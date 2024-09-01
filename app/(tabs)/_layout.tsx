@@ -4,7 +4,8 @@ import { Tabs } from "expo-router";
 import { SQLiteDatabase, SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { initDatabase } from "@/utils/database";
+import { checkIfDatabaseIsEmpty, initDatabase } from "@/utils/db/database";
+import { createTestData } from "@/utils/db/sessionFactory";
 
 // TabBarIcon component to render icons in the tab bar
 function TabBarIcon(props: {
@@ -17,6 +18,10 @@ function TabBarIcon(props: {
 // Function to handle database migration and initialization
 async function migrateDbIfNeeded(db: SQLiteDatabase) {
   await initDatabase(db);
+  const isEmpty = await checkIfDatabaseIsEmpty(db);
+  if (isEmpty) {
+    await createTestData(db);
+  }
 }
 
 export default function TabLayout() {

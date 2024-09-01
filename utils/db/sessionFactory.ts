@@ -3,16 +3,12 @@ import {
   ExerciseInstance,
   Session,
 } from "@/Interfaces/sessionInterfaces";
-import {
-  addExercise,
-  addExerciseInstance,
-  addSession,
-  initDatabase,
-} from "./database";
+import { SQLiteDatabase } from "expo-sqlite";
+import { addExercise } from "./exercise";
+import { addExerciseInstance } from "./exerciseInstance";
+import { addSession } from "./session";
 
-export const createTestData = async () => {
-  await initDatabase();
-
+export const createTestData = async (db: SQLiteDatabase) => {
   const exercises: Exercise[] = [
     {
       name: "Squat",
@@ -37,7 +33,7 @@ export const createTestData = async () => {
   // Add Exercises to the database
   const exerciseIds = [];
   for (const exercise of exercises) {
-    const exerciseId = await addExercise(exercise);
+    const exerciseId = await addExercise(db, exercise);
     exerciseIds.push(exerciseId);
   }
 
@@ -58,6 +54,7 @@ export const createTestData = async () => {
   const exerciseInstanceIds = [];
   for (let i = 0; i < exerciseInstances.length; i++) {
     const exerciseInstanceId = await addExerciseInstance(
+      db,
       exerciseInstances[i],
       exerciseIds[i]
     );
@@ -92,7 +89,7 @@ export const createTestData = async () => {
 
   // Add Sessions to the database
   for (const session of sessions) {
-    await addSession(session);
+    await addSession(db, session);
   }
 
   console.log("Test data created successfully.");
