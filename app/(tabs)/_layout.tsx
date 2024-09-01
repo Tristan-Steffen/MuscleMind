@@ -1,13 +1,12 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs } from "expo-router";
-import { Pressable } from "react-native";
-
+import { Tabs } from "expo-router";
+import { SQLiteDatabase, SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useClientOnlyValue } from "@/hooks/useClientOnlyValue.web";
+import { initDatabase } from "@/utils/database";
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+// TabBarIcon component to render icons in the tab bar
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
@@ -15,53 +14,46 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
+// Function to handle database migration and initialization
+async function migrateDbIfNeeded(db: SQLiteDatabase) {
+  await initDatabase(db);
+}
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? "light"].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+    <SQLiteProvider databaseName="fitness.db" onInit={migrateDbIfNeeded}>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+          headerShown: false,
         }}
-      />
-      <Tabs.Screen
-        name="workout"
-        options={{
-          title: "Workout",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="nutrition"
-        options={{
-          title: "Nutrition",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: "Home",
+            tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="workout"
+          options={{
+            title: "Workout",
+            tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="nutrition"
+          options={{
+            title: "Nutrition",
+            tabBarIcon: ({ color }) => (
+              <TabBarIcon name="apple" color={color} />
+            ),
+          }}
+        />
+      </Tabs>
+    </SQLiteProvider>
   );
 }
