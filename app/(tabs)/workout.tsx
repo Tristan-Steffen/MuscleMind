@@ -1,17 +1,17 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 
 import { Text, View } from "@/components/Themed";
 import { Exercise } from "@/Interfaces/sessionInterfaces";
 import { useEffect, useState } from "react";
 import { useSQLiteContext } from "expo-sqlite/build/hooks";
 import { getAllExercises } from "@/utils/db/exercise";
+import { SessionBuilder } from "@/components/workoutBuilder/SessionBuilder";
 
 export default function TabTwoScreen() {
   const db = useSQLiteContext();
   const [exercises, setExercises] = useState<Exercise[] | null>(null);
 
   useEffect(() => {
-    // Define an async function inside the useEffect hook
     async function fetchExercise() {
       try {
         const e = await getAllExercises(db);
@@ -21,19 +21,23 @@ export default function TabTwoScreen() {
       }
     }
 
-    // Call the async function
     fetchExercise();
   }, [db]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Workouts</Text>
-      <Text>{exercises?.map((exercise) => exercise.name).join(", ")}</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
+      <ScrollView
+        style={styles.scrollable}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.title}>Workouts</Text>
+        <SessionBuilder />
+        <View
+          style={styles.separator}
+          lightColor="#eee"
+          darkColor="rgba(255,255,255,0.1)"
+        />
+      </ScrollView>
     </View>
   );
 }
@@ -43,7 +47,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    color: "black",
   },
+  scrollable: { width: "100%", padding: 60 },
   title: {
     fontSize: 20,
     fontWeight: "bold",
