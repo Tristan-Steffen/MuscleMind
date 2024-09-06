@@ -1,16 +1,40 @@
-import { StyleSheet } from "react-native";
-
+import React, { useEffect, useState } from "react";
+import { StyleSheet, ScrollView } from "react-native";
 import { Text, View } from "@/components/Themed";
+import { SessionDisplay } from "@/components/workoutDisplay/SessionDisplay";
+import { useSQLiteContext } from "expo-sqlite";
+import { getAllSessions } from "@/utils/db/session";
+import { Session } from "@/Interfaces/sessionInterfaces";
 
 export default function HomeScreen() {
+  const db = useSQLiteContext();
+  const [sessions, setSessions] = useState<Session[] | null>(null);
+
+  useEffect(() => {
+    async function loadSessions() {
+      if (db) {
+        const allSessions = await getAllSessions(db);
+        setSessions(allSessions);
+      }
+    }
+
+    loadSessions();
+  }, [db]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>HomePage</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
+      <ScrollView
+        style={styles.scrollable}
+        showsVerticalScrollIndicator={false}
+      >
+        {sessions && sessions.length > 0 ? (
+          sessions.map((session) => (
+            <SessionDisplay key={session.id} session={session} />
+          ))
+        ) : (
+          <Text style={styles.title}>No sessions available</Text>
+        )}
+      </ScrollView>
     </View>
   );
 }
@@ -21,6 +45,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  scrollable: { width: "100%", padding: 60 },
   title: {
     fontSize: 20,
     fontWeight: "bold",

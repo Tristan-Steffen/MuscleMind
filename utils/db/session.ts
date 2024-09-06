@@ -1,5 +1,5 @@
 import { Session } from "@/Interfaces/sessionInterfaces";
-import { SQLiteDatabase } from "expo-sqlite/build/SQLiteDatabase";
+import { SQLiteDatabase } from "expo-sqlite";
 
 export async function addSession(
   db: SQLiteDatabase,
@@ -13,7 +13,7 @@ export async function addSession(
     const result = await statement.executeAsync({
       $name: session.name,
       $description: session.description,
-      $date: session.date,
+      $date: session.date.toISOString(),
       $isPreset: session.isPreset ? 1 : 0,
       $createdAt: session.createdAt.toISOString(),
       $updatedAt: session.updatedAt.toISOString(),
@@ -39,7 +39,7 @@ export async function updateSession(
     await statement.executeAsync({
       $name: session.name,
       $description: session.description,
-      $date: session.date,
+      $date: session.date.toISOString(),
       $isPreset: session.isPreset ? 1 : 0,
       $createdAt: session.createdAt.toISOString(),
       $updatedAt: session.updatedAt.toISOString(),
@@ -63,4 +63,22 @@ export async function deleteSession(
   } finally {
     await statement.finalizeAsync();
   }
+}
+
+export async function getAllSessions(db: SQLiteDatabase): Promise<Session[]> {
+  return db.getAllSync<Session>("SELECT * FROM sessions");
+}
+
+export async function getSession(
+  db: SQLiteDatabase,
+  sessionId: number
+): Promise<Session | undefined> {
+  const result = await db.getAllSync<Session>(
+    "SELECT * FROM sessions WHERE id = $id",
+    {
+      $id: sessionId,
+    }
+  );
+
+  return result[0];
 }
