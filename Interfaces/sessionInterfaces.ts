@@ -9,8 +9,8 @@ export interface Exercise {
   id?: number;
   name: string;
   description: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ExerciseInstance {
@@ -19,8 +19,8 @@ export interface ExerciseInstance {
   exercise: {
     data: Exercise;
   };
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Session {
@@ -32,6 +32,6 @@ export interface Session {
   exercise_instances: {
     data: ExerciseInstance[];
   };
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }

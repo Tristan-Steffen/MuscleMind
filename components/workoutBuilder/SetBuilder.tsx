@@ -1,28 +1,26 @@
-import React, { useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet } from "react-native";
+import React from "react";
+import { View, TextInput, Text, StyleSheet } from "react-native";
 import { Set } from "@/Interfaces/sessionInterfaces";
 
 interface SetBuilderProps {
-  onAddSet: (newSet: Set) => void;
+  set: Set;
+  onUpdate: (updatedSet: Set) => void;
 }
 
-export const SetBuilder: React.FC<SetBuilderProps> = ({ onAddSet }) => {
-  const [reps, setReps] = useState<number | undefined>();
-  const [weight, setWeight] = useState<number | undefined>();
-  const [rest, setRest] = useState<number | undefined>();
+export const SetBuilder: React.FC<SetBuilderProps> = ({ set, onUpdate }) => {
+  const updateReps = (text: string) => {
+    const updatedSet = { ...set, reps: parseInt(text) || 0 };
+    onUpdate(updatedSet);
+  };
 
-  const handleAddSet = () => {
-    if (reps !== undefined && weight !== undefined) {
-      const newSet: Set = {
-        reps,
-        weight,
-        rest: rest ?? null,
-      };
-      onAddSet(newSet);
-      setReps(undefined);
-      setWeight(undefined);
-      setRest(undefined);
-    }
+  const updateWeight = (text: string) => {
+    const updatedSet = { ...set, weight: parseInt(text) || 0 };
+    onUpdate(updatedSet);
+  };
+
+  const updateRest = (text: string) => {
+    const updatedSet = { ...set, rest: parseInt(text) || 0 };
+    onUpdate(updatedSet);
   };
 
   return (
@@ -30,29 +28,28 @@ export const SetBuilder: React.FC<SetBuilderProps> = ({ onAddSet }) => {
       <Text style={styles.title}>Add Set</Text>
       <TextInput
         style={styles.input}
-        value={reps ? reps.toString() : ""}
-        onChangeText={(text) => setReps(parseInt(text))}
+        value={set.reps ? set.reps.toString() : ""}
+        onChangeText={updateReps}
         keyboardType="numeric"
         placeholder="Enter reps"
         placeholderTextColor={"grey"}
       />
       <TextInput
         style={styles.input}
-        value={weight ? weight.toString() : ""}
-        onChangeText={(text) => setWeight(parseFloat(text))}
+        value={set.weight ? set.weight.toString() : ""}
+        onChangeText={updateWeight}
         keyboardType="numeric"
         placeholder="Enter weight"
         placeholderTextColor={"grey"}
       />
       <TextInput
         style={styles.input}
-        value={rest ? rest.toString() : ""}
-        onChangeText={(text) => setRest(parseInt(text))}
+        value={set.rest ? set.rest.toString() : ""}
+        onChangeText={updateRest}
         keyboardType="numeric"
         placeholder="Enter rest time"
         placeholderTextColor={"grey"}
       />
-      <Button title="Add Set" onPress={handleAddSet} />
     </View>
   );
 };

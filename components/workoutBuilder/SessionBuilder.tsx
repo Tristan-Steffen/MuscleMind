@@ -2,41 +2,50 @@ import React, { useState } from "react";
 import { View, TextInput, Button, Text, StyleSheet } from "react-native";
 import { Session, ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { ExerciseInstanceBuilder } from "./ExerciseInstanceBuilder";
+import { useSession } from "@/hooks/useSession";
 
 export const SessionBuilder: React.FC = () => {
-  const [sessionName, setSessionName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [exerciseInstances, setExerciseInstances] = useState<
-    ExerciseInstance[]
-  >([]);
-
-  const handleAddExerciseInstance = (newExerciseInstance: ExerciseInstance) => {
-    setExerciseInstances([...exerciseInstances, newExerciseInstance]);
-  };
+  const sessionHook = useSession();
+  const [session, setSession] = useState<Session>(
+    sessionHook.createEmptySession()
+  );
 
   const handleCreateSession = () => {
-    console.log("Creating Session...");
-    console.log(exerciseInstances);
-    if (sessionName && exerciseInstances.length > 0) {
-      const newSession: Session = {
-        name: sessionName,
-        description,
-        date: new Date().toISOString(),
-        isPreset: false,
-        exercise_instances: {
-          data: exerciseInstances,
-        },
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
+    // Implement session creation logic here
+  };
 
-      // Here, you can save this session to your database
-      console.log("New Session Created:", newSession);
-      // Reset form after submission
-      setSessionName("");
-      setDescription("");
-      setExerciseInstances([]);
-    }
+  const handleChangeName = (name: string) => {
+    setSession((prevSession) => ({ ...prevSession, name }));
+  };
+
+  const handleChangeDescription = (description: string) => {
+    setSession((prevSession) => ({ ...prevSession, description }));
+  };
+
+  const handleAddExerciseInstance = () => {
+    const newExerciseInstance = sessionHook.createEmptyExerciseInstance();
+    setSession((prevSession) => ({
+      ...prevSession,
+      exercise_instances: {
+        data: [...prevSession.exercise_instances.data, newExerciseInstance],
+      },
+    }));
+  };
+
+  const handleUpdateExerciseInstance = (
+    updatedInstance: ExerciseInstance,
+    index: number
+  ) => {
+    setSession((prevSession) => {
+      const updatedInstances = prevSession.exercise_instances.data.map(
+        (instance, i) => (i === index ? updatedInstance : instance)
+      );
+
+      return {
+        ...prevSession,
+        exercise_instances: { data: updatedInstances },
+      };
+    });
   };
 
   return (
@@ -44,32 +53,30 @@ export const SessionBuilder: React.FC = () => {
       <Text style={styles.title}>Session Builder</Text>
       <TextInput
         style={styles.input}
-        value={sessionName}
-        onChangeText={setSessionName}
+        value={session.name}
+        onChangeText={handleChangeName}
         placeholder="Enter session name"
         placeholderTextColor={"grey"}
       />
       <TextInput
         style={styles.input}
-        value={description}
-        onChangeText={setDescription}
+        value={session.description}
+        onChangeText={handleChangeDescription}
         placeholder="Enter session description"
         placeholderTextColor={"grey"}
       />
-      <ExerciseInstanceBuilder
-        onAddExerciseInstance={handleAddExerciseInstance}
-      />
+      {session.exercise_instances.data.map((instance, index) => (
+        <ExerciseInstanceBuilder
+          key={index}
+          exerciseInstance={instance}
+          onUpdate={(updatedInstance) =>
+            handleUpdateExerciseInstance(updatedInstance, index)
+          }
+        />
+      ))}
+
+      <Button title="Add Exercise" onPress={handleAddExerciseInstance} />
       <Button title="Create Session" onPress={handleCreateSession} />
-      {exerciseInstances.length > 0 && (
-        <View style={styles.instanceList}>
-          <Text style={styles.subTitle}>Added Exercise Instances:</Text>
-          {exerciseInstances.map((instance, index) => (
-            <Text key={index} style={styles.instanceText}>
-              {`${instance.exercise.data.name}`}
-            </Text>
-          ))}
-        </View>
-      )}
     </View>
   );
 };
@@ -94,15 +101,5 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
-  },
-  instanceList: {
-    marginTop: 10,
-  },
-  subTitle: {
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  instanceText: {
-    fontSize: 16,
   },
 });

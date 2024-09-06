@@ -1,44 +1,58 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, TextInput, Button, Text, StyleSheet } from "react-native";
 import { ExerciseInstance, Set } from "@/Interfaces/sessionInterfaces";
 import { SetBuilder } from "./SetBuilder";
+import { useSession } from "@/hooks/useSession";
 
 interface ExerciseInstanceBuilderProps {
-  onAddExerciseInstance: (newExerciseInstance: ExerciseInstance) => void;
+  exerciseInstance: ExerciseInstance;
+  onUpdate: (updatedInstance: ExerciseInstance) => void;
 }
 
 export const ExerciseInstanceBuilder: React.FC<
   ExerciseInstanceBuilderProps
-> = ({ onAddExerciseInstance }) => {
-  const [exerciseName, setExerciseName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [sets, setSets] = useState<Set[]>([]);
-
-  const handleAddSet = (newSet: Set) => {
-    setSets([...sets, newSet]);
+> = ({ exerciseInstance, onUpdate }) => {
+  const setExerciseName = (text: string): void => {
+    const updatedInstance = {
+      ...exerciseInstance,
+      exercise: {
+        ...exerciseInstance.exercise,
+        data: { ...exerciseInstance.exercise.data, name: text },
+      },
+    };
+    onUpdate(updatedInstance);
   };
 
-  const handleAddExerciseInstance = () => {
-    if (exerciseName && sets.length > 0) {
-      const newExerciseInstance: ExerciseInstance = {
-        sets,
-        exercise: {
-          data: {
-            name: exerciseName,
-            description,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        },
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
+  const setDescription = (text: string): void => {
+    const updatedInstance = {
+      ...exerciseInstance,
+      exercise: {
+        ...exerciseInstance.exercise,
+        data: { ...exerciseInstance.exercise.data, description: text },
+      },
+    };
+    onUpdate(updatedInstance);
+  };
 
-      onAddExerciseInstance(newExerciseInstance);
-      setExerciseName("");
-      setDescription("");
-      setSets([]);
-    }
+  const handleAddSet = (): void => {
+    const newSet = useSession().createEmptySet();
+    const updatedInstance = {
+      ...exerciseInstance,
+      sets: [...exerciseInstance.sets, newSet],
+    };
+    onUpdate(updatedInstance);
+  };
+
+  const updateSet = (updatedSet: Set, setIndex: number): void => {
+    const updatedSets = exerciseInstance.sets.map((set, index) =>
+      index === setIndex ? updatedSet : set
+    );
+
+    const updatedInstance = {
+      ...exerciseInstance,
+      sets: updatedSets,
+    };
+    onUpdate(updatedInstance);
   };
 
   return (
@@ -46,35 +60,27 @@ export const ExerciseInstanceBuilder: React.FC<
       <Text style={styles.title}>Exercise Instance</Text>
       <TextInput
         style={styles.input}
-        value={exerciseName}
+        value={exerciseInstance.exercise.data.name}
         onChangeText={setExerciseName}
         placeholder="Enter exercise name"
         placeholderTextColor={"grey"}
       />
       <TextInput
         style={styles.input}
-        value={description}
+        value={exerciseInstance.exercise.data.description}
         onChangeText={setDescription}
         placeholder="Enter description"
         placeholderTextColor={"grey"}
       />
-      <SetBuilder onAddSet={handleAddSet} />
-      <Button
-        title="Add Exercise Instance"
-        onPress={handleAddExerciseInstance}
-      />
-      {sets.length > 0 && (
-        <View style={styles.setList}>
-          <Text style={styles.subTitle}>Added Sets:</Text>
-          {sets.map((set, index) => (
-            <Text key={index} style={styles.setText}>
-              {`${set.reps} reps @ ${set.weight} kg - ${
-                set.rest ?? 0
-              } sec rest`}
-            </Text>
-          ))}
-        </View>
-      )}
+      {exerciseInstance.sets.map((set, index) => (
+        <SetBuilder
+          key={index}
+          set={set}
+          onUpdate={(updatedSet) => updateSet(updatedSet, index)}
+        />
+      ))}
+
+      <Button title="Add Set" onPress={handleAddSet} />
     </View>
   );
 };
@@ -99,15 +105,5 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 5,
     marginBottom: 10,
-  },
-  setList: {
-    marginTop: 10,
-  },
-  subTitle: {
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  setText: {
-    fontSize: 14,
   },
 });
