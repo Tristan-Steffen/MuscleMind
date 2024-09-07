@@ -1,8 +1,8 @@
-// SessionDisplay.tsx
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Session } from "@/Interfaces/sessionInterfaces";
 import { ExerciseInstanceDisplay } from "./ExerciseInstanceDisplay";
+import { Link } from "expo-router";
 
 interface SessionDisplayProps {
   session: Session;
@@ -23,6 +23,14 @@ export const SessionDisplay: React.FC<SessionDisplayProps> = ({ session }) => {
             ))
           : null}
       </View>
+      <Link
+        href={{
+          pathname: "/session/[id]",
+          params: { id: session.id! },
+        }}
+      >
+        View user
+      </Link>
     </View>
   );
 };

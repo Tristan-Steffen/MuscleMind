@@ -1,4 +1,3 @@
-// ExerciseInstanceDisplay.tsx
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";

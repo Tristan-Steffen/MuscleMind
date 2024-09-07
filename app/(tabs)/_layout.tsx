@@ -7,7 +7,6 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { checkIfDatabaseIsEmpty, initDatabase } from "@/utils/db/database";
 import { createTestData } from "@/utils/db/sessionFactory";
 
-// TabBarIcon component to render icons in the tab bar
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
@@ -15,7 +14,6 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-// Function to handle database migration and initialization
 async function migrateDbIfNeeded(db: SQLiteDatabase) {
   await initDatabase(db);
   const isEmpty = await checkIfDatabaseIsEmpty(db);

@@ -1,4 +1,3 @@
-// SetDisplay.tsx
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Set } from "@/Interfaces/sessionInterfaces";
