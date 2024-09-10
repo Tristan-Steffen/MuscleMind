@@ -9,8 +9,10 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
-
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
+import { initDatabase, checkIfDatabaseIsEmpty } from "@/utils/db/database";
+import { createTestData } from "@/utils/db/sessionFactory";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -21,6 +23,15 @@ export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: "(tabs)",
 };
+
+async function migrateDbIfNeeded(db: SQLiteDatabase) {
+  await initDatabase(db);
+  const isEmpty = await checkIfDatabaseIsEmpty(db);
+  if (isEmpty) {
+    console.log("Database is empty, creating test data...");
+    await createTestData(db);
+  }
+}
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -54,10 +65,12 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-      </Stack>
+      <SQLiteProvider databaseName="fitness25.db" onInit={migrateDbIfNeeded}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+        </Stack>
+      </SQLiteProvider>
     </ThemeProvider>
   );
 }

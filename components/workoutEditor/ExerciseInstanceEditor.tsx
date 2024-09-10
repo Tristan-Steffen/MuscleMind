@@ -12,9 +12,9 @@ export const ExerciseInstanceEditor: React.FC<ExerciseInstanceEditorProps> = ({
   exerciseInstance,
   onSave,
 }) => {
-  const [name, setName] = useState(exerciseInstance.exercise.data.name);
+  const [name, setName] = useState(exerciseInstance.exercise.name);
   const [description, setDescription] = useState(
-    exerciseInstance.exercise.data.description
+    exerciseInstance.exercise.description
   );
   const [sets, setSets] = useState<Set[]>(exerciseInstance.sets);
 
@@ -23,7 +23,7 @@ export const ExerciseInstanceEditor: React.FC<ExerciseInstanceEditorProps> = ({
       ...exerciseInstance,
       exercise: {
         ...exerciseInstance.exercise,
-        data: { ...exerciseInstance.exercise.data, name, description },
+        data: { ...exerciseInstance.exercise, name, description },
       },
       sets,
     };

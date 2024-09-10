@@ -2,14 +2,15 @@ import {
   Exercise,
   ExerciseInstance,
   Session,
+  Set,
 } from "@/Interfaces/sessionInterfaces";
 import { SQLiteDatabase } from "expo-sqlite";
-import { addExercise } from "./exercise";
-import { addExerciseInstance } from "./exerciseInstance";
+import { addExercise, getAllExercises } from "./exercise";
 import { addSession } from "./session";
 
 export const createTestData = async (db: SQLiteDatabase) => {
-  const exercises: Exercise[] = [
+  // Define the exercises
+  const saveExercises: Exercise[] = [
     {
       name: "Squat",
       description: "Leg exercise",
@@ -30,64 +31,55 @@ export const createTestData = async (db: SQLiteDatabase) => {
     },
   ];
 
-  // Add Exercises to the database
-  const exerciseIds = [];
-  for (const exercise of exercises) {
-    const exerciseId = await addExercise(db, exercise);
-    exerciseIds.push(exerciseId);
+  for (const exercise of saveExercises) {
+    await addExercise(db, exercise);
   }
 
-  // Sample Exercise Instances
-  const exerciseInstances: ExerciseInstance[] = exerciseIds.map((index) => ({
-    exercise: {
-      data: exercises[index],
-    },
-    sets: [
-      { reps: 10, weight: 100, rest: 60 },
-      { reps: 8, weight: 110, rest: 60 },
-    ],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }));
+  // I need to create the exercises first before creating the exercise instances in order for the foreign key constraint to work
+  const exercises = await getAllExercises(db);
 
-  // Add Exercise Instances to the database
-  const exerciseInstanceIds = [];
-  for (let i = 0; i < exerciseInstances.length; i++) {
-    const exerciseInstanceId = await addExerciseInstance(
-      db,
-      exerciseInstances[i],
-      exerciseIds[i]
-    );
-    exerciseInstanceIds.push(exerciseInstanceId);
+  const exerciseInstances: ExerciseInstance[] = [];
+  for (let i = 0; i < exercises.length; i++) {
+    const exerciseInstance: ExerciseInstance = {
+      exercise: exercises[i],
+      sessionId: 0,
+      sets: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const sets: Set[] = [
+      { reps: 10, weight: 100, rest: 60, exerciseInstanceId: null },
+      { reps: 8, weight: 110, rest: 60, exerciseInstanceId: null },
+    ];
+
+    exerciseInstances.push({
+      ...exerciseInstance,
+      sets,
+    });
   }
 
-  // Sample Sessions
   const sessions: Session[] = [
     {
       name: "Morning Workout",
       description: "Full body workout",
-      date: new Date().toISOString(),
+      date: new Date(),
       isPreset: false,
-      exercise_instances: {
-        data: [exerciseInstances[0], exerciseInstances[1]],
-      },
+      exercise_instances: [exerciseInstances[0], exerciseInstances[1]],
       createdAt: new Date(),
       updatedAt: new Date(),
     },
     {
       name: "Evening Workout",
       description: "Leg and back workout",
-      date: new Date().toISOString(),
+      date: new Date(),
       isPreset: false,
-      exercise_instances: {
-        data: [exerciseInstances[2]],
-      },
+      exercise_instances: [exerciseInstances[2]],
       createdAt: new Date(),
       updatedAt: new Date(),
     },
   ];
 
-  // Add Sessions to the database
   for (const session of sessions) {
     await addSession(db, session);
   }

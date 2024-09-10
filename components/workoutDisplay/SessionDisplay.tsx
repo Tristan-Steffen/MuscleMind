@@ -15,7 +15,7 @@ export const SessionDisplay: React.FC<SessionDisplayProps> = ({ session }) => {
       <Text style={styles.description}>{session.description}</Text>
       <View style={styles.instanceList}>
         {session.exercise_instances
-          ? session.exercise_instances.data.map((instance, index) => (
+          ? session.exercise_instances.map((instance, index) => (
               <ExerciseInstanceDisplay
                 key={index}
                 exerciseInstance={instance}

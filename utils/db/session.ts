@@ -1,5 +1,8 @@
+import { getExerciseInstancesForSession } from "./exerciseInstance";
 import { Session } from "@/Interfaces/sessionInterfaces";
 import { SQLiteDatabase } from "expo-sqlite";
+import { addExerciseInstance } from "./exerciseInstance";
+import { addSet } from "./set";
 
 export async function addSession(
   db: SQLiteDatabase,
@@ -19,7 +22,22 @@ export async function addSession(
       $updatedAt: session.updatedAt.toISOString(),
     });
 
-    return result.lastInsertRowId;
+    const sessionId = result.lastInsertRowId;
+
+    for (const exerciseInstance of session.exercise_instances) {
+      exerciseInstance.sessionId = sessionId;
+      const exerciseInstanceId = await addExerciseInstance(
+        db,
+        exerciseInstance
+      );
+
+      for (const set of exerciseInstance.sets) {
+        set.exerciseInstanceId = exerciseInstanceId;
+        await addSet(db, set);
+      }
+    }
+
+    return sessionId;
   } finally {
     await statement.finalizeAsync();
   }
@@ -65,8 +83,21 @@ export async function deleteSession(
   }
 }
 
-export async function getAllSessions(db: SQLiteDatabase): Promise<Session[]> {
-  return db.getAllSync<Session>("SELECT * FROM sessions");
+export async function getAllPopulatedSessions(
+  db: SQLiteDatabase
+): Promise<Session[]> {
+  const sessions = await db.getAllAsync<Session>("SELECT * FROM sessions");
+
+  for (let i = 0; i < sessions.length; i++) {
+    console.log("looping through sessions", i);
+    sessions[i].exercise_instances = await getExerciseInstancesForSession(
+      db,
+      sessions[i].id!
+    );
+  }
+
+  console.log("returning sessions", sessions);
+  return sessions;
 }
 
 export async function getSession(
@@ -80,5 +111,15 @@ export async function getSession(
     }
   );
 
-  return result[0];
+  if (result.length > 0) {
+    const session = result[0];
+    session.exercise_instances = await getExerciseInstancesForSession(
+      db,
+      session.id!
+    );
+
+    return session;
+  }
+
+  return undefined;
 }

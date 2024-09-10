@@ -26,9 +26,10 @@ export const SessionBuilder: React.FC = () => {
     const newExerciseInstance = sessionHook.createEmptyExerciseInstance();
     setSession((prevSession) => ({
       ...prevSession,
-      exercise_instances: {
-        data: [...prevSession.exercise_instances.data, newExerciseInstance],
-      },
+      exercise_instances: [
+        ...prevSession.exercise_instances,
+        newExerciseInstance,
+      ],
     }));
   };
 
@@ -37,13 +38,13 @@ export const SessionBuilder: React.FC = () => {
     index: number
   ) => {
     setSession((prevSession) => {
-      const updatedInstances = prevSession.exercise_instances.data.map(
+      const updatedInstances = prevSession.exercise_instances.map(
         (instance, i) => (i === index ? updatedInstance : instance)
       );
 
       return {
         ...prevSession,
-        exercise_instances: { data: updatedInstances },
+        exercise_instances: updatedInstances,
       };
     });
   };
@@ -65,7 +66,7 @@ export const SessionBuilder: React.FC = () => {
         placeholder="Enter session description"
         placeholderTextColor={"grey"}
       />
-      {session.exercise_instances.data.map((instance, index) => (
+      {session.exercise_instances.map((instance, index) => (
         <ExerciseInstanceBuilder
           key={index}
           exerciseInstance={instance}

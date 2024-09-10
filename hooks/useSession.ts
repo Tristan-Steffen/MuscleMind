@@ -5,13 +5,11 @@ export function useSession() {
     return {
       name: "",
       description: "",
-      date: new Date().toISOString(),
+      date: new Date(),
       isPreset: false,
-      exercise_instances: {
-        data: [] as ExerciseInstance[],
-      },
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      exercise_instances: [] as ExerciseInstance[],
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
   };
 
@@ -19,15 +17,14 @@ export function useSession() {
     return {
       sets: [] as Set[],
       exercise: {
-        data: {
-          name: "",
-          description: "",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
+        name: "",
+        description: "",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      sessionId: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
   };
 
@@ -36,6 +33,7 @@ export function useSession() {
       reps: 0,
       weight: 0,
       rest: 0,
+      exerciseInstanceId: null,
     };
   };
 

@@ -1,16 +1,29 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
+import { getSession } from "@/utils/db/session";
+import { SessionEditor } from "@/components/workoutEditor/SessionEditor";
+import { Session } from "@/Interfaces/sessionInterfaces";
 
-export default function SessionDetailsPage() {
+export default function EditSessionPage() {
   const local = useLocalSearchParams();
+  const db = useSQLiteContext();
+  const [session, setSession] = useState<Session | null>(null);
 
-  console.log("Local:", local.id);
+  useEffect(() => {
+    async function loadSession() {
+      if (db) {
+        let session = await getSession(db, parseInt(local.id[0]));
+        session ? setSession(session) : null;
+      }
+    }
+    loadSession();
+  }, [local.id[0]]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Session Details</Text>
-      <Text>Session ID: {local.id}</Text>
+      {session ? <SessionEditor session={session}></SessionEditor> : null}
     </View>
   );
 }

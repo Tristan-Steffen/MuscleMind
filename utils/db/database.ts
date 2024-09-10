@@ -14,6 +14,7 @@ export async function initDatabase(db: SQLiteDatabase) {
   ) {
     return; // Database is up-to-date
   }
+
   // Initial migration or any updates
   if (user_version && user_version.user_version === 0) {
     await db.execAsync(`
@@ -23,7 +24,9 @@ export async function initDatabase(db: SQLiteDatabase) {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         reps INTEGER NOT NULL,
         weight REAL NOT NULL,
-        rest INTEGER
+        rest INTEGER,
+        exerciseInstanceId INTEGER,
+        FOREIGN KEY(exerciseInstanceId) REFERENCES exerciseInstances(id)
       );
 
       CREATE TABLE IF NOT EXISTS exercises (
@@ -32,14 +35,6 @@ export async function initDatabase(db: SQLiteDatabase) {
         description TEXT,
         createdAt TEXT NOT NULL,
         updatedAt TEXT NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS exerciseInstances (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        exerciseId INTEGER,
-        createdAt TEXT NOT NULL,
-        updatedAt TEXT NOT NULL,
-        FOREIGN KEY(exerciseId) REFERENCES exercises(id)
       );
 
       CREATE TABLE IF NOT EXISTS sessions (
@@ -52,12 +47,14 @@ export async function initDatabase(db: SQLiteDatabase) {
         updatedAt TEXT NOT NULL
       );
 
-      CREATE TABLE IF NOT EXISTS sessionExerciseInstances (
+      CREATE TABLE IF NOT EXISTS exerciseInstances (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        exerciseId INTEGER,
         sessionId INTEGER,
-        exerciseInstanceId INTEGER,
-        FOREIGN KEY(sessionId) REFERENCES sessions(id),
-        FOREIGN KEY(exerciseInstanceId) REFERENCES exerciseInstances(id)
+        createdAt TEXT NOT NULL,
+        updatedAt TEXT NOT NULL,
+        FOREIGN KEY(exerciseId) REFERENCES exercises(id),
+        FOREIGN KEY(sessionId) REFERENCES sessions(id)
       );
     `);
   }

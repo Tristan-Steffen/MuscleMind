@@ -12,9 +12,9 @@ export const ExerciseInstanceDisplay: React.FC<
 > = ({ exerciseInstance }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{exerciseInstance.exercise.data.name}</Text>
+      <Text style={styles.title}>{exerciseInstance.exercise.name}</Text>
       <Text style={styles.description}>
-        {exerciseInstance.exercise.data.description}
+        {exerciseInstance.exercise.description}
       </Text>
       <View style={styles.setList}>
         {exerciseInstance.sets.map((set, index) => (

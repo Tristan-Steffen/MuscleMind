@@ -60,12 +60,19 @@ export async function deleteExercise(
   }
 }
 
-export async function getExercise(
-  db: SQLiteDatabase
+export async function getExerciseById(
+  db: SQLiteDatabase,
+  id: number
 ): Promise<Exercise | undefined> {
-  const result = await db.getAllSync<Exercise>("SELECT * FROM exercises");
+  console.log("Getting exercise by id", id);
+  const result = await db.getAllAsync<Exercise>(
+    "SELECT * FROM exercises WHERE id = $id",
+    {
+      $id: id,
+    }
+  );
 
-  return result[0];
+  return result[0]; // Return the exercise found, if any
 }
 
 export async function getAllExercises(db: SQLiteDatabase): Promise<Exercise[]> {

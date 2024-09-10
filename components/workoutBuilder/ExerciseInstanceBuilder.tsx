@@ -17,7 +17,7 @@ export const ExerciseInstanceBuilder: React.FC<
       ...exerciseInstance,
       exercise: {
         ...exerciseInstance.exercise,
-        data: { ...exerciseInstance.exercise.data, name: text },
+        data: { ...exerciseInstance.exercise, name: text },
       },
     };
     onUpdate(updatedInstance);
@@ -28,7 +28,7 @@ export const ExerciseInstanceBuilder: React.FC<
       ...exerciseInstance,
       exercise: {
         ...exerciseInstance.exercise,
-        data: { ...exerciseInstance.exercise.data, description: text },
+        data: { ...exerciseInstance.exercise, description: text },
       },
     };
     onUpdate(updatedInstance);
@@ -60,14 +60,14 @@ export const ExerciseInstanceBuilder: React.FC<
       <Text style={styles.title}>Exercise Instance</Text>
       <TextInput
         style={styles.input}
-        value={exerciseInstance.exercise.data.name}
+        value={exerciseInstance.exercise.name}
         onChangeText={setExerciseName}
         placeholder="Enter exercise name"
         placeholderTextColor={"grey"}
       />
       <TextInput
         style={styles.input}
-        value={exerciseInstance.exercise.data.description}
+        value={exerciseInstance.exercise.description}
         onChangeText={setDescription}
         placeholder="Enter description"
         placeholderTextColor={"grey"}

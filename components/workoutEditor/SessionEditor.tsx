@@ -1,38 +1,46 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, StyleSheet } from "react-native";
+import { View, TextInput, Button, StyleSheet, Text } from "react-native";
 import { Session, ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { ExerciseInstanceEditor } from "./ExerciseInstanceEditor";
+import { useSQLiteContext } from "expo-sqlite";
+import { updateSession } from "@/utils/db/session";
+import { Redirect } from "expo-router";
 
 interface SessionEditorProps {
   session: Session;
-  onSave: (updatedSession: Session) => void;
 }
 
-export const SessionEditor: React.FC<SessionEditorProps> = ({
-  session,
-  onSave,
-}) => {
+export const SessionEditor: React.FC<SessionEditorProps> = ({ session }) => {
+  const db = useSQLiteContext();
   const [name, setName] = useState(session.name);
   const [description, setDescription] = useState(session.description);
   const [exerciseInstances, setExerciseInstances] = useState<
-    ExerciseInstance[]
-  >(session.exercise_instances.data);
+    ExerciseInstance[] | null
+  >(session.exercise_instances ? session.exercise_instances : null);
 
   const handleSave = () => {
     const updatedSession = {
       ...session,
       name,
       description,
-      exercise_instances: { data: exerciseInstances },
+      exercise_instances: { data: exerciseInstances! },
     };
-    onSave(updatedSession);
+    updateSession(db, updatedSession).then(
+      () => {
+        console.log("Session updated");
+        return <Redirect href="../index" />;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   };
 
   const handleUpdateExerciseInstance = (
     updatedInstance: ExerciseInstance,
     index: number
   ) => {
-    const updatedInstances = [...exerciseInstances];
+    const updatedInstances = [...exerciseInstances!];
     updatedInstances[index] = updatedInstance;
     setExerciseInstances(updatedInstances);
   };
@@ -54,15 +62,19 @@ export const SessionEditor: React.FC<SessionEditorProps> = ({
         placeholderTextColor="grey"
       />
 
-      {exerciseInstances.map((instance, index) => (
-        <ExerciseInstanceEditor
-          key={index}
-          exerciseInstance={instance}
-          onSave={(updatedInstance) =>
-            handleUpdateExerciseInstance(updatedInstance, index)
-          }
-        />
-      ))}
+      {exerciseInstances ? (
+        exerciseInstances.map((instance, index) => (
+          <ExerciseInstanceEditor
+            key={index}
+            exerciseInstance={instance}
+            onSave={(updatedInstance) =>
+              handleUpdateExerciseInstance(updatedInstance, index)
+            }
+          />
+        ))
+      ) : (
+        <Text>No exercise instances</Text>
+      )}
 
       <Button title="Save Session" onPress={handleSave} />
     </View>
