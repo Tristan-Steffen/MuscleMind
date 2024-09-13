@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, TextInput, Button, Text, StyleSheet } from "react-native";
-import { Session, ExerciseInstance } from "@/Interfaces/sessionInterfaces";
+import {
+  Session,
+  ExerciseInstance,
+  Exercise,
+} from "@/Interfaces/sessionInterfaces";
 import { ExerciseInstanceBuilder } from "./ExerciseInstanceBuilder";
 import { useSession } from "@/hooks/useSession";
 import { useSQLiteContext } from "expo-sqlite";
 import { getAllExercises } from "@/utils/db/exercise";
+import { Dropdown } from "react-native-element-dropdown"; // New dropdown library
 
 export const SessionBuilder: React.FC = () => {
   const db = useSQLiteContext();
@@ -12,7 +17,17 @@ export const SessionBuilder: React.FC = () => {
   const [session, setSession] = useState<Session>(
     sessionHook.createEmptySession()
   );
-  const exercises = getAllExercises(db);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false); // State to control dropdown visibility
+  const [selectedExerciseId, setSelectedExerciseId] = useState<number>(0);
+
+  useEffect(() => {
+    const loadExercises = async () => {
+      const exerciseList = await getAllExercises(db);
+      setExercises(exerciseList);
+    };
+    loadExercises();
+  }, [db]);
 
   const handleCreateSession = () => {
     // Implement session creation logic here
@@ -27,14 +42,27 @@ export const SessionBuilder: React.FC = () => {
   };
 
   const handleAddExerciseInstance = () => {
-    const newExerciseInstance = sessionHook.createEmptyExerciseInstance();
-    setSession((prevSession) => ({
-      ...prevSession,
-      exercise_instances: [
-        ...prevSession.exercise_instances,
-        newExerciseInstance,
-      ],
-    }));
+    setShowDropdown(true);
+  };
+
+  const handleSelectExercise = (exerciseId: number) => {
+    const selectedExercise = exercises.find(
+      (exercise) => exercise.id === exerciseId
+    );
+
+    if (selectedExercise) {
+      const newExerciseInstance =
+        sessionHook.createExerciseInstanceWithExercise(selectedExercise);
+      setSession((prevSession) => ({
+        ...prevSession,
+        exercise_instances: [
+          ...prevSession.exercise_instances,
+          newExerciseInstance,
+        ],
+      }));
+    }
+
+    setShowDropdown(false);
   };
 
   const handleUpdateExerciseInstance = (
@@ -70,6 +98,7 @@ export const SessionBuilder: React.FC = () => {
         placeholder="Enter session description"
         placeholderTextColor={"grey"}
       />
+
       {session.exercise_instances.map((instance, index) => (
         <ExerciseInstanceBuilder
           key={index}
@@ -79,6 +108,24 @@ export const SessionBuilder: React.FC = () => {
           }
         />
       ))}
+
+      {showDropdown && (
+        <Dropdown
+          style={styles.dropdown}
+          data={exercises.map((exercise) => ({
+            label: exercise.name,
+            value: exercise.id,
+          }))}
+          labelField="label"
+          valueField="value"
+          placeholder="Select exercise"
+          value={
+            exercises.find((exercise) => exercise.id === selectedExerciseId)
+              ?.name
+          }
+          onChange={(item) => handleSelectExercise(item.value!)}
+        />
+      )}
 
       <Button title="Add Exercise" onPress={handleAddExerciseInstance} />
       <Button title="Create Session" onPress={handleCreateSession} />
@@ -106,5 +153,13 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
+  },
+  dropdown: {
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    marginVertical: 10,
   },
 });

@@ -1,4 +1,9 @@
-import { Session, ExerciseInstance, Set } from "@/Interfaces/sessionInterfaces";
+import {
+  Session,
+  ExerciseInstance,
+  Set,
+  Exercise,
+} from "@/Interfaces/sessionInterfaces";
 
 export function useSession() {
   const createEmptySession = (): Session => {
@@ -28,6 +33,18 @@ export function useSession() {
     };
   };
 
+  const createExerciseInstanceWithExercise = (
+    exercise: Exercise
+  ): ExerciseInstance => {
+    return {
+      sets: [] as Set[],
+      exercise: exercise,
+      sessionId: undefined,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+  };
+
   const createEmptySet = (): Set => {
     return {
       reps: 0,
@@ -40,6 +57,7 @@ export function useSession() {
   return {
     createEmptySession,
     createEmptyExerciseInstance,
+    createExerciseInstanceWithExercise,
     createEmptySet,
   };
 }
