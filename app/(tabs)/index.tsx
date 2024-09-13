@@ -5,21 +5,27 @@ import { SessionDisplay } from "@/components/workoutDisplay/SessionDisplay";
 import { useSQLiteContext } from "expo-sqlite";
 import { getAllPopulatedSessions } from "@/utils/db/session";
 import { Session } from "@/Interfaces/sessionInterfaces";
+import { useFocusEffect } from "expo-router";
 
 export default function HomeScreen() {
   const db = useSQLiteContext();
   const [sessions, setSessions] = useState<Session[] | null>(null);
+  async function loadSessions() {
+    if (db) {
+      const allSessions = await getAllPopulatedSessions(db);
+      setSessions(allSessions);
+    }
+  }
 
   useEffect(() => {
-    async function loadSessions() {
-      if (db) {
-        const allSessions = await getAllPopulatedSessions(db);
-        setSessions(allSessions);
-      }
-    }
-
     loadSessions();
   }, [db]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadSessions();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>

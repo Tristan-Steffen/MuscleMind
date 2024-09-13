@@ -4,7 +4,7 @@ import { Session, ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { ExerciseInstanceEditor } from "./ExerciseInstanceEditor";
 import { useSQLiteContext } from "expo-sqlite";
 import { updateSession } from "@/utils/db/session";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 
 interface SessionEditorProps {
   session: Session;
@@ -17,6 +17,7 @@ export const SessionEditor: React.FC<SessionEditorProps> = ({ session }) => {
   const [exerciseInstances, setExerciseInstances] = useState<
     ExerciseInstance[] | null
   >(session.exercise_instances ? session.exercise_instances : null);
+  const [redirect, setRedirect] = useState(false);
 
   const handleSave = () => {
     const updatedSession = {
@@ -28,14 +29,13 @@ export const SessionEditor: React.FC<SessionEditorProps> = ({ session }) => {
     updateSession(db, updatedSession).then(
       () => {
         console.log("Session updated");
-        return <Redirect href="../index" />;
+        setRedirect(true);
       },
       (error) => {
         console.log(error);
       }
     );
   };
-
   const handleUpdateExerciseInstance = (
     updatedInstance: ExerciseInstance,
     index: number
@@ -48,6 +48,7 @@ export const SessionEditor: React.FC<SessionEditorProps> = ({ session }) => {
 
   return (
     <View style={styles.container}>
+      {redirect ? <Redirect href="/" /> : null}
       <TextInput
         style={styles.input}
         value={name}

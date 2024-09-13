@@ -29,7 +29,7 @@ export const SessionDisplay: React.FC<SessionDisplayProps> = ({ session }) => {
           params: { id: session.id! },
         }}
       >
-        View user
+        Edit Session
       </Link>
     </View>
   );

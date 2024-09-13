@@ -3,12 +3,16 @@ import { View, TextInput, Button, Text, StyleSheet } from "react-native";
 import { Session, ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { ExerciseInstanceBuilder } from "./ExerciseInstanceBuilder";
 import { useSession } from "@/hooks/useSession";
+import { useSQLiteContext } from "expo-sqlite";
+import { getAllExercises } from "@/utils/db/exercise";
 
 export const SessionBuilder: React.FC = () => {
+  const db = useSQLiteContext();
   const sessionHook = useSession();
   const [session, setSession] = useState<Session>(
     sessionHook.createEmptySession()
   );
+  const exercises = getAllExercises(db);
 
   const handleCreateSession = () => {
     // Implement session creation logic here

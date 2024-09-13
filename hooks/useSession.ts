@@ -22,7 +22,7 @@ export function useSession() {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
-      sessionId: null,
+      sessionId: undefined,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

@@ -66,9 +66,13 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <SQLiteProvider databaseName="fitness25.db" onInit={migrateDbIfNeeded}>
-        <Stack>
+        <Stack screenOptions={{ animation: "fade" }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          <Stack.Screen
+            name="session/[id]"
+            options={{ title: "Edit Session", headerBackTitle: "Back" }}
+          />
         </Stack>
       </SQLiteProvider>
     </ThemeProvider>
