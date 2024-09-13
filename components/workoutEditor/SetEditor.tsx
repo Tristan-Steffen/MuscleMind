@@ -1,44 +1,46 @@
-import React, { useState } from "react";
-import { View, TextInput, Button, StyleSheet } from "react-native";
+import React from "react";
+import { View, TextInput, StyleSheet } from "react-native";
 import { Set } from "@/Interfaces/sessionInterfaces";
 
 interface SetEditorProps {
   set: Set;
-  onSave: (updatedSet: Set) => void;
+  onRepsChange: (reps: string, index: number) => void;
+  onWeightChange: (weight: string, index: number) => void;
+  index: number;
 }
 
-export const SetEditor: React.FC<SetEditorProps> = ({ set, onSave }) => {
-  const [reps, setReps] = useState(set.reps.toString());
-  const [weight, setWeight] = useState(set.weight.toString());
+export const SetEditor: React.FC<SetEditorProps> = ({
+  set,
+  onRepsChange,
+  onWeightChange,
+  index,
+}) => {
+  const handleRepsChange = (reps: string) => {
+    onRepsChange(reps, index);
+  };
 
-  const handleSave = () => {
-    const updatedSet = {
-      ...set,
-      reps: parseInt(reps, 10),
-      weight: parseFloat(weight),
-    };
-    onSave(updatedSet);
+  const handleWeightChange = (weight: string) => {
+    onWeightChange(weight, index);
   };
 
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        value={reps}
-        onChangeText={setReps}
+        value={set.reps.toString()}
+        onChangeText={handleRepsChange}
         placeholder="Enter reps"
         placeholderTextColor="grey"
         keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
-        value={weight}
-        onChangeText={setWeight}
+        value={set.weight.toString()}
+        onChangeText={handleWeightChange}
         placeholder="Enter weight"
         placeholderTextColor="grey"
         keyboardType="numeric"
       />
-      <Button title="Save Set" onPress={handleSave} />
     </View>
   );
 };

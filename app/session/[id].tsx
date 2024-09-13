@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { getSession } from "@/utils/db/session";
@@ -23,22 +23,25 @@ export default function EditSessionPage() {
 
   return (
     <View style={styles.container}>
-      {session ? <SessionEditor session={session}></SessionEditor> : null}
+      <ScrollView
+        style={styles.scrollable}
+        showsVerticalScrollIndicator={false}
+      >
+        {session ? <SessionEditor session={session}></SessionEditor> : null}
+        <View style={styles.bottomSpacer} />
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#f8f8f8",
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+  scrollable: { width: "100%", paddingHorizontal: 60, display: "flex" },
+  bottomSpacer: {
+    height: 60, // Adjust the height to your needs
   },
 });

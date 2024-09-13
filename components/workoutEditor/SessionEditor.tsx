@@ -23,7 +23,7 @@ export const SessionEditor: React.FC<SessionEditorProps> = ({ session }) => {
       ...session,
       name,
       description,
-      exercise_instances: { data: exerciseInstances! },
+      exercise_instances: exerciseInstances!,
     };
     updateSession(db, updatedSession).then(
       () => {
@@ -40,6 +40,7 @@ export const SessionEditor: React.FC<SessionEditorProps> = ({ session }) => {
     updatedInstance: ExerciseInstance,
     index: number
   ) => {
+    console.log(updatedInstance);
     const updatedInstances = [...exerciseInstances!];
     updatedInstances[index] = updatedInstance;
     setExerciseInstances(updatedInstances);
@@ -67,7 +68,7 @@ export const SessionEditor: React.FC<SessionEditorProps> = ({ session }) => {
           <ExerciseInstanceEditor
             key={index}
             exerciseInstance={instance}
-            onSave={(updatedInstance) =>
+            onInstanceChange={(updatedInstance) =>
               handleUpdateExerciseInstance(updatedInstance, index)
             }
           />
@@ -76,7 +77,7 @@ export const SessionEditor: React.FC<SessionEditorProps> = ({ session }) => {
         <Text>No exercise instances</Text>
       )}
 
-      <Button title="Save Session" onPress={handleSave} />
+      <Button title="Update Session" onPress={handleSave} />
     </View>
   );
 };

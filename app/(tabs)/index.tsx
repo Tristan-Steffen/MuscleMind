@@ -5,8 +5,6 @@ import { SessionDisplay } from "@/components/workoutDisplay/SessionDisplay";
 import { useSQLiteContext } from "expo-sqlite";
 import { getAllPopulatedSessions } from "@/utils/db/session";
 import { Session } from "@/Interfaces/sessionInterfaces";
-import { getAllExerciseInstances } from "@/utils/db/exerciseInstance";
-import { getAllSets } from "@/utils/db/set";
 
 export default function HomeScreen() {
   const db = useSQLiteContext();
@@ -15,14 +13,8 @@ export default function HomeScreen() {
   useEffect(() => {
     async function loadSessions() {
       if (db) {
-        console.log("start loading sessions");
         const allSessions = await getAllPopulatedSessions(db);
         setSessions(allSessions);
-        console.log("allSessions", allSessions);
-        const instances = await getAllExerciseInstances(db);
-        console.log("instances", instances);
-        const sets = await getAllSets(db);
-        console.log("sets", sets);
       }
     }
 
@@ -42,6 +34,7 @@ export default function HomeScreen() {
         ) : (
           <Text style={styles.title}>No sessions available</Text>
         )}
+        <View style={styles.bottomSpacer} />
       </ScrollView>
     </View>
   );
@@ -49,11 +42,13 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
-  scrollable: { width: "100%", padding: 60 },
+  scrollable: {
+    width: "100%",
+    padding: 60,
+  },
   title: {
     fontSize: 20,
     fontWeight: "bold",
@@ -62,5 +57,8 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: "80%",
+  },
+  bottomSpacer: {
+    height: 60, // Adjust the height to your needs
   },
 });

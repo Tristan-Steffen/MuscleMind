@@ -43,12 +43,7 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    color: "black",
-  },
+  container: {},
   scrollable: { width: "100%", padding: 60 },
   title: {
     fontSize: 20,

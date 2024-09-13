@@ -63,18 +63,27 @@ export async function deleteExercise(
 export async function getExerciseById(
   db: SQLiteDatabase,
   id: number
-): Promise<Exercise | undefined> {
+): Promise<Exercise | null> {
   console.log("Getting exercise by id", id);
-  const result = await db.getAllAsync<Exercise>(
+  const exercise = await db.getFirstAsync<Exercise>(
     "SELECT * FROM exercises WHERE id = $id",
     {
       $id: id,
     }
   );
+  exercise!.createdAt = new Date(exercise!.createdAt);
+  exercise!.updatedAt = new Date(exercise!.updatedAt);
 
-  return result[0]; // Return the exercise found, if any
+  return exercise;
 }
 
 export async function getAllExercises(db: SQLiteDatabase): Promise<Exercise[]> {
-  return db.getAllSync<Exercise>("SELECT * FROM exercises");
+  const exercises = db.getAllSync<Exercise>("SELECT * FROM exercises");
+
+  for (let i = 0; i < exercises.length; i++) {
+    exercises[i].createdAt = new Date(exercises[i].createdAt);
+    exercises[i].updatedAt = new Date(exercises[i].updatedAt);
+  }
+
+  return exercises;
 }

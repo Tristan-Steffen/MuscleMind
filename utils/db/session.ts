@@ -1,4 +1,7 @@
-import { getExerciseInstancesForSession } from "./exerciseInstance";
+import {
+  getExerciseInstancesForSession,
+  updateExerciseInstance,
+} from "./exerciseInstance";
 import { Session } from "@/Interfaces/sessionInterfaces";
 import { SQLiteDatabase } from "expo-sqlite";
 import { addExerciseInstance } from "./exerciseInstance";
@@ -60,11 +63,25 @@ export async function updateSession(
       $date: session.date.toISOString(),
       $isPreset: session.isPreset ? 1 : 0,
       $createdAt: session.createdAt.toISOString(),
-      $updatedAt: session.updatedAt.toISOString(),
+      $updatedAt: Date.now().toString(),
       $id: session.id,
     });
   } finally {
     await statement.finalizeAsync();
+  }
+
+  for (const exerciseInstance of session.exercise_instances) {
+    if (exerciseInstance.id) {
+      await updateExerciseInstance(
+        db,
+        exerciseInstance,
+        session.id,
+        exerciseInstance.exercise.id!
+      );
+    } else {
+      exerciseInstance.sessionId = session.id;
+      await addExerciseInstance(db, exerciseInstance);
+    }
   }
 }
 
@@ -89,14 +106,17 @@ export async function getAllPopulatedSessions(
   const sessions = await db.getAllAsync<Session>("SELECT * FROM sessions");
 
   for (let i = 0; i < sessions.length; i++) {
-    console.log("looping through sessions", i);
+    // Convert string dates to Date objects
+    sessions[i].date = new Date(sessions[i].date);
+    sessions[i].createdAt = new Date(sessions[i].createdAt);
+    sessions[i].updatedAt = new Date(sessions[i].updatedAt);
+
     sessions[i].exercise_instances = await getExerciseInstancesForSession(
       db,
       sessions[i].id!
     );
   }
 
-  console.log("returning sessions", sessions);
   return sessions;
 }
 
@@ -113,6 +133,12 @@ export async function getSession(
 
   if (result.length > 0) {
     const session = result[0];
+
+    // Convert string dates to Date objects
+    session.date = new Date(session.date);
+    session.createdAt = new Date(session.createdAt);
+    session.updatedAt = new Date(session.updatedAt);
+
     session.exercise_instances = await getExerciseInstancesForSession(
       db,
       session.id!

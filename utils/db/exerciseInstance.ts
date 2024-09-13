@@ -2,6 +2,7 @@ import { Exercise, ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { SQLiteDatabase } from "expo-sqlite";
 import { Set } from "@/Interfaces/sessionInterfaces";
 import { getExerciseById } from "./exercise";
+import { updateSet, addSet } from "./set";
 
 export async function addExerciseInstance(
   db: SQLiteDatabase,
@@ -14,7 +15,7 @@ export async function addExerciseInstance(
   try {
     const result = await statement.executeAsync({
       $exerciseId: exerciseInstance.exercise.id!,
-      $sessionId: exerciseInstance.sessionId,
+      $sessionId: exerciseInstance.sessionId!,
       $createdAt: exerciseInstance.createdAt.toISOString(),
       $updatedAt: exerciseInstance.updatedAt.toISOString(),
     });
@@ -51,6 +52,15 @@ export async function updateExerciseInstance(
   } finally {
     await statement.finalizeAsync();
   }
+
+  for (const set of exerciseInstance.sets) {
+    if (set.id) {
+      await updateSet(db, set);
+    } else {
+      set.exerciseInstanceId = exerciseInstance.id!;
+      await addSet(db, set);
+    }
+  }
 }
 
 export async function deleteExerciseInstance(
@@ -80,6 +90,8 @@ export async function getExerciseInstancesForSession(
   );
 
   for (const exerciseInstance of exerciseInstances) {
+    exerciseInstance.createdAt = new Date(exerciseInstance.createdAt);
+    exerciseInstance.updatedAt = new Date(exerciseInstance.updatedAt);
     exerciseInstance.sets = await getSetsForExerciseInstance(
       db,
       exerciseInstance.id!
@@ -110,7 +122,13 @@ async function getSetsForExerciseInstance(
 export async function getAllExerciseInstances(
   db: SQLiteDatabase
 ): Promise<ExerciseInstance[]> {
-  return await db.getAllSync<ExerciseInstance>(
+  const instaces = await db.getAllSync<ExerciseInstance>(
     "SELECT * FROM exerciseInstances"
   );
+
+  for (let i = 0; i < instaces.length; i++) {
+    instaces[i].createdAt = new Date(instaces[i].createdAt);
+    instaces[i].updatedAt = new Date(instaces[i].updatedAt);
+  }
+  return instaces;
 }
