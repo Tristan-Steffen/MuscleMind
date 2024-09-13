@@ -1,17 +1,26 @@
 import React from "react";
-import { View, TextInput, Button, Text, StyleSheet } from "react-native";
+import { Image } from "expo-image";
+import {
+  View,
+  TextInput,
+  Button,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { ExerciseInstance, Set } from "@/Interfaces/sessionInterfaces";
 import { SetBuilder } from "./SetBuilder";
 import { useSession } from "@/hooks/useSession";
 
 interface ExerciseInstanceBuilderProps {
   exerciseInstance: ExerciseInstance;
+  key: number;
   onUpdate: (updatedInstance: ExerciseInstance) => void;
 }
 
 export const ExerciseInstanceBuilder: React.FC<
   ExerciseInstanceBuilderProps
-> = ({ exerciseInstance, onUpdate }) => {
+> = ({ exerciseInstance, onUpdate, key }) => {
   const setExerciseName = (text: string): void => {
     const updatedInstance = {
       ...exerciseInstance,
@@ -55,26 +64,32 @@ export const ExerciseInstanceBuilder: React.FC<
     onUpdate(updatedInstance);
   };
 
+  const handleDelete = (): void => {
+    console.log("Delete exercise instance");
+  };
+
   return (
     <View style={styles.tile}>
-      <Text style={styles.title}>Exercise Instance</Text>
-      <TextInput
-        style={styles.input}
-        value={exerciseInstance.exercise.name}
-        onChangeText={setExerciseName}
-        placeholder="Enter exercise name"
-        placeholderTextColor={"grey"}
-      />
-      <TextInput
-        style={styles.input}
-        value={exerciseInstance.exercise.description}
-        onChangeText={setDescription}
-        placeholder="Enter description"
-        placeholderTextColor={"grey"}
-      />
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text style={styles.title}>{exerciseInstance.exercise.name}</Text>
+        <TouchableOpacity onPress={handleDelete}>
+          <Image
+            source={require("../../assets/images/delete.png")}
+            style={{ width: 20, height: 20 }}
+          />
+        </TouchableOpacity>
+      </View>
+      <Text>{exerciseInstance.exercise.description}</Text>
       {exerciseInstance.sets.map((set, index) => (
         <SetBuilder
           key={index}
+          index={index}
           set={set}
           onUpdate={(updatedSet) => updateSet(updatedSet, index)}
         />

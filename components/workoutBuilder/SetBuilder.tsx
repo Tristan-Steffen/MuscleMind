@@ -4,15 +4,19 @@ import { Set } from "@/Interfaces/sessionInterfaces";
 
 interface SetBuilderProps {
   set: Set;
+  index: number;
   onUpdate: (updatedSet: Set) => void;
 }
 
-export const SetBuilder: React.FC<SetBuilderProps> = ({ set, onUpdate }) => {
+export const SetBuilder: React.FC<SetBuilderProps> = ({
+  set,
+  onUpdate,
+  index,
+}) => {
   const updateReps = (text: string) => {
     const updatedSet = { ...set, reps: parseInt(text) || 0 };
     onUpdate(updatedSet);
   };
-
   const updateWeight = (text: string) => {
     const updatedSet = { ...set, weight: parseInt(text) || 0 };
     onUpdate(updatedSet);
@@ -22,10 +26,9 @@ export const SetBuilder: React.FC<SetBuilderProps> = ({ set, onUpdate }) => {
     const updatedSet = { ...set, rest: parseInt(text) || 0 };
     onUpdate(updatedSet);
   };
-
   return (
     <View style={styles.tile}>
-      <Text style={styles.title}>Add Set</Text>
+      <Text style={styles.title}>Set Nr: {index + 1}</Text>
       <TextInput
         style={styles.input}
         value={set.reps ? set.reps.toString() : ""}
