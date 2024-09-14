@@ -64,7 +64,6 @@ export async function getExerciseById(
   db: SQLiteDatabase,
   id: number
 ): Promise<Exercise | null> {
-  console.log("Getting exercise by id", id);
   const exercise = await db.getFirstAsync<Exercise>(
     "SELECT * FROM exercises WHERE id = $id",
     {

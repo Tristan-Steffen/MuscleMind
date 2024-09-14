@@ -27,7 +27,7 @@ export const SetEditor: React.FC<SetEditorProps> = ({
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        value={set.reps.toString()}
+        value={set.reps != null ? set.reps!.toString() : ""}
         onChangeText={handleRepsChange}
         placeholder="Enter reps"
         placeholderTextColor="grey"
@@ -35,7 +35,7 @@ export const SetEditor: React.FC<SetEditorProps> = ({
       />
       <TextInput
         style={styles.input}
-        value={set.weight.toString()}
+        value={set.weight != null ? set.weight!.toString() : ""}
         onChangeText={handleWeightChange}
         placeholder="Enter weight"
         placeholderTextColor="grey"

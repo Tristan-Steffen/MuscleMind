@@ -1,7 +1,7 @@
 export interface Set {
   id?: number;
-  reps: number;
-  weight: number;
+  reps: number | null;
+  weight: number | null;
   rest: number | null;
   exerciseInstanceId: number | null;
 }

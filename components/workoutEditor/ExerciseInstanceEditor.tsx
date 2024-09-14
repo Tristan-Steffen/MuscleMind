@@ -18,7 +18,7 @@ export const ExerciseInstanceEditor: React.FC<ExerciseInstanceEditorProps> = ({
     const updatedInstance = instance;
     updatedInstance.sets[index] = {
       ...updatedInstance.sets[index],
-      reps: parseInt(reps, 10),
+      reps: reps ? parseInt(reps, 10) : null,
     };
     setInstance(updatedInstance);
     onInstanceChange(exerciseInstance);
@@ -28,7 +28,7 @@ export const ExerciseInstanceEditor: React.FC<ExerciseInstanceEditorProps> = ({
     const updatedWeightInstance = instance;
     updatedWeightInstance.sets[index] = {
       ...updatedWeightInstance.sets[index],
-      weight: parseFloat(weight),
+      weight: weight ? parseFloat(weight) : null,
     };
     setInstance(updatedWeightInstance);
     onInstanceChange(exerciseInstance);

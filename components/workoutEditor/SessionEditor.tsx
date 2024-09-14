@@ -40,7 +40,6 @@ export const SessionEditor: React.FC<SessionEditorProps> = ({ session }) => {
     updatedInstance: ExerciseInstance,
     index: number
   ) => {
-    console.log(updatedInstance);
     const updatedInstances = [...exerciseInstances!];
     updatedInstances[index] = updatedInstance;
     setExerciseInstances(updatedInstances);
