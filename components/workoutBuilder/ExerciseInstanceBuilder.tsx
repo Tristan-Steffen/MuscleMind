@@ -1,48 +1,19 @@
 import React from "react";
 import { Image } from "expo-image";
-import {
-  View,
-  TextInput,
-  Button,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Button, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { ExerciseInstance, Set } from "@/Interfaces/sessionInterfaces";
 import { SetBuilder } from "./SetBuilder";
 import { useSession } from "@/hooks/useSession";
 
 interface ExerciseInstanceBuilderProps {
   exerciseInstance: ExerciseInstance;
-  key: number;
   onUpdate: (updatedInstance: ExerciseInstance) => void;
+  onDelete: () => void;
 }
 
 export const ExerciseInstanceBuilder: React.FC<
   ExerciseInstanceBuilderProps
-> = ({ exerciseInstance, onUpdate, key }) => {
-  const setExerciseName = (text: string): void => {
-    const updatedInstance = {
-      ...exerciseInstance,
-      exercise: {
-        ...exerciseInstance.exercise,
-        data: { ...exerciseInstance.exercise, name: text },
-      },
-    };
-    onUpdate(updatedInstance);
-  };
-
-  const setDescription = (text: string): void => {
-    const updatedInstance = {
-      ...exerciseInstance,
-      exercise: {
-        ...exerciseInstance.exercise,
-        data: { ...exerciseInstance.exercise, description: text },
-      },
-    };
-    onUpdate(updatedInstance);
-  };
-
+> = ({ exerciseInstance, onUpdate, onDelete }) => {
   const handleAddSet = (): void => {
     const newSet = useSession().createEmptySet();
     const updatedInstance = {
@@ -66,6 +37,22 @@ export const ExerciseInstanceBuilder: React.FC<
 
   const handleDelete = (): void => {
     console.log("Delete exercise instance");
+    onDelete();
+  };
+
+  const handleDeleteSet = (setIndex: number): void => {
+    const updatedSets = [];
+
+    for (let i = 0; i < exerciseInstance.sets.length; i++) {
+      if (i !== setIndex) {
+        updatedSets.push(exerciseInstance.sets[i]);
+      }
+    }
+    const updatedInstance = {
+      ...exerciseInstance,
+      sets: updatedSets,
+    };
+    onUpdate(updatedInstance);
   };
 
   return (
@@ -92,6 +79,7 @@ export const ExerciseInstanceBuilder: React.FC<
           index={index}
           set={set}
           onUpdate={(updatedSet) => updateSet(updatedSet, index)}
+          onDelete={() => handleDeleteSet(index)}
         />
       ))}
 

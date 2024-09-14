@@ -19,7 +19,6 @@ export const SessionBuilder: React.FC = () => {
   );
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [showDropdown, setShowDropdown] = useState(false); // State to control dropdown visibility
-  const [selectedExerciseId, setSelectedExerciseId] = useState<number>(0);
 
   useEffect(() => {
     const loadExercises = async () => {
@@ -81,6 +80,22 @@ export const SessionBuilder: React.FC = () => {
     });
   };
 
+  const handleDeleteExerciseInstance = (index: number) => {
+    setSession((prevSession) => {
+      const updatedInstances: ExerciseInstance[] = [];
+      for (let i = 0; i < prevSession.exercise_instances.length; i++) {
+        if (i !== index) {
+          updatedInstances.push(prevSession.exercise_instances[i]);
+        }
+      }
+
+      return {
+        ...prevSession,
+        exercise_instances: updatedInstances,
+      };
+    });
+  };
+
   return (
     <View style={styles.tile}>
       <Text style={styles.title}>Session Builder</Text>
@@ -106,6 +121,7 @@ export const SessionBuilder: React.FC = () => {
           onUpdate={(updatedInstance) =>
             handleUpdateExerciseInstance(updatedInstance, index)
           }
+          onDelete={() => handleDeleteExerciseInstance(index)}
         />
       ))}
 
@@ -119,10 +135,6 @@ export const SessionBuilder: React.FC = () => {
           labelField="label"
           valueField="value"
           placeholder="Select exercise"
-          value={
-            exercises.find((exercise) => exercise.id === selectedExerciseId)
-              ?.name
-          }
           onChange={(item) => handleSelectExercise(item.value!)}
         />
       )}
