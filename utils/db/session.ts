@@ -1,11 +1,12 @@
 import {
+  deleteExerciseInstance,
   getExerciseInstancesForSession,
   updateExerciseInstance,
 } from "./exerciseInstance";
-import { Session } from "@/Interfaces/sessionInterfaces";
+import { ExerciseInstance, Session } from "@/Interfaces/sessionInterfaces";
 import { SQLiteDatabase } from "expo-sqlite";
 import { addExerciseInstance } from "./exerciseInstance";
-import { addSet } from "./set";
+import { addSet, deleteSet } from "./set";
 
 export async function addSession(
   db: SQLiteDatabase,
@@ -48,6 +49,7 @@ export async function addSession(
 
 export async function updateSession(
   db: SQLiteDatabase,
+  oldSession: Session,
   session: Session
 ): Promise<void> {
   if (!session.id) throw new Error("Session ID is required");
@@ -70,6 +72,24 @@ export async function updateSession(
     await statement.finalizeAsync();
   }
 
+  // Create a map of old exercise instances for easier comparison, converting IDs to strings
+  const oldExerciseInstanceMap = new Map<string, ExerciseInstance>(
+    oldSession.exercise_instances.map((ei) => [String(ei.id!), ei])
+  );
+
+  // Track IDs of the exercise instances in the new session, also converting to strings
+  const newExerciseInstanceIds = new Set<string>(
+    session.exercise_instances.map((ei) => String(ei.id!))
+  );
+
+  // Delete exercise instances not present in the new session
+  for (const [id, oldExerciseInstance] of oldExerciseInstanceMap) {
+    if (!newExerciseInstanceIds.has(id)) {
+      await deleteExerciseInstance(db, Number(id)); // This deletes the exercise instance and its associated sets
+    }
+  }
+
+  // Update or add exercise instances in the new session
   for (const exerciseInstance of session.exercise_instances) {
     if (exerciseInstance.id) {
       await updateExerciseInstance(

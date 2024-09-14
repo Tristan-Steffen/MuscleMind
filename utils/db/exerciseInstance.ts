@@ -2,7 +2,7 @@ import { Exercise, ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { SQLiteDatabase } from "expo-sqlite";
 import { Set } from "@/Interfaces/sessionInterfaces";
 import { getExerciseById } from "./exercise";
-import { updateSet, addSet } from "./set";
+import { updateSet, addSet, deleteSet } from "./set";
 
 export async function addExerciseInstance(
   db: SQLiteDatabase,
@@ -20,6 +20,8 @@ export async function addExerciseInstance(
       $updatedAt: exerciseInstance.updatedAt.toISOString(),
     });
 
+    exerciseInstance.id = result.lastInsertRowId;
+    updateSetsForExerciseInstance(db, exerciseInstance);
     return result.lastInsertRowId;
   } catch (error) {
     console.log(error);
@@ -52,15 +54,7 @@ export async function updateExerciseInstance(
   } finally {
     await statement.finalizeAsync();
   }
-
-  for (const set of exerciseInstance.sets) {
-    if (set.id) {
-      await updateSet(db, set);
-    } else {
-      set.exerciseInstanceId = exerciseInstance.id!;
-      await addSet(db, set);
-    }
-  }
+  updateSetsForExerciseInstance(db, exerciseInstance);
 }
 
 export async function deleteExerciseInstance(
@@ -107,18 +101,6 @@ export async function getExerciseInstancesForSession(
   return exerciseInstances;
 }
 
-async function getSetsForExerciseInstance(
-  db: SQLiteDatabase,
-  exerciseInstanceId: number
-): Promise<Set[]> {
-  return await db.getAllSync<Set>(
-    "SELECT * FROM sets WHERE exerciseInstanceId = $exerciseInstanceId",
-    {
-      $exerciseInstanceId: exerciseInstanceId,
-    }
-  );
-}
-
 export async function getAllExerciseInstances(
   db: SQLiteDatabase
 ): Promise<ExerciseInstance[]> {
@@ -131,4 +113,42 @@ export async function getAllExerciseInstances(
     instaces[i].updatedAt = new Date(instaces[i].updatedAt);
   }
   return instaces;
+}
+
+async function getSetsForExerciseInstance(
+  db: SQLiteDatabase,
+  exerciseInstanceId: number
+): Promise<Set[]> {
+  return await db.getAllSync<Set>(
+    "SELECT * FROM sets WHERE exerciseInstanceId = $exerciseInstanceId",
+    {
+      $exerciseInstanceId: exerciseInstanceId,
+    }
+  );
+}
+
+async function updateSetsForExerciseInstance(
+  db: SQLiteDatabase,
+  exerciseInstance: ExerciseInstance
+): Promise<void> {
+  const existingSets: Set[] = await getSetsForExerciseInstance(
+    db,
+    exerciseInstance.id!
+  );
+
+  // Delete sets that are no longer in the exercise instance
+  for (const set of existingSets) {
+    if (!exerciseInstance.sets.some((s) => s.id === set.id)) {
+      await deleteSet(db, set.id!);
+    }
+  }
+
+  for (const set of exerciseInstance.sets) {
+    if (set.id) {
+      await updateSet(db, set);
+    } else {
+      set.exerciseInstanceId = exerciseInstance.id!;
+      await addSet(db, set);
+    }
+  }
 }

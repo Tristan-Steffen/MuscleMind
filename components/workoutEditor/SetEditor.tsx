@@ -1,11 +1,19 @@
 import React from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import { Set } from "@/Interfaces/sessionInterfaces";
+import { Image } from "expo-image";
 
 interface SetEditorProps {
   set: Set;
   onRepsChange: (reps: string, index: number) => void;
   onWeightChange: (weight: string, index: number) => void;
+  onDelete: () => void;
   index: number;
 }
 
@@ -13,6 +21,7 @@ export const SetEditor: React.FC<SetEditorProps> = ({
   set,
   onRepsChange,
   onWeightChange,
+  onDelete,
   index,
 }) => {
   const handleRepsChange = (reps: string) => {
@@ -23,8 +32,28 @@ export const SetEditor: React.FC<SetEditorProps> = ({
     onWeightChange(weight, index);
   };
 
+  const handleDelete = () => {
+    onDelete();
+  };
+
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginBottom: 10,
+        }}
+      >
+        <Text>Set Nr: {index + 1}</Text>
+        <TouchableOpacity onPress={handleDelete}>
+          <Image
+            source={require("../../assets/images/delete.png")}
+            style={{ width: 20, height: 20 }}
+          />
+        </TouchableOpacity>
+      </View>
       <TextInput
         style={styles.input}
         value={set.reps != null ? set.reps!.toString() : ""}

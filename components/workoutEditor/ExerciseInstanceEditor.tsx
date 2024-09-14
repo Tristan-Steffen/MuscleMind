@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native";
 import { ExerciseInstance, Set } from "@/Interfaces/sessionInterfaces";
 import { SetEditor } from "./SetEditor";
+import { useSession } from "@/hooks/useSession";
 
 interface ExerciseInstanceEditorProps {
   exerciseInstance: ExerciseInstance;
@@ -12,25 +13,34 @@ export const ExerciseInstanceEditor: React.FC<ExerciseInstanceEditorProps> = ({
   exerciseInstance,
   onInstanceChange,
 }) => {
-  const [instance, setInstance] = useState<ExerciseInstance>(exerciseInstance);
-
+  const sessionHook = useSession();
   const handleRepsChange = (reps: string, index: number) => {
-    const updatedInstance = instance;
+    const updatedInstance = exerciseInstance;
     updatedInstance.sets[index] = {
       ...updatedInstance.sets[index],
       reps: reps ? parseInt(reps, 10) : null,
     };
-    setInstance(updatedInstance);
     onInstanceChange(exerciseInstance);
   };
 
   const handleWeightChange = (weight: string, index: number) => {
-    const updatedWeightInstance = instance;
+    const updatedWeightInstance = exerciseInstance;
     updatedWeightInstance.sets[index] = {
       ...updatedWeightInstance.sets[index],
       weight: weight ? parseFloat(weight) : null,
     };
-    setInstance(updatedWeightInstance);
+    onInstanceChange(exerciseInstance);
+  };
+
+  const handleDelete = (index: number) => () => {
+    const updatedInstance = exerciseInstance;
+    updatedInstance.sets.splice(index, 1);
+    onInstanceChange(exerciseInstance);
+  };
+
+  const handleAddSet = () => {
+    const updatedInstance = exerciseInstance;
+    updatedInstance.sets.push(sessionHook.createEmptySet());
     onInstanceChange(exerciseInstance);
   };
 
@@ -38,15 +48,17 @@ export const ExerciseInstanceEditor: React.FC<ExerciseInstanceEditorProps> = ({
     <View style={styles.container}>
       <Text style={styles.text}>{exerciseInstance.exercise.name}</Text>
       <Text style={styles.text}>{exerciseInstance.exercise.description}</Text>
-      {instance.sets.map((set, index) => (
+      {exerciseInstance.sets.map((set, index) => (
         <SetEditor
           key={index}
           set={set}
           index={index}
           onRepsChange={handleRepsChange}
           onWeightChange={handleWeightChange}
+          onDelete={handleDelete(index)}
         />
       ))}
+      <Button title="Add Set" onPress={handleAddSet} />
     </View>
   );
 };
