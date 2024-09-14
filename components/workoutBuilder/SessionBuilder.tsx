@@ -10,6 +10,8 @@ import { useSession } from "@/hooks/useSession";
 import { useSQLiteContext } from "expo-sqlite";
 import { getAllExercises } from "@/utils/db/exercise";
 import { Dropdown } from "react-native-element-dropdown"; // New dropdown library
+import { addSession } from "@/utils/db/session";
+import { Redirect } from "expo-router";
 
 export const SessionBuilder: React.FC = () => {
   const db = useSQLiteContext();
@@ -18,7 +20,8 @@ export const SessionBuilder: React.FC = () => {
     sessionHook.createEmptySession()
   );
   const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [showDropdown, setShowDropdown] = useState(false); // State to control dropdown visibility
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
     const loadExercises = async () => {
@@ -29,7 +32,17 @@ export const SessionBuilder: React.FC = () => {
   }, [db]);
 
   const handleCreateSession = () => {
-    // Implement session creation logic here
+    const saveSession = async () => {
+      try {
+        await addSession(db, session);
+      } catch (error) {
+        console.error("Failed to create session", error);
+      } finally {
+        console.log("Create session", session);
+        setRedirect(true);
+      }
+    };
+    saveSession();
   };
 
   const handleChangeName = (name: string) => {
@@ -98,6 +111,7 @@ export const SessionBuilder: React.FC = () => {
 
   return (
     <View style={styles.tile}>
+      {redirect ? <Redirect href="/" /> : null}
       <Text style={styles.title}>Session Builder</Text>
       <TextInput
         style={styles.input}
