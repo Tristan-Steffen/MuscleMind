@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView } from "react-native";
 import { Text, View } from "@/components/Themed";
 import { SessionDisplay } from "@/components/workoutDisplay/SessionDisplay";
 import { useSQLiteContext } from "expo-sqlite";
-import { getAllPopulatedSessions } from "@/utils/db/session";
+import { deleteSession, getAllPopulatedSessions } from "@/utils/db/session";
 import { Session } from "@/Interfaces/sessionInterfaces";
 import { useFocusEffect } from "expo-router";
 
@@ -27,6 +27,14 @@ export default function HomeScreen() {
     }, [])
   );
 
+  const onDeleteSession = (id: number) => {
+    if (db) {
+      deleteSession(db, id).then(() => {
+        loadSessions();
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -35,7 +43,11 @@ export default function HomeScreen() {
       >
         {sessions && sessions.length > 1 ? (
           sessions.map((session) => (
-            <SessionDisplay key={session.id} session={session} />
+            <SessionDisplay
+              key={session.id}
+              session={session}
+              onDelete={(id: number) => onDeleteSession(id)}
+            />
           ))
         ) : (
           <Text style={styles.title}>No sessions available</Text>

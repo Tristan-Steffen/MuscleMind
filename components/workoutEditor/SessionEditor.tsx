@@ -64,6 +64,12 @@ export const SessionEditor: React.FC<SessionEditorProps> = ({ session }) => {
     setExerciseInstances(updatedInstances);
   };
 
+  const handleDeleteExerciseInstance = (index: number) => {
+    const updatedInstances = [...exerciseInstances!];
+    updatedInstances.splice(index, 1);
+    setExerciseInstances(updatedInstances);
+  };
+
   const handleAddExerciseInstance = () => {
     setShowDropdown(true);
   };
@@ -110,6 +116,9 @@ export const SessionEditor: React.FC<SessionEditorProps> = ({ session }) => {
             onInstanceChange={(updatedInstance) =>
               handleUpdateExerciseInstance(updatedInstance, index)
             }
+            onInstanceDelete={() => {
+              handleDeleteExerciseInstance(index);
+            }}
           />
         ))
       ) : (

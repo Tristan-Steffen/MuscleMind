@@ -1,17 +1,20 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
 import { ExerciseInstance, Set } from "@/Interfaces/sessionInterfaces";
 import { SetEditor } from "./SetEditor";
 import { useSession } from "@/hooks/useSession";
+import { Image } from "expo-image";
 
 interface ExerciseInstanceEditorProps {
   exerciseInstance: ExerciseInstance;
   onInstanceChange: (exerciseInstance: ExerciseInstance) => void;
+  onInstanceDelete: () => void;
 }
 
 export const ExerciseInstanceEditor: React.FC<ExerciseInstanceEditorProps> = ({
   exerciseInstance,
   onInstanceChange,
+  onInstanceDelete,
 }) => {
   const sessionHook = useSession();
   const handleRepsChange = (reps: string, index: number) => {
@@ -32,21 +35,39 @@ export const ExerciseInstanceEditor: React.FC<ExerciseInstanceEditorProps> = ({
     onInstanceChange(exerciseInstance);
   };
 
-  const handleDelete = (index: number) => () => {
-    const updatedInstance = exerciseInstance;
-    updatedInstance.sets.splice(index, 1);
-    onInstanceChange(exerciseInstance);
-  };
-
   const handleAddSet = () => {
     const updatedInstance = exerciseInstance;
     updatedInstance.sets.push(sessionHook.createEmptySet());
     onInstanceChange(exerciseInstance);
   };
 
+  const handleDeleteSet = (index: number) => () => {
+    const updatedInstance = exerciseInstance;
+    updatedInstance.sets.splice(index, 1);
+    onInstanceChange(exerciseInstance);
+  };
+
+  const handleDelete = () => {
+    onInstanceDelete();
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{exerciseInstance.exercise.name}</Text>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text style={styles.text}>{exerciseInstance.exercise.name}</Text>
+        <TouchableOpacity onPress={handleDelete}>
+          <Image
+            source={require("../../assets/images/delete.png")}
+            style={{ width: 20, height: 20 }}
+          />
+        </TouchableOpacity>
+      </View>
       <Text style={styles.text}>{exerciseInstance.exercise.description}</Text>
       {exerciseInstance.sets.map((set, index) => (
         <SetEditor
@@ -55,7 +76,7 @@ export const ExerciseInstanceEditor: React.FC<ExerciseInstanceEditorProps> = ({
           index={index}
           onRepsChange={handleRepsChange}
           onWeightChange={handleWeightChange}
-          onDelete={handleDelete(index)}
+          onDelete={handleDeleteSet(index)}
         />
       ))}
       <Button title="Add Set" onPress={handleAddSet} />
