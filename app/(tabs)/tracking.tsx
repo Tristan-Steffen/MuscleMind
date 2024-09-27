@@ -1,28 +1,39 @@
+import React, { useEffect, useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
-
 import { Text, View } from "@/components/Themed";
-import { Exercise } from "@/Interfaces/sessionInterfaces";
-import { useEffect, useState } from "react";
-import { useSQLiteContext } from "expo-sqlite/build/hooks";
-import { getAllExercises } from "@/utils/db/exercise";
-import { SessionBuilder } from "@/components/workoutBuilder/SessionBuilder";
+import { SessionDisplay } from "@/components/workoutDisplay/SessionDisplay";
+import { useSQLiteContext } from "expo-sqlite";
+import { deleteSession, getAllPopulatedSessions } from "@/utils/db/session";
+import { Session } from "@/Interfaces/sessionInterfaces";
+import { useFocusEffect } from "expo-router";
 
-export default function TabTwoScreen() {
+export default function HomeScreen() {
   const db = useSQLiteContext();
-  const [exercises, setExercises] = useState<Exercise[] | null>(null);
+  const [sessions, setSessions] = useState<Session[] | null>(null);
+  async function loadSessions() {
+    if (db) {
+      const allSessions = await getAllPopulatedSessions(db);
+      setSessions(allSessions);
+    }
+  }
 
   useEffect(() => {
-    async function fetchExercise() {
-      try {
-        const e = await getAllExercises(db);
-        setExercises(e || null);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    fetchExercise();
+    loadSessions();
   }, [db]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadSessions();
+    }, [])
+  );
+
+  const onDeleteSession = (id: number) => {
+    if (db) {
+      deleteSession(db, id).then(() => {
+        loadSessions();
+      });
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -30,17 +41,32 @@ export default function TabTwoScreen() {
         style={styles.scrollable}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Workouts</Text>
-        <SessionBuilder />
-        <View style={styles.separator} />
+        {sessions && sessions.length > 1 ? (
+          sessions.map((session) => (
+            <SessionDisplay
+              key={session.id}
+              session={session}
+              onDelete={(id: number) => onDeleteSession(id)}
+            />
+          ))
+        ) : (
+          <Text style={styles.title}>No sessions available</Text>
+        )}
+        <View style={styles.bottomSpacer} />
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {},
-  scrollable: { width: "100%", padding: 60 },
+  container: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  scrollable: {
+    width: "100%",
+    padding: 60,
+  },
   title: {
     fontSize: 20,
     fontWeight: "bold",
@@ -49,5 +75,8 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: "80%",
+  },
+  bottomSpacer: {
+    height: 60, // Adjust the height to your needs
   },
 });

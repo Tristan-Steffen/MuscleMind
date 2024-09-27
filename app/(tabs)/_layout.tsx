@@ -26,9 +26,7 @@ export default function TabLayout() {
           name="profile"
           options={{
             title: "Profile",
-            tabBarIcon: ({ color }) => (
-              <TabBarIcon name="apple" color={color} />
-            ),
+            tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
           }}
         />
         <Tabs.Screen
@@ -36,7 +34,7 @@ export default function TabLayout() {
           options={{
             title: "Statistics",
             tabBarIcon: ({ color }) => (
-              <TabBarIcon name="apple" color={color} />
+              <TabBarIcon name="bar-chart" color={color} />
             ),
           }}
         />
