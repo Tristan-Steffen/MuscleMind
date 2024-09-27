@@ -1,9 +1,10 @@
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView, Button } from "react-native";
 
 import { Text, View } from "@/components/Themed";
 import { useSQLiteContext } from "expo-sqlite/build/hooks";
 import FiveDaysHistory from "@/components/fiveDaysHistory/FiveDaysHistory";
-import BigButton from "@/components/BigButton";
+import BigButton from "@/components/Buttons/BigButton";
+import ButtonAsText from "@/components/Buttons/ButtonAsText";
 
 export default function TabTwoScreen() {
   const db = useSQLiteContext();
@@ -28,6 +29,14 @@ export default function TabTwoScreen() {
             style={styles.button}
           />
         </View>
+        <View style={styles.header}>
+          <Text style={{ fontSize: 16 }}>Your Workouts</Text>
+          <ButtonAsText title="View all" onPress={handlePress} />
+        </View>
+        <View style={styles.header}>
+          <Text style={{ fontSize: 16 }}>Example Workouts</Text>
+          <ButtonAsText title="View all" onPress={handlePress} />
+        </View>
       </ScrollView>
     </View>
   );
@@ -38,6 +47,12 @@ const styles = StyleSheet.create({
   buttons: {
     justifyContent: "space-between",
     flexDirection: "row",
+    marginTop: 20,
+  },
+  header: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 20,
   },
   button: {

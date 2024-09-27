@@ -6,7 +6,7 @@ import {
   TextStyle,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { Text, View } from "@/components/Themed";
+import { Text } from "@/components/Themed";
 import { CustomTheme } from "@/constants/Colors";
 
 type BigButtonProps = {
