@@ -1,6 +1,6 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ThemeProvider } from "@react-navigation/native";
-import Colors from "@/constants/Colors";
+import { createTheme } from "@/constants/Colors";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -59,18 +59,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const { colorScheme } = useColorScheme();
-
-  const customTheme = {
-    dark: colorScheme === "dark",
-    colors: {
-      background: Colors[colorScheme].background,
-      text: Colors[colorScheme].text,
-      primary: Colors[colorScheme].tint,
-      card: Colors[colorScheme].card,
-      border: Colors[colorScheme].border,
-      notification: Colors[colorScheme].notification,
-    },
-  };
+  const customTheme = createTheme(colorScheme);
 
   return (
     <ThemeProvider value={customTheme}>
