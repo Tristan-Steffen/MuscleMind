@@ -1,15 +1,12 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+import { ThemeProvider } from "@react-navigation/native";
+import Colors from "@/constants/Colors";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import useColorScheme from "@/hooks/useColorScheme";
 import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
 import { initDatabase, checkIfDatabaseIsEmpty } from "@/utils/db/database";
 import { createTestData } from "@/utils/db/sessionFactory";
@@ -61,10 +58,22 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
+
+  const customTheme = {
+    dark: colorScheme === "dark",
+    colors: {
+      background: Colors[colorScheme].background,
+      text: Colors[colorScheme].text,
+      primary: Colors[colorScheme].tint,
+      card: Colors[colorScheme].card,
+      border: Colors[colorScheme].border,
+      notification: Colors[colorScheme].notification,
+    },
+  };
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={customTheme}>
       <SQLiteProvider databaseName="fitness25.db" onInit={migrateDbIfNeeded}>
         <Stack screenOptions={{ animation: "fade" }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
