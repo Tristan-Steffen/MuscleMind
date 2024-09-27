@@ -5,7 +5,7 @@ import { Text, View } from "@/components/Themed";
 export default function TabTwoScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Nutrition</Text>
+      <Text style={styles.title}>Statistics</Text>
       <View style={styles.separator} />
     </View>
   );

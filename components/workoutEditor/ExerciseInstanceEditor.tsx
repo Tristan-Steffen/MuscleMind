@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, StyleSheet, Button, TouchableOpacity } from "react-native";
-import { ExerciseInstance, Set } from "@/Interfaces/sessionInterfaces";
+import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { SetEditor } from "./SetEditor";
 import { useSession } from "@/hooks/useSession";
 import { Image } from "expo-image";
