@@ -30,15 +30,7 @@ export async function addSession(
 
     for (const exerciseInstance of session.exercise_instances) {
       exerciseInstance.sessionId = sessionId;
-      const exerciseInstanceId = await addExerciseInstance(
-        db,
-        exerciseInstance
-      );
-
-      for (const set of exerciseInstance.sets) {
-        set.exerciseInstanceId = exerciseInstanceId;
-        await addSet(db, set);
-      }
+      await addExerciseInstance(db, exerciseInstance);
     }
 
     return sessionId;
