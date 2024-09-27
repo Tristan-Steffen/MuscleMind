@@ -1,29 +1,33 @@
 import { Theme } from "@react-navigation/native";
 
+const white = "#fff";
+
 const Colors = {
   light: {
     text: "#000",
-    background: "#fff",
-    navigator: "#fff",
+    background: white,
+    lightBackground: "#FFEEE7",
+    navigator: white,
     tint: "#2f95dc",
     tabIconDefault: "#ccc",
     tabIconSelected: "#2f95dc",
     card: "#f9f9f9",
     border: "#ddd",
-    highlight: "#ff453a",
     notification: "#ff453a",
+    basicButton: "#505F9E",
   },
   dark: {
-    text: "#fff",
+    text: white,
     background: "#080813",
+    lightBackground: "#FFEEE7",
     navigator: "#010103",
-    tint: "#fff",
+    tint: white,
     tabIconDefault: "#ccc",
-    tabIconSelected: "#fff",
+    tabIconSelected: white,
     card: "#16213E",
     border: "#333",
-    highlight: "#FFEEE7",
     notification: "#ff453a",
+    basicButton: "#505F9E",
   },
 };
 
@@ -31,7 +35,8 @@ export default Colors;
 
 export type CustomTheme = Theme & {
   colors: Theme["colors"] & {
-    highlight: string;
+    lightBackground: string;
+    basicButton: string;
   };
 };
 
@@ -44,6 +49,7 @@ export const createTheme = (colorScheme: "light" | "dark"): CustomTheme => ({
     card: Colors[colorScheme].card,
     border: Colors[colorScheme].border,
     notification: Colors[colorScheme].notification,
-    highlight: Colors[colorScheme].highlight,
+    lightBackground: Colors[colorScheme].lightBackground,
+    basicButton: Colors[colorScheme].basicButton,
   },
 });

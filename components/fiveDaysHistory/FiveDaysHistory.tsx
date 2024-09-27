@@ -1,6 +1,7 @@
 // components/FiveDaysHistory.tsx
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { View } from "@/components/Themed";
 import DayCard from "./DayCard";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -45,7 +46,6 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "space-evenly",
     flexDirection: "row",
-    paddingHorizontal: 20,
   },
 });
 

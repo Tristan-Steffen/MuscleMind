@@ -17,7 +17,7 @@ const DayCard: React.FC<DayCardProps> = ({ day, date, isToday = false }) => {
     <View
       style={[
         styles.card,
-        { backgroundColor: isToday ? colors.highlight : colors.card },
+        { backgroundColor: isToday ? colors.lightBackground : colors.card },
       ]}
     >
       <Text
