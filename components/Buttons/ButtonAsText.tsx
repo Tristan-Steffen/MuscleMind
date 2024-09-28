@@ -8,13 +8,15 @@ import {
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { CustomTheme } from "@/constants/Colors";
+import { Href, Link } from "expo-router"; // Import Link from expo-router
 
 type ButtonAsTextProps = {
   title: string;
-  onPress: () => void;
+  onPress?: () => void; // onPress is optional for links
   textColor?: string;
   textStyle?: TextStyle;
   style?: ViewStyle;
+  href?: Href;
 };
 
 const ButtonAsText: React.FC<ButtonAsTextProps> = ({
@@ -23,20 +25,27 @@ const ButtonAsText: React.FC<ButtonAsTextProps> = ({
   textColor,
   textStyle,
   style,
+  href,
 }) => {
   const { colors } = useTheme() as CustomTheme;
 
+  const textStyles = [
+    styles.buttonText,
+    { color: textColor || colors.basicButton },
+    textStyle,
+  ];
+
+  if (href) {
+    return (
+      <Link href={href} style={[style]}>
+        <Text style={textStyles}>{title}</Text>
+      </Link>
+    );
+  }
+
   return (
     <TouchableOpacity style={[style]} onPress={onPress} activeOpacity={0.6}>
-      <Text
-        style={[
-          styles.buttonText,
-          { color: textColor || colors.basicButton },
-          textStyle,
-        ]}
-      >
-        {title}
-      </Text>
+      <Text style={textStyles}>{title}</Text>
     </TouchableOpacity>
   );
 };
