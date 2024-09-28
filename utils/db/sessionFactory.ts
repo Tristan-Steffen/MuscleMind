@@ -134,6 +134,7 @@ export const createTestData = async (db: SQLiteDatabase) => {
       description: "Chest, shoulders, and triceps workout",
       date: new Date(),
       isPreset: true, // Set as a preset session
+      isExample: true, // Set as an example session
       exercise_instances: [
         exerciseInstances[0], // Bench Press
         exerciseInstances[1], // Overhead Press
@@ -148,6 +149,7 @@ export const createTestData = async (db: SQLiteDatabase) => {
       description: "Back and biceps workout",
       date: new Date(),
       isPreset: true, // Set as a preset session
+      isExample: true, // Set as an example session
       exercise_instances: [
         exerciseInstances[4], // Deadlift
         exerciseInstances[5], // Pull-Ups
@@ -162,6 +164,7 @@ export const createTestData = async (db: SQLiteDatabase) => {
       description: "Full leg workout",
       date: new Date(),
       isPreset: true, // Set as a preset session
+      isExample: true, // Set as an example session
       exercise_instances: [
         exerciseInstances[8], // Squat
         exerciseInstances[9], // Leg Press

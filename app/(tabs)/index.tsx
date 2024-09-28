@@ -7,7 +7,7 @@ import BigButton from "@/components/Buttons/BigButton";
 import ButtonAsText from "@/components/Buttons/ButtonAsText";
 import { Session } from "@/Interfaces/sessionInterfaces";
 import { useEffect, useState } from "react";
-import { getAllPopulatedSessions } from "@/utils/db/session";
+import { getAllSessions } from "@/utils/db/session";
 import PresetCard from "@/components/preset/PresetCard";
 import { Href, Link, Redirect } from "expo-router";
 
@@ -18,7 +18,7 @@ export default function TabTwoScreen() {
   useEffect(() => {
     async function loadSessions() {
       if (db) {
-        const allSessions = await getAllPopulatedSessions(db);
+        const allSessions = await getAllSessions(db);
         setSessions(allSessions);
       }
     }
@@ -48,7 +48,13 @@ export default function TabTwoScreen() {
         </View>
         <View style={styles.header}>
           <Text style={{ fontSize: 16 }}>Your Templates</Text>
-          <ButtonAsText title="View all" onPress={handlePress} />
+          <ButtonAsText
+            title="View all"
+            href={{
+              pathname: "/template/templates",
+              params: { type: "custom" },
+            }}
+          />
         </View>
         <View style={styles.header}>
           <Text style={{ fontSize: 16 }}>Example Templates</Text>

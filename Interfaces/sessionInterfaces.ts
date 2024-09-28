@@ -30,6 +30,7 @@ export interface Session {
   description: string;
   date: Date;
   isPreset: boolean;
+  isExample: boolean;
   exercise_instances: ExerciseInstance[];
   createdAt: Date;
   updatedAt: Date;

@@ -43,6 +43,7 @@ export async function initDatabase(db: SQLiteDatabase) {
         description TEXT,
         date TEXT NOT NULL,
         isPreset INTEGER NOT NULL,
+        isExample INTEGER NOT NULL,
         createdAt TEXT NOT NULL,
         updatedAt TEXT NOT NULL
       );

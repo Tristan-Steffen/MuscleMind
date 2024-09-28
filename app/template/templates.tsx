@@ -1,7 +1,10 @@
 import PresetCard from "@/components/preset/PresetCard";
 import { View, Text } from "@/components/Themed";
 import { Session } from "@/Interfaces/sessionInterfaces";
-import { getAllPopulatedSessions } from "@/utils/db/session";
+import {
+  getCustomPresetSessions,
+  getExamplePresetSessions,
+} from "@/utils/db/session";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import React, { useEffect, useState } from "react";
@@ -14,8 +17,13 @@ const Templates: React.FC = () => {
 
   useEffect(() => {
     async function loadSession() {
-      if (db) {
-        let sessions = await getAllPopulatedSessions(db);
+      if (!db) return;
+      if (local.type === "example") {
+        let sessions = await getExamplePresetSessions(db);
+        sessions ? setSessions(sessions) : null;
+      }
+      if (local.type === "custom") {
+        let sessions = await getCustomPresetSessions(db);
         sessions ? setSessions(sessions) : null;
       }
     }
