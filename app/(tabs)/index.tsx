@@ -9,6 +9,7 @@ import { Session } from "@/Interfaces/sessionInterfaces";
 import { useEffect, useState } from "react";
 import { getAllPopulatedSessions } from "@/utils/db/session";
 import PresetCard from "@/components/preset/PresetCard";
+import { Href, Link, Redirect } from "expo-router";
 
 export default function TabTwoScreen() {
   const db = useSQLiteContext();
@@ -26,6 +27,7 @@ export default function TabTwoScreen() {
 
   const handlePress = () => {
     console.log("Button pressed!");
+    return <Redirect href="/template/templates" />;
   };
 
   return (
@@ -39,18 +41,24 @@ export default function TabTwoScreen() {
             style={styles.button}
           />
           <BigButton
-            title="New Preset"
+            title="New Template"
             onPress={handlePress}
             style={styles.button}
           />
         </View>
         <View style={styles.header}>
-          <Text style={{ fontSize: 16 }}>Your Workouts</Text>
+          <Text style={{ fontSize: 16 }}>Your Templates</Text>
           <ButtonAsText title="View all" onPress={handlePress} />
         </View>
         <View style={styles.header}>
-          <Text style={{ fontSize: 16 }}>Example Workouts</Text>
-          <ButtonAsText title="View all" onPress={handlePress} />
+          <Text style={{ fontSize: 16 }}>Example Templates</Text>
+          <ButtonAsText
+            title="View all"
+            href={{
+              pathname: "/template/templates",
+              params: { type: "example" },
+            }}
+          />
         </View>
         <View style={styles.exampleWorkouts}>
           {sessions && sessions.length > 1 ? (

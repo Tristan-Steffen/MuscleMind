@@ -4,13 +4,14 @@ import { Session } from "@/Interfaces/sessionInterfaces";
 
 type PresetCardProps = {
   session: Session;
+  style?: object;
 };
 
-const PresetCard: React.FC<PresetCardProps> = ({ session }) => {
+const PresetCard: React.FC<PresetCardProps> = ({ session, style }) => {
   const lastIndex = session.exercise_instances.length - 1;
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, style]}>
       <View style={styles.sessionNameContainer}>
         <Text style={styles.sessionName}>{session.name}</Text>
       </View>

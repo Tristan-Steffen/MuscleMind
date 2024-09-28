@@ -71,6 +71,10 @@ function RootLayoutNav() {
             name="session/[id]"
             options={{ title: "Edit Session", headerBackTitle: "Back" }}
           />
+          <Stack.Screen
+            name="template/templates"
+            options={{ title: "Example Templates", headerBackTitle: "Back" }}
+          />
         </Stack>
       </SQLiteProvider>
     </ThemeProvider>
