@@ -63,7 +63,7 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={customTheme}>
-      <SQLiteProvider databaseName="fitness25.db" onInit={migrateDbIfNeeded}>
+      <SQLiteProvider databaseName="fitness27.db" onInit={migrateDbIfNeeded}>
         <Stack screenOptions={{ animation: "fade" }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: "modal" }} />
