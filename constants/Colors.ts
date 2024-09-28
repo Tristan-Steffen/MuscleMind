@@ -7,6 +7,8 @@ const Colors = {
     text: "#000",
     background: white,
     lightBackground: "#FFEEE7",
+    darkBackground: "#40455C",
+    darkerBackground: "#383C4E",
     navigator: white,
     tint: "#2f95dc",
     tabIconDefault: "#ccc",
@@ -19,6 +21,8 @@ const Colors = {
   dark: {
     text: white,
     background: "#080813",
+    darkBackground: "#40455C",
+    darkerBackground: "#383C4E",
     lightBackground: "#FFEEE7",
     navigator: "#010103",
     tint: white,
@@ -36,7 +40,9 @@ export default Colors;
 export type CustomTheme = Theme & {
   colors: Theme["colors"] & {
     lightBackground: string;
+    darkBackground: string;
     basicButton: string;
+    darkerBackground: string;
   };
 };
 
@@ -51,5 +57,7 @@ export const createTheme = (colorScheme: "light" | "dark"): CustomTheme => ({
     notification: Colors[colorScheme].notification,
     lightBackground: Colors[colorScheme].lightBackground,
     basicButton: Colors[colorScheme].basicButton,
+    darkBackground: Colors[colorScheme].darkBackground,
+    darkerBackground: Colors[colorScheme].darkerBackground,
   },
 });

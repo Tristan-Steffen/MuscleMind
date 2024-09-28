@@ -9,7 +9,7 @@ import { Session } from "@/Interfaces/sessionInterfaces";
 import { useEffect, useState } from "react";
 import { getAllSessions } from "@/utils/db/session";
 import PresetCard from "@/components/preset/PresetCard";
-import { Href, Link, Redirect } from "expo-router";
+import { Href, Link, Redirect, router } from "expo-router";
 
 export default function TabTwoScreen() {
   const db = useSQLiteContext();
@@ -27,7 +27,7 @@ export default function TabTwoScreen() {
 
   const handlePress = () => {
     console.log("Button pressed!");
-    return <Redirect href="/template/templates" />;
+    router.navigate({ pathname: "/template/templateBuilder" });
   };
 
   return (
@@ -37,7 +37,10 @@ export default function TabTwoScreen() {
         <View style={styles.buttons}>
           <BigButton
             title="Start Training"
-            onPress={handlePress}
+            href={{
+              pathname: "/template/templates",
+              params: { type: "custom" },
+            }}
             style={styles.button}
           />
           <BigButton
@@ -80,7 +83,7 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { marginTop: 40, paddingHorizontal: 20 },
+  container: { marginTop: 40, paddingHorizontal: 20, height: "100%" },
   buttons: {
     justifyContent: "space-between",
     flexDirection: "row",

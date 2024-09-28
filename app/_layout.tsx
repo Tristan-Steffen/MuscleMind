@@ -75,6 +75,10 @@ function RootLayoutNav() {
             name="template/templates"
             options={{ title: "Example Templates", headerBackTitle: "Back" }}
           />
+          <Stack.Screen
+            name="template/templateBuilder"
+            options={{ title: "Template Builder", headerBackTitle: "Back" }}
+          />
         </Stack>
       </SQLiteProvider>
     </ThemeProvider>

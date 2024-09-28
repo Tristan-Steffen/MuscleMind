@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Session } from "@/Interfaces/sessionInterfaces";
+import { useTheme } from "@react-navigation/native";
+import { CustomTheme } from "@/constants/Colors";
 
 type PresetCardProps = {
   session: Session;
@@ -9,11 +11,21 @@ type PresetCardProps = {
 
 const PresetCard: React.FC<PresetCardProps> = ({ session, style }) => {
   const lastIndex = session.exercise_instances.length - 1;
+  const { colors } = useTheme() as CustomTheme;
 
   return (
-    <View style={[styles.card, style]}>
-      <View style={styles.sessionNameContainer}>
-        <Text style={styles.sessionName}>{session.name}</Text>
+    <View
+      style={[styles.card, style, { backgroundColor: colors.darkBackground }]}
+    >
+      <View
+        style={[
+          styles.sessionNameContainer,
+          { backgroundColor: colors.basicButton },
+        ]}
+      >
+        <Text style={[styles.sessionName, { color: colors.text }]}>
+          {session.name}
+        </Text>
       </View>
 
       <View>
@@ -22,14 +34,19 @@ const PresetCard: React.FC<PresetCardProps> = ({ session, style }) => {
             key={exerciseInstance.exercise.id?.toString() || index}
             style={[
               styles.exerciseRow,
-              { backgroundColor: index % 2 === 0 ? "#40455C" : "#383C4E" },
+              {
+                backgroundColor:
+                  index % 2 === 0
+                    ? colors.darkBackground
+                    : colors.darkerBackground,
+              },
               index === lastIndex && styles.lastRow,
             ]}
           >
-            <Text style={styles.exerciseName}>
+            <Text style={[styles.exerciseName, { color: colors.text }]}>
               {exerciseInstance.exercise.name}
             </Text>
-            <Text style={styles.setsCount}>
+            <Text style={[styles.setsCount, { color: colors.text }]}>
               {exerciseInstance.sets.length} sets
             </Text>
           </View>
@@ -41,12 +58,10 @@ const PresetCard: React.FC<PresetCardProps> = ({ session, style }) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#40455C",
     borderRadius: 25,
     width: "48%",
   },
   sessionNameContainer: {
-    backgroundColor: "#505F9E",
     height: 40,
     borderRadius: 25,
     paddingHorizontal: 10,
@@ -55,7 +70,6 @@ const styles = StyleSheet.create({
   sessionName: {
     fontSize: 16,
     fontWeight: "semibold",
-    color: "#fff",
   },
   exerciseRow: {
     height: 40,
@@ -70,12 +84,10 @@ const styles = StyleSheet.create({
   },
   exerciseName: {
     fontSize: 12,
-    color: "#fff",
   },
   setsCount: {
     fontSize: 12,
     fontWeight: "medium",
-    color: "#fff",
   },
 });
 
