@@ -6,14 +6,13 @@ import {
 import { ExerciseInstance, Session } from "@/Interfaces/sessionInterfaces";
 import { SQLiteDatabase } from "expo-sqlite";
 import { addExerciseInstance } from "./exerciseInstance";
-import { addSet, deleteSet } from "./set";
 
 export async function addSession(
   db: SQLiteDatabase,
   session: Session
 ): Promise<number> {
   const statement = await db.prepareAsync(
-    "INSERT INTO sessions (name, description, date, isPreset, createdAt, updatedAt) VALUES ($name, $description, $date, $isPreset, $createdAt, $updatedAt)"
+    "INSERT INTO sessions (name, description, date, isPreset, isExample, createdAt, updatedAt) VALUES ($name, $description, $date, $isPreset, $isExample, $createdAt, $updatedAt)"
   );
 
   try {
@@ -22,6 +21,7 @@ export async function addSession(
       $description: session.description,
       $date: session.date.toISOString(),
       $isPreset: session.isPreset ? 1 : 0,
+      $isExample: session.isExample ? 1 : 0,
       $createdAt: session.createdAt.toISOString(),
       $updatedAt: session.updatedAt.toISOString(),
     });
@@ -47,7 +47,7 @@ export async function updateSession(
   if (!session.id) throw new Error("Session ID is required");
 
   const statement = await db.prepareAsync(
-    "UPDATE sessions SET name = $name, description = $description, date = $date, isPreset = $isPreset, createdAt = $createdAt, updatedAt = $updatedAt WHERE id = $id"
+    "UPDATE sessions SET name = $name, description = $description, date = $date, isPreset = $isPreset, isExample = $isExample, createdAt = $createdAt, updatedAt = $updatedAt WHERE id = $id"
   );
 
   try {
@@ -56,6 +56,7 @@ export async function updateSession(
       $description: session.description,
       $date: session.date.toISOString(),
       $isPreset: session.isPreset ? 1 : 0,
+      $isExample: session.isExample ? 1 : 0,
       $createdAt: session.createdAt.toISOString(),
       $updatedAt: Date.now().toString(),
       $id: session.id,
@@ -112,16 +113,64 @@ export async function deleteSession(
   }
 }
 
-export async function getAllPopulatedSessions(
-  db: SQLiteDatabase
-): Promise<Session[]> {
+export async function getAllSessions(db: SQLiteDatabase): Promise<Session[]> {
   const sessions = await db.getAllAsync<Session>("SELECT * FROM sessions");
 
   for (let i = 0; i < sessions.length; i++) {
-    // Convert string dates to Date objects
+    // Convert string dates to Date objects ints to booleans
     sessions[i].date = new Date(sessions[i].date);
     sessions[i].createdAt = new Date(sessions[i].createdAt);
     sessions[i].updatedAt = new Date(sessions[i].updatedAt);
+    sessions[i].isPreset = Boolean(sessions[i].isPreset);
+    sessions[i].isExample = Boolean(sessions[i].isExample);
+
+    sessions[i].exercise_instances = await getExerciseInstancesForSession(
+      db,
+      sessions[i].id!
+    );
+  }
+
+  return sessions;
+}
+
+export async function getExamplePresetSessions(
+  db: SQLiteDatabase
+): Promise<Session[]> {
+  const sessions = await db.getAllAsync<Session>(
+    "SELECT * FROM sessions WHERE isExample = 1 AND isPreset = 1"
+  );
+
+  for (let i = 0; i < sessions.length; i++) {
+    // Convert string dates to Date objects and ints to booleans
+    sessions[i].date = new Date(sessions[i].date);
+    sessions[i].createdAt = new Date(sessions[i].createdAt);
+    sessions[i].updatedAt = new Date(sessions[i].updatedAt);
+    sessions[i].isPreset = Boolean(sessions[i].isPreset);
+    sessions[i].isExample = Boolean(sessions[i].isExample);
+
+    sessions[i].exercise_instances = await getExerciseInstancesForSession(
+      db,
+      sessions[i].id!
+    );
+  }
+
+  return sessions;
+}
+
+export async function getCustomPresetSessions(
+  db: SQLiteDatabase
+): Promise<Session[]> {
+  const sessions = await db.getAllAsync<Session>(
+    "SELECT * FROM sessions WHERE isExample = 0 AND isPreset = 1"
+  );
+
+  for (let i = 0; i < sessions.length; i++) {
+    // Convert string dates to Date objects and ints to booleans
+    sessions[i].date = new Date(sessions[i].date);
+    sessions[i].createdAt = new Date(sessions[i].createdAt);
+    sessions[i].updatedAt = new Date(sessions[i].updatedAt);
+    sessions[i].isPreset = Boolean(sessions[i].isPreset);
+    sessions[i].isExample = Boolean(sessions[i].isExample);
 
     sessions[i].exercise_instances = await getExerciseInstancesForSession(
       db,
@@ -136,7 +185,7 @@ export async function getSession(
   db: SQLiteDatabase,
   sessionId: number
 ): Promise<Session | undefined> {
-  const result = await db.getAllSync<Session>(
+  const result = await db.getAllAsync<Session>(
     "SELECT * FROM sessions WHERE id = $id",
     {
       $id: sessionId,
@@ -146,10 +195,12 @@ export async function getSession(
   if (result.length > 0) {
     const session = result[0];
 
-    // Convert string dates to Date objects
+    // Convert string dates to Date objects ints to booleans
     session.date = new Date(session.date);
     session.createdAt = new Date(session.createdAt);
     session.updatedAt = new Date(session.updatedAt);
+    session.isPreset = Boolean(session.isPreset);
+    session.isExample = Boolean(session.isExample);
 
     session.exercise_instances = await getExerciseInstancesForSession(
       db,
