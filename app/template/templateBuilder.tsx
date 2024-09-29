@@ -24,6 +24,7 @@ const TemplateBuilder: React.FC = () => {
       {/* Workout Description Input */}
       <InputField
         placeholder="Workout Description"
+        style={{ height: 120, paddingTop: 15, marginTop: 15 }}
         value={workoutDescription}
         onChangeText={setWorkoutDescription}
         multiline={true}
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   addButton: {
-    marginTop: 20,
+    marginTop: 25,
   },
 });
 

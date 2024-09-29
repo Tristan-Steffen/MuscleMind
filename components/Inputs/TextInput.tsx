@@ -1,12 +1,14 @@
 import React from "react";
-import { TextInput, StyleSheet, TextInputProps } from "react-native";
+import { TextInput, StyleSheet, TextInputProps, ViewStyle } from "react-native";
 import { useTheme } from "@react-navigation/native"; // To access theme colors
+import { CustomTheme } from "@/constants/Colors";
 
 type InputFieldProps = {
   value: string;
   onChangeText: (text: string) => void;
   placeholder: string;
   multiline?: boolean;
+  style?: ViewStyle;
 } & TextInputProps;
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -14,13 +16,22 @@ const InputField: React.FC<InputFieldProps> = ({
   onChangeText,
   placeholder,
   multiline = false,
+  style,
   ...props
 }) => {
-  const { colors } = useTheme();
+  const { colors } = useTheme() as CustomTheme;
 
   return (
     <TextInput
-      style={[styles.input, { borderColor: colors.border, color: colors.text }]}
+      style={[
+        styles.input,
+        {
+          borderColor: colors.border,
+          color: colors.text,
+          backgroundColor: colors.darkBackground,
+        },
+        style,
+      ]}
       placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
@@ -34,9 +45,8 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 25,
     paddingHorizontal: 15,
-    marginBottom: 15,
     fontSize: 16,
   },
 });
