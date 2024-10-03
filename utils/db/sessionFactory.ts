@@ -7,100 +7,241 @@ import {
 import { SQLiteDatabase } from "expo-sqlite";
 import { addExercise, getAllExercises } from "./exercise";
 import { addSession } from "./session";
+import { createMuscle } from "./muscles";
 
 export const createTestData = async (db: SQLiteDatabase) => {
-  // Define the exercises for push, pull, and leg day
-  const saveExercises: Exercise[] = [
-    // Push Day Exercises
+  // Define the muscles
+  const muscles = {
+    chest: await createMuscle(db, { name: "Chest" }),
+    shoulders: await createMuscle(db, { name: "Shoulders" }),
+    triceps: await createMuscle(db, { name: "Triceps" }),
+    back: await createMuscle(db, { name: "Back" }),
+    biceps: await createMuscle(db, { name: "Biceps" }),
+    hamstrings: await createMuscle(db, { name: "Hamstrings" }),
+    quads: await createMuscle(db, { name: "Quadriceps" }),
+    calves: await createMuscle(db, { name: "Calves" }),
+  };
+
+  // Define the exercises and associate muscles at the same time
+  const saveExercises = [
     {
-      name: "Bench Press",
-      description: "Chest exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Bench Press",
+        description: "Chest exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/bench-press.png", // Replace with the actual image path
+        cues: [
+          "Keep your back flat on the bench",
+          "Lower the bar slowly to your chest",
+          "Push the bar up explosively",
+        ],
+      },
+      primaryMuscles: [muscles.chest],
+      secondaryMuscles: [muscles.triceps, muscles.shoulders],
     },
     {
-      name: "Overhead Press",
-      description: "Shoulder exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Overhead Press",
+        description: "Shoulder exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/overhead-press.png", // Replace with the actual image path
+        cues: [
+          "Keep your core tight",
+          "Press overhead and lock out your elbows",
+          "Do not let your lower back arch",
+        ],
+      },
+      primaryMuscles: [muscles.shoulders],
+      secondaryMuscles: [muscles.triceps],
     },
     {
-      name: "Dumbbell Flyes",
-      description: "Chest isolation exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Dumbbell Flyes",
+        description: "Chest isolation exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/dumbbell-flyes.png", // Replace with the actual image path
+        cues: [
+          "Keep a slight bend in your elbows",
+          "Lower the dumbbells in a wide arc",
+          "Squeeze your chest as you bring the dumbbells together",
+        ],
+      },
+      primaryMuscles: [muscles.chest],
+      secondaryMuscles: [],
     },
     {
-      name: "Triceps Pushdown",
-      description: "Triceps exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Triceps Pushdown",
+        description: "Triceps exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/triceps-pushdown.png", // Replace with the actual image path
+        cues: [
+          "Keep your elbows close to your body",
+          "Push the bar straight down",
+          "Squeeze your triceps at the bottom of the movement",
+        ],
+      },
+      primaryMuscles: [muscles.triceps],
+      secondaryMuscles: [],
     },
 
     // Pull Day Exercises
     {
-      name: "Deadlift",
-      description: "Back exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Deadlift",
+        description: "Back exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/deadlift.png", // Replace with the actual image path
+        cues: [
+          "Keep your chest up and back flat",
+          "Drive through your heels",
+          "Lock out your hips at the top of the movement",
+        ],
+      },
+      primaryMuscles: [muscles.back, muscles.hamstrings],
+      secondaryMuscles: [],
     },
     {
-      name: "Pull-Ups",
-      description: "Back and biceps exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Pull-Ups",
+        description: "Back and biceps exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/pull-ups.png", // Replace with the actual image path
+        cues: [
+          "Engage your lats at the start",
+          "Pull with your elbows, not your hands",
+          "Control the descent",
+        ],
+      },
+      primaryMuscles: [muscles.back],
+      secondaryMuscles: [muscles.biceps],
     },
     {
-      name: "Barbell Rows",
-      description: "Back and biceps exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Barbell Rows",
+        description: "Back and biceps exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/barbell-rows.png", // Replace with the actual image path
+        cues: [
+          "Keep your back straight and core engaged",
+          "Row the bar towards your belly button",
+          "Squeeze your back at the top of the movement",
+        ],
+      },
+      primaryMuscles: [muscles.back],
+      secondaryMuscles: [muscles.biceps],
     },
     {
-      name: "Bicep Curls",
-      description: "Biceps exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Bicep Curls",
+        description: "Biceps exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/bicep-curls.png", // Replace with the actual image path
+        cues: [
+          "Keep your elbows close to your sides",
+          "Curl the weight up in a controlled motion",
+          "Squeeze your biceps at the top of the movement",
+        ],
+      },
+      primaryMuscles: [muscles.biceps],
+      secondaryMuscles: [],
     },
 
     // Leg Day Exercises
     {
-      name: "Squat",
-      description: "Leg exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Squat",
+        description: "Leg exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/squat.png", // Replace with the actual image path
+        cues: [
+          "Keep your chest up",
+          "Push through your heels",
+          "Do not let your knees cave in",
+        ],
+      },
+      primaryMuscles: [muscles.quads],
+      secondaryMuscles: [muscles.hamstrings],
     },
     {
-      name: "Leg Press",
-      description: "Leg exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Leg Press",
+        description: "Leg exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/leg-press.png", // Replace with the actual image path
+        cues: [
+          "Place your feet shoulder-width apart",
+          "Lower the platform slowly",
+          "Push through your heels to return to the starting position",
+        ],
+      },
+      primaryMuscles: [muscles.quads],
+      secondaryMuscles: [],
     },
     {
-      name: "Lunges",
-      description: "Leg exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Lunges",
+        description: "Leg exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/lunges.png", // Replace with the actual image path
+        cues: [
+          "Keep your chest up and core tight",
+          "Step forward and lower your hips until both knees are bent at 90 degrees",
+          "Push back to the starting position",
+        ],
+      },
+      primaryMuscles: [muscles.quads],
+      secondaryMuscles: [muscles.hamstrings],
     },
     {
-      name: "Leg Curls",
-      description: "Hamstring exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Leg Curls",
+        description: "Hamstring exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/leg-curls.png", // Replace with the actual image path
+        cues: [
+          "Keep your hips on the pad",
+          "Curl your legs as high as you can",
+          "Squeeze your hamstrings at the top",
+        ],
+      },
+      primaryMuscles: [muscles.hamstrings],
+      secondaryMuscles: [],
     },
     {
-      name: "Calf Raises",
-      description: "Calf exercise",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      exercise: {
+        name: "Calf Raises",
+        description: "Calf exercise",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image: "/images/exercises/calf-raises.png", // Replace with the actual image path
+        cues: [
+          "Stand with your feet shoulder-width apart",
+          "Raise your heels off the ground",
+          "Squeeze your calves at the top",
+        ],
+      },
+      primaryMuscles: [muscles.calves],
+      secondaryMuscles: [],
     },
   ];
 
-  // Save the exercises to the database
-  for (const exercise of saveExercises) {
-    await addExercise(db, exercise);
+  // Save the exercises and associate the muscles
+  for (const { exercise, primaryMuscles, secondaryMuscles } of saveExercises) {
+    await addExercise(db, exercise, primaryMuscles, secondaryMuscles);
   }
-
   // Fetch all saved exercises from the database
   const exercises = await getAllExercises(db);
 
