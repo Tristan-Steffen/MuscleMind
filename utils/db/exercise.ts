@@ -93,8 +93,6 @@ export async function getExerciseById(
 
   if (!exercise) return null;
 
-  exercise.cues = JSON.parse(exercise.cues as unknown as string);
-
   // Convert date fields
   exercise.createdAt = new Date(exercise.createdAt);
   exercise.updatedAt = new Date(exercise.updatedAt);
