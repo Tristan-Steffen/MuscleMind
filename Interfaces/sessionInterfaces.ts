@@ -12,6 +12,12 @@ export interface Exercise {
   description: string;
   createdAt: Date;
   updatedAt: Date;
+  targetMuscles?: {
+    primary: Muscle[];
+    secondary: Muscle[];
+  };
+  image?: string;
+  cues?: string[];
 }
 
 export interface ExerciseInstance {
@@ -34,4 +40,9 @@ export interface Session {
   exercise_instances: ExerciseInstance[];
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface Muscle {
+  id?: number;
+  name: string;
 }
