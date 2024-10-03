@@ -33,6 +33,8 @@ export async function initDatabase(db: SQLiteDatabase) {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         description TEXT,
+        image TEXT,
+        cues TEXT,
         createdAt TEXT NOT NULL,
         updatedAt TEXT NOT NULL
       );
@@ -56,6 +58,20 @@ export async function initDatabase(db: SQLiteDatabase) {
         updatedAt TEXT NOT NULL,
         FOREIGN KEY(exerciseId) REFERENCES exercises(id),
         FOREIGN KEY(sessionId) REFERENCES sessions(id)
+      );
+
+      CREATE TABLE IF NOT EXISTS muscles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS exercise_muscles (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        exerciseId INTEGER NOT NULL,
+        muscleId INTEGER NOT NULL,
+        isPrimary BOOLEAN NOT NULL,
+        FOREIGN KEY (exerciseId) REFERENCES exercises(id),
+        FOREIGN KEY (muscleId) REFERENCES muscles(id)
       );
     `);
   }
