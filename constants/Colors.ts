@@ -5,6 +5,7 @@ const white = "#fff";
 const Colors = {
   light: {
     text: "#000",
+    placeHolderText: "#666",
     background: white,
     lightBackground: "#FFEEE7",
     darkBackground: "#40455C",
@@ -20,6 +21,7 @@ const Colors = {
   },
   dark: {
     text: white,
+    placeHolderText: "#666",
     background: "#080813",
     darkBackground: "#40455C",
     darkerBackground: "#383C4E",
@@ -43,6 +45,7 @@ export type CustomTheme = Theme & {
     darkBackground: string;
     basicButton: string;
     darkerBackground: string;
+    placeHolderText: string;
   };
 };
 
@@ -59,5 +62,6 @@ export const createTheme = (colorScheme: "light" | "dark"): CustomTheme => ({
     basicButton: Colors[colorScheme].basicButton,
     darkBackground: Colors[colorScheme].darkBackground,
     darkerBackground: Colors[colorScheme].darkerBackground,
+    placeHolderText: Colors[colorScheme].placeHolderText,
   },
 });
