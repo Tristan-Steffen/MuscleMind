@@ -32,7 +32,9 @@ const TemplateBuilder: React.FC = () => {
 
       <BigButton
         title="Add Exercises"
-        onPress={handleAddExercises}
+        href={{
+          pathname: "/exercises/exerciseSelector",
+        }}
         style={styles.addButton}
       />
     </View>

@@ -63,7 +63,7 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={customTheme}>
-      <SQLiteProvider databaseName="fitness29.db" onInit={migrateDbIfNeeded}>
+      <SQLiteProvider databaseName="fitness32.db" onInit={migrateDbIfNeeded}>
         <Stack screenOptions={{ animation: "fade" }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: "modal" }} />
@@ -78,6 +78,10 @@ function RootLayoutNav() {
           <Stack.Screen
             name="template/templateBuilder"
             options={{ title: "Template Builder", headerBackTitle: "Back" }}
+          />
+          <Stack.Screen
+            name="exercises/exerciseSelector"
+            options={{ title: "Exercise Selector", headerBackTitle: "Back" }}
           />
         </Stack>
       </SQLiteProvider>

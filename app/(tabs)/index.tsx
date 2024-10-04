@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, Button } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 
 import { Text, View } from "@/components/Themed";
 import { useSQLiteContext } from "expo-sqlite/build/hooks";
@@ -9,7 +9,7 @@ import { Session } from "@/Interfaces/sessionInterfaces";
 import { useEffect, useState } from "react";
 import { getAllSessions } from "@/utils/db/session";
 import PresetCard from "@/components/preset/PresetCard";
-import { Href, Link, Redirect, router } from "expo-router";
+import { router } from "expo-router";
 
 export default function TabTwoScreen() {
   const db = useSQLiteContext();
@@ -26,9 +26,10 @@ export default function TabTwoScreen() {
   }, [db]);
 
   const handlePress = () => {
-    console.log("Button pressed!");
     router.navigate({ pathname: "/template/templateBuilder" });
   };
+
+  if (!sessions) return null;
 
   return (
     <View style={styles.container}>
