@@ -28,7 +28,6 @@ const InputField: React.FC<InputFieldProps> = ({
         {
           borderColor: colors.border,
           color: colors.text,
-          backgroundColor: colors.darkBackground,
         },
         style,
       ]}
