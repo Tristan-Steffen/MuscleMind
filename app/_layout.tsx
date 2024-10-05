@@ -10,6 +10,8 @@ import useColorScheme from "@/hooks/useColorScheme";
 import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
 import { initDatabase, checkIfDatabaseIsEmpty } from "@/utils/db/database";
 import { createTestData } from "@/utils/db/sessionFactory";
+import { TouchableOpacity, StyleSheet } from "react-native";
+import { SessionProvider } from "@/context/SessionContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -64,27 +66,48 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={customTheme}>
       <SQLiteProvider databaseName="fitness32.db" onInit={migrateDbIfNeeded}>
-        <Stack screenOptions={{ animation: "fade" }}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-          <Stack.Screen
-            name="session/[id]"
-            options={{ title: "Edit Session", headerBackTitle: "Back" }}
-          />
-          <Stack.Screen
-            name="template/templates"
-            options={{ title: "Example Templates", headerBackTitle: "Back" }}
-          />
-          <Stack.Screen
-            name="template/templateBuilder"
-            options={{ title: "Template Builder", headerBackTitle: "Back" }}
-          />
-          <Stack.Screen
-            name="exercises/exerciseSelector"
-            options={{ title: "Exercise Selector", headerBackTitle: "Back" }}
-          />
-        </Stack>
+        <SessionProvider>
+          <Stack screenOptions={{ animation: "fade" }}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+            <Stack.Screen
+              name="session/[id]"
+              options={{ title: "Edit Session", headerBackTitle: "Back" }}
+            />
+            <Stack.Screen
+              name="template/templates"
+              options={{ title: "Example Templates", headerBackTitle: "Back" }}
+            />
+            <Stack.Screen
+              name="template/templateBuilder"
+              options={{ title: "Template Builder", headerBackTitle: "Back" }}
+            />
+            <Stack.Screen
+              name="exercises/exerciseSelector"
+              options={{
+                title: "Exercise Selector",
+                headerBackTitle: "Back",
+                headerRight: () => (
+                  <TouchableOpacity
+                    style={styles.headerButton}
+                    onPress={() => {
+                      console.log("Custom button pressed!");
+                    }}
+                  >
+                    <FontAwesome name="plus" size={24} color="white" />
+                  </TouchableOpacity>
+                ),
+              }}
+            />
+          </Stack>
+        </SessionProvider>
       </SQLiteProvider>
     </ThemeProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  headerButton: {
+    marginRight: 15,
+  },
+});
