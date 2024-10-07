@@ -7,30 +7,28 @@ import { CustomTheme } from "@/constants/Colors";
 type ExerciseGroupProps = {
   muscleGroup: string;
   exercises: Exercise[];
+  selectedExercises: Exercise[];
   onExerciseSelect: (exercise: Exercise, selected: boolean) => void;
 };
 
 const ExerciseGroup: React.FC<ExerciseGroupProps> = ({
   muscleGroup,
   exercises,
+  selectedExercises,
   onExerciseSelect,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const [selectedExercises, setSelectedExercises] = useState<number[]>([]);
+
+  const isExerciseSelected = (exerciseId: number) =>
+    selectedExercises.some((exercise) => exercise.id === exerciseId);
 
   const toggleExerciseSelection = (exercise: Exercise) => {
-    const alreadySelected = selectedExercises.includes(exercise.id!);
-    let updatedSelections = [];
-
+    const alreadySelected = isExerciseSelected(exercise.id!);
     if (alreadySelected) {
-      updatedSelections = selectedExercises.filter((id) => id !== exercise.id);
       onExerciseSelect(exercise, false);
     } else {
-      updatedSelections = [...selectedExercises, exercise.id!];
       onExerciseSelect(exercise, true);
     }
-
-    setSelectedExercises(updatedSelections);
   };
 
   return (
@@ -41,18 +39,17 @@ const ExerciseGroup: React.FC<ExerciseGroupProps> = ({
 
       <View style={[styles.exercises, { borderColor: colors.border }]}>
         {exercises.map((exercise, index) => {
-          const isSelected = selectedExercises.includes(exercise.id!);
+          const isSelected = isExerciseSelected(exercise.id!);
           return (
-            <View>
+            <View key={exercise.id}>
               <View
                 style={
-                  index != 0
+                  index !== 0
                     ? [styles.divider, { borderColor: colors.border }]
                     : null
                 }
               />
               <TouchableOpacity
-                key={exercise.id}
                 style={styles.exerciseRow}
                 onPress={() => toggleExerciseSelection(exercise)}
               >

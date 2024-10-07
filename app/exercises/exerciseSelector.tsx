@@ -17,7 +17,9 @@ const ExerciseSelector: React.FC = () => {
   const [groupedExercises, setGroupedExercises] = useState<Exercise[][] | null>(
     null
   );
-  const { addExercise, removeExercise } = useSessionContext();
+
+  const { addExercise, removeExercise, selectedExercises } =
+    useSessionContext();
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -86,6 +88,7 @@ const ExerciseSelector: React.FC = () => {
                 group[0].targetMuscles?.primary?.[0]?.name || "Unknown"
               }
               exercises={group}
+              selectedExercises={selectedExercises}
               onExerciseSelect={handleExerciseSelect}
             />
           ))}
