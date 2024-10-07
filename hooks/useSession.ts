@@ -2,32 +2,20 @@ import {
   Session,
   ExerciseInstance,
   Set,
+  Muscle,
   Exercise,
 } from "@/Interfaces/sessionInterfaces";
 
 export function useSession() {
   const createEmptySession = (): Session => {
     return {
+      id: undefined,
       name: "",
       description: "",
       date: new Date(),
       isPreset: false,
+      isExample: false,
       exercise_instances: [] as ExerciseInstance[],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-  };
-
-  const createEmptyExerciseInstance = (): ExerciseInstance => {
-    return {
-      sets: [] as Set[],
-      exercise: {
-        name: "",
-        description: "",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      sessionId: undefined,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -37,9 +25,32 @@ export function useSession() {
     exercise: Exercise
   ): ExerciseInstance => {
     return {
-      sets: [] as Set[],
+      id: undefined,
       exercise: exercise,
       sessionId: undefined,
+      sets: [
+        {
+          id: undefined,
+          reps: 12,
+          weight: 50,
+          rest: null,
+          exerciseInstanceId: null,
+        },
+        {
+          id: undefined,
+          reps: 12,
+          weight: 50,
+          rest: null,
+          exerciseInstanceId: null,
+        },
+        {
+          id: undefined,
+          reps: 12,
+          weight: 50,
+          rest: null,
+          exerciseInstanceId: null,
+        },
+      ] as Set[],
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -47,16 +58,16 @@ export function useSession() {
 
   const createEmptySet = (): Set => {
     return {
-      reps: 0,
-      weight: 0,
-      rest: 0,
+      id: undefined,
+      reps: null,
+      weight: null,
+      rest: null,
       exerciseInstanceId: null,
     };
   };
 
   return {
     createEmptySession,
-    createEmptyExerciseInstance,
     createExerciseInstanceWithExercise,
     createEmptySet,
   };
