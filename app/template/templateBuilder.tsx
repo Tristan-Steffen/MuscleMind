@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, ScrollView } from "react-native";
 import InputField from "@/components/Inputs/TextInput";
 import BigButton from "@/components/Buttons/BigButton";
 import { useSessionContext } from "@/context/SessionContext"; // Use session context
+import ExerciseInstanceBuilder from "@/components/ExerciseInstanceBuilder/ExerciseInstanceBuilder";
 
 const TemplateBuilder: React.FC = () => {
   const {
@@ -10,13 +11,19 @@ const TemplateBuilder: React.FC = () => {
     workoutDescription,
     setWorkoutTitle,
     setWorkoutDescription,
-    selectedExercises,
+    selectedExerciseInstances,
+    editSelectedExerciseInstance,
   } = useSessionContext();
 
-  const handleAddExercises = () => {
-    // Logic to add exercises to the template
-    console.log("Add Exercises Button Pressed");
-  };
+  function onSetChange(index: number, field: string, value: string) {
+    const newInstances = [...selectedExerciseInstances];
+    newInstances[index].sets = newInstances[index].sets.map((set, setIndex) =>
+      setIndex === index ? { ...set, [field]: value } : set
+    );
+    editSelectedExerciseInstance(newInstances[index]);
+  }
+
+  console.log(selectedExerciseInstances);
 
   return (
     <View style={styles.container}>
@@ -40,9 +47,12 @@ const TemplateBuilder: React.FC = () => {
           }}
           style={styles.addButton}
         />
-        {selectedExercises
-          ? selectedExercises.map((exercise) => (
-              <Text style={{ color: "white" }}>{exercise.name}</Text>
+        {selectedExerciseInstances
+          ? selectedExerciseInstances.map((instance) => (
+              <ExerciseInstanceBuilder
+                exerciseInstance={instance}
+                onSetChange={onSetChange}
+              />
             ))
           : null}
       </ScrollView>

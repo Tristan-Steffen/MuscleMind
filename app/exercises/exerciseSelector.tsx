@@ -3,11 +3,12 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { CustomTheme } from "@/constants/Colors";
 import { getAllExercises } from "@/utils/db/exercise";
-import { Exercise } from "@/Interfaces/sessionInterfaces";
+import { Exercise, ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { useSQLiteContext } from "expo-sqlite";
 import SearchInput from "@/components/Inputs/SearchInput";
 import ExerciseGroup from "@/components/Inputs/ExerciseGroup";
 import { useSessionContext } from "@/context/SessionContext";
+import { useSession } from "@/hooks/useSession";
 
 const ExerciseSelector: React.FC = () => {
   const db = useSQLiteContext();
@@ -18,8 +19,11 @@ const ExerciseSelector: React.FC = () => {
     null
   );
 
-  const { addExercise, removeExercise, selectedExercises } =
-    useSessionContext();
+  const {
+    addExerciseInstance,
+    removeExerciseInstance,
+    selectedExerciseInstances,
+  } = useSessionContext();
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -49,9 +53,11 @@ const ExerciseSelector: React.FC = () => {
 
   const handleExerciseSelect = (exercise: Exercise, selected: boolean) => {
     if (selected) {
-      addExercise(exercise);
+      const exerciseInstance =
+        useSession().createExerciseInstanceWithExercise(exercise);
+      addExerciseInstance(exerciseInstance);
     } else {
-      removeExercise(exercise.id!);
+      removeExerciseInstance(exercise.id!);
     }
   };
 
@@ -88,7 +94,9 @@ const ExerciseSelector: React.FC = () => {
                 group[0].targetMuscles?.primary?.[0]?.name || "Unknown"
               }
               exercises={group}
-              selectedExercises={selectedExercises}
+              selectedExercises={selectedExerciseInstances.map(
+                (instance) => instance.exercise
+              )}
               onExerciseSelect={handleExerciseSelect}
             />
           ))}
