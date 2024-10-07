@@ -17,8 +17,7 @@ const ExerciseSelector: React.FC = () => {
   const [groupedExercises, setGroupedExercises] = useState<Exercise[][] | null>(
     null
   );
-  const { addExercise, removeExercise, selectedExercises } =
-    useSessionContext();
+  const { addExercise, removeExercise } = useSessionContext();
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -69,7 +68,10 @@ const ExerciseSelector: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
         <SearchInput
           placeholder="Search"
           value={searchValue}
