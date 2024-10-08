@@ -4,6 +4,7 @@ import InputField from "@/components/Inputs/TextInput";
 import BigButton from "@/components/Buttons/BigButton";
 import { useSessionContext } from "@/context/SessionContext"; // Use session context
 import ExerciseInstanceBuilder from "@/components/ExerciseInstanceBuilder/ExerciseInstanceBuilder";
+import { Set } from "@/Interfaces/sessionInterfaces";
 
 const TemplateBuilder: React.FC = () => {
   const {
@@ -15,19 +16,20 @@ const TemplateBuilder: React.FC = () => {
     editSelectedExerciseInstance,
   } = useSessionContext();
 
-  function onSetChange(index: number, field: string, value: string) {
-    const newInstances = [...selectedExerciseInstances];
-    newInstances[index].sets = newInstances[index].sets.map((set, setIndex) =>
-      setIndex === index ? { ...set, [field]: value } : set
-    );
-    editSelectedExerciseInstance(newInstances[index]);
+  function onSetChange(
+    setIndex: number,
+    field: keyof Set,
+    value: number,
+    exerciseIndex: number
+  ) {
+    let newInstance = selectedExerciseInstances[exerciseIndex];
+    newInstance.sets[setIndex][field] = value;
+    editSelectedExerciseInstance(newInstance);
   }
-
-  console.log(selectedExerciseInstances);
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <InputField
           placeholder="Workout Title"
           value={workoutTitle}
@@ -48,10 +50,12 @@ const TemplateBuilder: React.FC = () => {
           style={styles.addButton}
         />
         {selectedExerciseInstances
-          ? selectedExerciseInstances.map((instance) => (
+          ? selectedExerciseInstances.map((instance, index) => (
               <ExerciseInstanceBuilder
                 exerciseInstance={instance}
-                onSetChange={onSetChange}
+                onSetChange={(setIndex, field, value) =>
+                  onSetChange(setIndex, field as keyof Set, value, index)
+                }
               />
             ))
           : null}
