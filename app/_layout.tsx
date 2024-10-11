@@ -10,7 +10,7 @@ import useColorScheme from "@/hooks/useColorScheme";
 import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
 import { initDatabase, checkIfDatabaseIsEmpty } from "@/utils/db/database";
 import { createTestData } from "@/utils/db/sessionFactory";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet, Text } from "react-native";
 import { SessionProvider } from "@/context/SessionContext";
 
 export {
@@ -62,6 +62,7 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const { colorScheme } = useColorScheme();
   const customTheme = createTheme(colorScheme);
+  const colors = customTheme.colors;
 
   return (
     <ThemeProvider value={customTheme}>
@@ -71,16 +72,27 @@ function RootLayoutNav() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: "modal" }} />
             <Stack.Screen
-              name="session/[id]"
-              options={{ title: "Edit Session", headerBackTitle: "Back" }}
-            />
-            <Stack.Screen
               name="template/templates"
               options={{ title: "Example Templates", headerBackTitle: "Back" }}
             />
             <Stack.Screen
               name="template/templateBuilder"
-              options={{ title: "Template Builder", headerBackTitle: "Back" }}
+              options={{
+                title: "New Workout",
+                headerBackTitle: "Back",
+                headerRight: () => (
+                  <TouchableOpacity
+                    style={styles.headerButton}
+                    onPress={() => {
+                      console.log("Custom button pressed!");
+                    }}
+                  >
+                    <Text style={[styles.headerText, { color: colors.text }]}>
+                      Start
+                    </Text>
+                  </TouchableOpacity>
+                ),
+              }}
             />
             <Stack.Screen
               name="exercises/exerciseSelector"
@@ -109,5 +121,9 @@ function RootLayoutNav() {
 const styles = StyleSheet.create({
   headerButton: {
     marginRight: 15,
+  },
+  headerText: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

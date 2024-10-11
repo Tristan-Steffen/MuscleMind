@@ -37,7 +37,7 @@ export default function TabTwoScreen() {
         <FiveDaysHistory />
         <View style={styles.buttons}>
           <BigButton
-            title="Start Training"
+            title="Workout Program"
             href={{
               pathname: "/template/templates",
               params: { type: "custom" },
@@ -45,7 +45,7 @@ export default function TabTwoScreen() {
             style={styles.button}
           />
           <BigButton
-            title="New Template"
+            title="New Workout"
             onPress={handlePress}
             style={styles.button}
           />
