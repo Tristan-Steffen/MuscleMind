@@ -6,29 +6,27 @@ import {
   TextStyle,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { Text, View } from "@/components/Themed";
+import { Text } from "@/components/Themed";
 import { CustomTheme } from "@/constants/Colors";
-import { Href, Link } from "expo-router"; // Import Link from expo-router
+import { Href, useRouter } from "expo-router";
 
 type BigButtonProps = {
   title: string;
-  onPress?: () => void; // onPress is optional for links
-  backgroundColor?: string;
-  textColor?: string;
+  onPress?: () => void;
   style?: ViewStyle;
   textStyle?: TextStyle;
-  href?: Href; // Optional href for Link behavior
+  href?: Href;
 };
 
 const BigButton: React.FC<BigButtonProps> = ({
   title,
   onPress,
-  textColor,
   style,
   textStyle,
   href,
 }) => {
   const { colors } = useTheme() as CustomTheme;
+  const router = useRouter();
 
   const buttonStyles = [
     styles.button,
@@ -36,28 +34,20 @@ const BigButton: React.FC<BigButtonProps> = ({
     { backgroundColor: colors.basicButton },
   ];
 
-  const textStyles = [
-    styles.buttonText,
-    { color: textColor || colors.text },
-    textStyle,
-  ];
+  const textStyles = [styles.buttonText, { color: colors.text }, textStyle];
 
-  // Render Link if href is provided
-  if (href) {
-    return (
-      <View style={buttonStyles}>
-        <Link href={href}>
-          <Text style={textStyles}>{title}</Text>
-        </Link>
-      </View>
-    );
-  }
+  const handlePress = () => {
+    if (href) {
+      router.push(href);
+    } else if (onPress) {
+      onPress();
+    }
+  };
 
-  // Otherwise render as a regular button
   return (
     <TouchableOpacity
       style={buttonStyles}
-      onPress={onPress}
+      onPress={handlePress}
       activeOpacity={0.8}
     >
       <Text style={textStyles}>{title}</Text>
