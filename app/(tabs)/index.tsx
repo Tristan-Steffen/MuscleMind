@@ -26,7 +26,7 @@ export default function TabTwoScreen() {
   }, [db]);
 
   const handlePress = () => {
-    router.navigate({ pathname: "/template/templateBuilder" });
+    router.navigate({ pathname: "/workouts/workoutBuilder" });
   };
 
   if (!sessions) return null;
@@ -39,7 +39,7 @@ export default function TabTwoScreen() {
           <BigButton
             title="Workout Program"
             href={{
-              pathname: "/template/templates",
+              pathname: "/workouts/workouts",
               params: { type: "custom" },
             }}
             style={styles.button}
@@ -51,21 +51,21 @@ export default function TabTwoScreen() {
           />
         </View>
         <View style={styles.header}>
-          <Text style={{ fontSize: 16 }}>Your Templates</Text>
+          <Text style={{ fontSize: 16 }}>Your Workouts</Text>
           <ButtonAsText
             title="View all"
             href={{
-              pathname: "/template/templates",
+              pathname: "/workouts/workouts",
               params: { type: "custom" },
             }}
           />
         </View>
         <View style={styles.header}>
-          <Text style={{ fontSize: 16 }}>Example Templates</Text>
+          <Text style={{ fontSize: 16 }}>Example Workouts</Text>
           <ButtonAsText
             title="View all"
             href={{
-              pathname: "/template/templates",
+              pathname: "/workouts/workouts",
               params: { type: "example" },
             }}
           />

@@ -10,7 +10,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 
-const Templates: React.FC = () => {
+const Workouts: React.FC = () => {
   const local = useLocalSearchParams();
   const db = useSQLiteContext();
   const [sessions, setSessions] = useState<Session[] | null>(null);
@@ -63,4 +63,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Templates;
+export default Workouts;

@@ -72,11 +72,11 @@ function RootLayoutNav() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: "modal" }} />
             <Stack.Screen
-              name="template/templates"
-              options={{ title: "Example Templates", headerBackTitle: "Back" }}
+              name="workouts/workouts"
+              options={{ title: "Example Workouts", headerBackTitle: "Back" }}
             />
             <Stack.Screen
-              name="template/templateBuilder"
+              name="workouts/workoutBuilder"
               options={{
                 title: "New Workout",
                 headerBackTitle: "Back",
