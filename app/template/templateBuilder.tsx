@@ -2,9 +2,10 @@ import React from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
 import InputField from "@/components/Inputs/TextInput";
 import BigButton from "@/components/Buttons/BigButton";
-import { useSessionContext } from "@/context/SessionContext"; // Use session context
+import { useSessionContext } from "@/context/SessionContext";
 import ExerciseInstanceBuilder from "@/components/ExerciseInstanceBuilder/ExerciseInstanceBuilder";
 import { Set } from "@/Interfaces/sessionInterfaces";
+import { useSession } from "@/hooks/useSession";
 
 const TemplateBuilder: React.FC = () => {
   const {
@@ -14,16 +15,39 @@ const TemplateBuilder: React.FC = () => {
     setWorkoutDescription,
     selectedExerciseInstances,
     editSelectedExerciseInstance,
+    removeExerciseInstance,
   } = useSessionContext();
+
+  const { createEmptySet } = useSession();
 
   function onSetChange(
     setIndex: number,
     field: keyof Set,
     value: number,
-    exerciseIndex: number
+    instanceIndex: number
   ) {
-    let newInstance = selectedExerciseInstances[exerciseIndex];
+    let newInstance = selectedExerciseInstances[instanceIndex];
     newInstance.sets[setIndex][field] = value;
+    editSelectedExerciseInstance(newInstance);
+  }
+
+  function onInstanceDelete(instanceIndex: number) {
+    removeExerciseInstance(instanceIndex);
+  }
+
+  function onAddInstanceSet(instanceIndex: number) {
+    let newInstance = selectedExerciseInstances[instanceIndex];
+    let lastSet = newInstance.sets[newInstance.sets.length - 1];
+    let set = createEmptySet();
+    set.reps = lastSet.reps;
+    set.weight = lastSet.weight;
+    newInstance.sets.push(set);
+    editSelectedExerciseInstance(newInstance);
+  }
+
+  function onDeleteInstanceSet(instanceIndex: number, setIndex: number) {
+    let newInstance = selectedExerciseInstances[instanceIndex];
+    newInstance.sets.splice(setIndex, 1);
     editSelectedExerciseInstance(newInstance);
   }
 
@@ -56,6 +80,9 @@ const TemplateBuilder: React.FC = () => {
                 onSetChange={(setIndex, field, value) =>
                   onSetChange(setIndex, field as keyof Set, value, index)
                 }
+                onInstanceDelete={() => onInstanceDelete(index)}
+                onAddSet={() => onAddInstanceSet(index)}
+                onSetDelete={(setIndex) => onDeleteInstanceSet(index, setIndex)}
               />
             ))
           : null}
