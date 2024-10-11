@@ -64,103 +64,112 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
           />
         </View>
       </TouchableOpacity>
-      {showExercise &&
-        exerciseInstance.sets.map((set, setIndex) => (
-          <View key={setIndex} style={styles.setContainer}>
-            <View style={styles.inputContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  onSetChange(setIndex, "reps", decrementReps(set.reps))
-                }
-                style={styles.button}
-              >
-                <FontAwesome
-                  name={"minus-circle"}
-                  size={30}
-                  color={colors.lightBackground}
-                />
-              </TouchableOpacity>
-              <InputField
-                placeholder="0"
-                style={[
-                  styles.inputField,
-                  {
-                    backgroundColor: colors.background,
-                  },
-                ]}
-                value={set.reps === 0 ? "" : set.reps?.toString() || ""}
-                keyboardType="numeric"
-                onChangeText={(value) =>
-                  onSetChange(setIndex, "reps", Number(value))
-                }
-              />
-              <TouchableOpacity
-                onPress={() =>
-                  onSetChange(setIndex, "reps", incrementReps(set.reps))
-                }
-                style={styles.button}
-              >
-                <FontAwesome
-                  name="plus-circle"
-                  size={30}
-                  color={colors.lightBackground}
-                />
-              </TouchableOpacity>
+      {showExercise && (
+        <>
+          <View style={styles.setsHeaderContainer}>
+            <View style={[styles.setsHeader, { paddingRight: 10 }]}>
+              <Text style={{ color: colors.text }}>Reps</Text>
             </View>
-
-            <View style={styles.inputContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  onSetChange(setIndex, "weight", decrementWeigth(set.weight))
-                }
-                style={styles.button}
-              >
-                <FontAwesome
-                  name={"minus-circle"}
-                  size={30}
-                  color={colors.lightBackground}
-                />
-              </TouchableOpacity>
-              <InputField
-                placeholder="0"
-                style={[
-                  styles.inputField,
-                  {
-                    backgroundColor: colors.background,
-                  },
-                ]}
-                value={set.weight === 0 ? "" : set.weight?.toString() || ""}
-                keyboardType="numeric"
-                onChangeText={(value) =>
-                  onSetChange(setIndex, "weight", Number(value))
-                }
-              />
-              <TouchableOpacity
-                onPress={() =>
-                  onSetChange(setIndex, "weight", incrementWeigth(set.weight))
-                }
-                style={styles.button}
-              >
-                <FontAwesome
-                  name="plus-circle"
-                  size={30}
-                  color={colors.lightBackground}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.trashContainer}>
-              <TouchableOpacity
-                onPress={() => {
-                  onSetDelete(setIndex);
-                }}
-              >
-                <FontAwesome name="trash" size={20} color={colors.text} />
-              </TouchableOpacity>
+            <View style={styles.setsHeader}>
+              <Text style={{ color: colors.text }}>Weight</Text>
             </View>
           </View>
-        ))}
-      {showExercise && (
-        <View>
+
+          {exerciseInstance.sets.map((set, setIndex) => (
+            <View key={setIndex} style={styles.setContainer}>
+              <View style={styles.inputContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    onSetChange(setIndex, "reps", decrementReps(set.reps))
+                  }
+                  style={styles.button}
+                >
+                  <FontAwesome
+                    name={"minus-circle"}
+                    size={30}
+                    color={colors.lightBackground}
+                  />
+                </TouchableOpacity>
+                <InputField
+                  placeholder="0"
+                  style={[
+                    styles.inputField,
+                    {
+                      backgroundColor: colors.background,
+                    },
+                  ]}
+                  value={set.reps === 0 ? "" : set.reps?.toString() || ""}
+                  keyboardType="numeric"
+                  onChangeText={(value) =>
+                    onSetChange(setIndex, "reps", Number(value))
+                  }
+                />
+                <TouchableOpacity
+                  onPress={() =>
+                    onSetChange(setIndex, "reps", incrementReps(set.reps))
+                  }
+                  style={styles.button}
+                >
+                  <FontAwesome
+                    name="plus-circle"
+                    size={30}
+                    color={colors.lightBackground}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.inputContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    onSetChange(setIndex, "weight", decrementWeigth(set.weight))
+                  }
+                  style={styles.button}
+                >
+                  <FontAwesome
+                    name={"minus-circle"}
+                    size={30}
+                    color={colors.lightBackground}
+                  />
+                </TouchableOpacity>
+                <InputField
+                  placeholder="0"
+                  style={[
+                    styles.inputField,
+                    {
+                      backgroundColor: colors.background,
+                    },
+                  ]}
+                  value={set.weight === 0 ? "" : set.weight?.toString() || ""}
+                  keyboardType="numeric"
+                  onChangeText={(value) =>
+                    onSetChange(setIndex, "weight", Number(value))
+                  }
+                />
+                <TouchableOpacity
+                  onPress={() =>
+                    onSetChange(setIndex, "weight", incrementWeigth(set.weight))
+                  }
+                  style={styles.button}
+                >
+                  <FontAwesome
+                    name="plus-circle"
+                    size={30}
+                    color={colors.lightBackground}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.trashContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    onSetDelete(setIndex);
+                  }}
+                >
+                  <FontAwesome name="trash" size={20} color={colors.text} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
+
           <ButtonAsText
             title="Add Set"
             style={styles.buttonAsText}
@@ -169,7 +178,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
               onAddSet();
             }}
           ></ButtonAsText>
-        </View>
+        </>
       )}
     </View>
   );
@@ -218,6 +227,17 @@ const styles = StyleSheet.create({
   },
   trashContainer: {
     marginRight: 10,
+    justifyContent: "center",
+  },
+  setsHeaderContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
+    marginRight: 36,
+  },
+  setsHeader: {
+    flexDirection: "row",
+    width: "50%",
     justifyContent: "center",
   },
 });
