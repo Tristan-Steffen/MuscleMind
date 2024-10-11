@@ -25,10 +25,6 @@ export default function TabTwoScreen() {
     loadSessions();
   }, [db]);
 
-  const handlePress = () => {
-    router.navigate({ pathname: "/workouts/workoutBuilder" });
-  };
-
   if (!sessions) return null;
 
   return (
@@ -46,7 +42,9 @@ export default function TabTwoScreen() {
           />
           <BigButton
             title="New Workout"
-            onPress={handlePress}
+            onPress={() =>
+              router.navigate({ pathname: "/workouts/workoutBuilder" })
+            }
             style={styles.button}
           />
         </View>

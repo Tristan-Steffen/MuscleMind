@@ -80,6 +80,7 @@ const ExerciseSelector: React.FC = () => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
+        <View style={styles.spacer}></View>
         <SearchInput
           placeholder="Search"
           value={searchValue}
@@ -100,6 +101,7 @@ const ExerciseSelector: React.FC = () => {
               onExerciseSelect={handleExerciseSelect}
             />
           ))}
+        <View style={styles.spacer}></View>
       </ScrollView>
     </View>
   );
@@ -108,7 +110,10 @@ const ExerciseSelector: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+  },
+  spacer: {
+    height: 20,
   },
 });
 
