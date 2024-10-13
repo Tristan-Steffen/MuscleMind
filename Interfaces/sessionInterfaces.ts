@@ -4,6 +4,7 @@ export interface Set {
   weight: number | null;
   rest: number | null;
   exerciseInstanceId: number | null;
+  done?: boolean;
 }
 
 export interface Exercise {
@@ -18,6 +19,7 @@ export interface Exercise {
   };
   image?: string;
   cues?: string[];
+  custom?: boolean;
 }
 
 export interface ExerciseInstance {
