@@ -9,7 +9,11 @@ import ButtonAsText from "../Buttons/ButtonAsText";
 
 type ExerciseInstanceBuilderProps = {
   exerciseInstance: ExerciseInstance;
-  onSetChange: (setIndex: number, field: string, value: number) => void;
+  onSetChange: (
+    setIndex: number,
+    field: "reps" | "weight",
+    value: number
+  ) => void;
   onAddSet: () => void;
   onInstanceDelete: () => void;
   onSetDelete: (setIndex: number) => void;

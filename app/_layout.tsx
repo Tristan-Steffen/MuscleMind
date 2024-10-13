@@ -2,9 +2,9 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ThemeProvider } from "@react-navigation/native";
 import { createTheme } from "@/constants/Colors";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import "react-native-reanimated";
 import useColorScheme from "@/hooks/useColorScheme";
 import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
@@ -12,28 +12,12 @@ import { initDatabase, checkIfDatabaseIsEmpty } from "@/utils/db/database";
 import { createTestData } from "@/utils/db/sessionFactory";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
 import { SessionProvider } from "@/context/SessionContext";
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(tabs)",
-};
-
-async function migrateDbIfNeeded(db: SQLiteDatabase) {
-  await initDatabase(db);
-  const isEmpty = await checkIfDatabaseIsEmpty(db);
-  if (isEmpty) {
-    console.log("Database is empty, creating test data...");
-    await createTestData(db);
-  }
-}
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
+import Workout from "@/components/workout";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -41,16 +25,12 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [error, loaded]);
 
   if (!loaded) {
     return null;
@@ -64,57 +44,98 @@ function RootLayoutNav() {
   const customTheme = createTheme(colorScheme);
   const colors = customTheme.colors;
 
+  // Ref for the BottomSheetModal
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // Modal snap points
+  const snapPoints = useMemo(() => ["10%", "95%"], []);
+
+  // Modal trigger function
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present(); // Correct method to present the modal
+  }, []);
+
   return (
-    <ThemeProvider value={customTheme}>
-      <SQLiteProvider databaseName="fitness32.db" onInit={migrateDbIfNeeded}>
-        <SessionProvider>
-          <Stack screenOptions={{ animation: "fade" }}>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-            <Stack.Screen
-              name="workouts/workouts"
-              options={{ title: "Example Workouts", headerBackTitle: "Back" }}
-            />
-            <Stack.Screen
-              name="workouts/workoutBuilder"
-              options={{
-                title: "New Workout",
-                headerBackTitle: "Back",
-                headerRight: () => (
-                  <TouchableOpacity
-                    style={styles.headerButton}
-                    onPress={() => {
-                      console.log("Custom button pressed!");
-                    }}
-                  >
-                    <Text style={[styles.headerText, { color: colors.text }]}>
-                      Start
-                    </Text>
-                  </TouchableOpacity>
-                ),
-              }}
-            />
-            <Stack.Screen
-              name="exercises/exerciseSelector"
-              options={{
-                title: "Exercise Selector",
-                headerBackTitle: "Back",
-                headerRight: () => (
-                  <TouchableOpacity
-                    style={styles.headerButton}
-                    onPress={() => {
-                      console.log("Custom button pressed!");
-                    }}
-                  >
-                    <FontAwesome name="plus" size={24} color="white" />
-                  </TouchableOpacity>
-                ),
-              }}
-            />
-          </Stack>
-        </SessionProvider>
-      </SQLiteProvider>
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+        <ThemeProvider value={customTheme}>
+          <SQLiteProvider
+            databaseName="fitness32.db"
+            onInit={async (db: SQLiteDatabase) => {
+              await initDatabase(db);
+              const isEmpty = await checkIfDatabaseIsEmpty(db);
+              if (isEmpty) {
+                await createTestData(db);
+              }
+            }}
+          >
+            <SessionProvider>
+              <Stack screenOptions={{ animation: "fade" }}>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="modal"
+                  options={{ presentation: "modal" }}
+                />
+                <Stack.Screen
+                  name="workouts/workouts"
+                  options={{
+                    title: "Example Workouts",
+                    headerBackTitle: "Back",
+                  }}
+                />
+                <Stack.Screen
+                  name="workouts/workoutBuilder"
+                  options={{
+                    title: "New Workout",
+                    headerBackTitle: "Back",
+                    headerRight: () => (
+                      <TouchableOpacity
+                        style={styles.headerButton}
+                        onPress={handlePresentModalPress} // Trigger modal here
+                      >
+                        <Text
+                          style={[styles.headerText, { color: colors.text }]}
+                        >
+                          Start
+                        </Text>
+                      </TouchableOpacity>
+                    ),
+                  }}
+                />
+                <Stack.Screen
+                  name="exercises/exerciseSelector"
+                  options={{
+                    title: "Exercise Selector",
+                    headerBackTitle: "Back",
+                    headerRight: () => (
+                      <TouchableOpacity
+                        style={styles.headerButton}
+                        onPress={() => {
+                          console.log("Custom button pressed!");
+                        }}
+                      >
+                        <FontAwesome name="plus" size={24} color="white" />
+                      </TouchableOpacity>
+                    ),
+                  }}
+                />
+              </Stack>
+              <BottomSheetModal
+                ref={bottomSheetModalRef}
+                index={1}
+                snapPoints={snapPoints}
+                enablePanDownToClose={false}
+                enableDismissOnClose={false}
+              >
+                <SessionProvider>
+                  <Workout />
+                </SessionProvider>
+              </BottomSheetModal>
+            </SessionProvider>
+          </SQLiteProvider>
+        </ThemeProvider>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }
 

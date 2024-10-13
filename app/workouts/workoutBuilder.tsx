@@ -3,8 +3,7 @@ import { View, StyleSheet, Text, ScrollView } from "react-native";
 import InputField from "@/components/Inputs/TextInput";
 import BigButton from "@/components/Buttons/BigButton";
 import { useSessionContext } from "@/context/SessionContext";
-import ExerciseInstanceBuilder from "@/components/ExerciseInstanceBuilder/ExerciseInstanceBuilder";
-import { Set } from "@/Interfaces/sessionInterfaces";
+import ExerciseInstanceBuilder from "@/components/Exercise/ExerciseInstanceBuilder";
 import { useSession } from "@/hooks/useSession";
 
 const TemplateBuilder: React.FC = () => {
@@ -22,7 +21,7 @@ const TemplateBuilder: React.FC = () => {
 
   function onSetChange(
     setIndex: number,
-    field: keyof Set,
+    field: "reps" | "weight",
     value: number,
     instanceIndex: number
   ) {
@@ -53,7 +52,10 @@ const TemplateBuilder: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ paddingVertical: 15 }}
+      >
         <InputField
           placeholder="Workout Title"
           value={workoutTitle}
@@ -77,8 +79,8 @@ const TemplateBuilder: React.FC = () => {
           ? selectedExerciseInstances.map((instance, index) => (
               <ExerciseInstanceBuilder
                 exerciseInstance={instance}
-                onSetChange={(setIndex, field, value) =>
-                  onSetChange(setIndex, field as keyof Set, value, index)
+                onSetChange={(setIndex, field: "reps" | "weight", value) =>
+                  onSetChange(setIndex, field, value, index)
                 }
                 onInstanceDelete={() => onInstanceDelete(index)}
                 onAddSet={() => onAddInstanceSet(index)}
@@ -94,7 +96,7 @@ const TemplateBuilder: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
   },
   addButton: {
     marginTop: 25,
