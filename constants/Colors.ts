@@ -18,6 +18,7 @@ const Colors = {
     border: "#666778",
     notification: "#ff453a",
     basicButton: "#505F9E",
+    success: "#4CD964",
   },
   dark: {
     text: white,
@@ -34,6 +35,7 @@ const Colors = {
     border: "#51515B",
     notification: "#ff453a",
     basicButton: "#505F9E",
+    success: "#4CD964",
   },
 };
 
@@ -46,6 +48,7 @@ export type CustomTheme = Theme & {
     basicButton: string;
     darkerBackground: string;
     placeHolderText: string;
+    success: string;
   };
 };
 
@@ -63,5 +66,6 @@ export const createTheme = (colorScheme: "light" | "dark"): CustomTheme => ({
     darkBackground: Colors[colorScheme].darkBackground,
     darkerBackground: Colors[colorScheme].darkerBackground,
     placeHolderText: Colors[colorScheme].placeHolderText,
+    success: Colors[colorScheme].success,
   },
 });

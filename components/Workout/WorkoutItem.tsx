@@ -1,25 +1,25 @@
 import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "@/components/Themed";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
-import { useTheme } from "@react-navigation/native";
 import { CustomTheme } from "@/constants/Colors";
-import { Line } from "react-native-svg";
 
-// Placeholder image in case the exercise image is missing
 const placeholderImage = require("@/assets/images/exercises/bench-press.png");
 
 type WorkoutItemProps = {
   exerciseInstance: ExerciseInstance;
   colors: CustomTheme["colors"];
+  onPress: () => void;
 };
 
 const WorkoutItem: React.FC<WorkoutItemProps> = ({
   exerciseInstance,
   colors,
+  onPress,
 }) => {
   return (
-    <View
+    <TouchableOpacity
+      onPress={onPress}
       style={[
         styles.container,
         {
@@ -40,11 +40,17 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({
         <View style={[styles.line, { borderColor: colors.border }]}></View>
         <View style={styles.sets}>
           {exerciseInstance.sets.map((set, index) => (
-            <View key={index} style={styles.setOval} />
+            <View
+              key={index}
+              style={[
+                styles.setOval,
+                set.done ? { backgroundColor: colors.success } : null,
+              ]}
+            />
           ))}
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -52,7 +58,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    marginTop: 20,
     borderRadius: 20,
     borderWidth: 1,
   },
