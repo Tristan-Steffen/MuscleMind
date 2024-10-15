@@ -17,7 +17,7 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import Workout from "@/components/workout";
+import Workout from "@/components/Workout/Workout";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({

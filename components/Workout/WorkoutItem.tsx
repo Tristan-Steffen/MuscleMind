@@ -8,11 +8,11 @@ import { CustomTheme } from "@/constants/Colors";
 // Placeholder image in case the exercise image is missing
 const placeholderImage = require("@/assets/images/exercises/bench-press.png");
 
-type ExerciseItemProps = {
+type WorkoutItemProps = {
   exerciseInstance: ExerciseInstance;
 };
 
-const ExerciseItem: React.FC<ExerciseItemProps> = ({ exerciseInstance }) => {
+const WorkoutItem: React.FC<WorkoutItemProps> = ({ exerciseInstance }) => {
   const { colors } = useTheme() as CustomTheme;
 
   // Uncomment to actually use real images
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ExerciseItem;
+export default WorkoutItem;

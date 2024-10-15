@@ -3,7 +3,7 @@ import { View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "@/components/Themed";
 import { useTheme } from "@react-navigation/native";
 import { CustomTheme } from "@/constants/Colors";
-import ExerciseItem from "@/components/Exercise/ExerciseItem";
+import WorkoutItem from "@/components/Workout/WorkoutItem";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 
 interface WorkoutProps {
@@ -37,7 +37,7 @@ const Workout: React.FC<WorkoutProps> = ({
       >
         {Instances.length > 0 ? (
           Instances.map((instance, index) => (
-            <ExerciseItem key={index} exerciseInstance={instance} />
+            <WorkoutItem key={index} exerciseInstance={instance} />
           ))
         ) : (
           <Text style={styles.noExerciseText}>No exercises selected.</Text>
