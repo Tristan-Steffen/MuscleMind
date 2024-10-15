@@ -78,7 +78,7 @@ function RootLayoutNav() {
   const snapPoints = useMemo(() => ["10%", "95%"], []);
 
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present(); // Correct method to present the modal
+    bottomSheetModalRef.current?.present();
   }, []);
 
   return (
@@ -133,7 +133,6 @@ function RootLayoutNav() {
         index={1}
         snapPoints={snapPoints}
         enablePanDownToClose={false}
-        enableDismissOnClose={false}
       >
         <Workout
           workoutTitle={workoutTitle}
@@ -141,6 +140,9 @@ function RootLayoutNav() {
           exerciseInstances={selectedExerciseInstances}
           onLoad={() => {
             clearContext();
+          }}
+          onDeleteWorkout={() => {
+            bottomSheetModalRef.current?.close(); // Dismiss the modal when delete is clicked
           }}
         />
       </BottomSheetModal>
