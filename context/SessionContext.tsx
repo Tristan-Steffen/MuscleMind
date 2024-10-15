@@ -10,6 +10,7 @@ type SessionContextType = {
   setWorkoutDescription: (description: string) => void;
   addExerciseInstance: (exerciseInstance: ExerciseInstance) => void;
   removeExerciseInstance: (exerciseInstanceId: number) => void;
+  clearContext: () => void;
 };
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
@@ -46,12 +47,19 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
     );
   };
 
+  const clearContext = () => {
+    setWorkoutTitle("");
+    setWorkoutDescription("");
+    setSelectedExerciseInstances([]);
+  };
+
   return (
     <SessionContext.Provider
       value={{
         workoutTitle,
         workoutDescription,
         selectedExerciseInstances,
+        clearContext,
         editSelectedExerciseInstance,
         setWorkoutTitle,
         setWorkoutDescription,
