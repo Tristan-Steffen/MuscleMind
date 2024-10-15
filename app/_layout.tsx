@@ -18,6 +18,7 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import Workout from "@/components/Workout/Workout";
+import WorkoutHeader from "@/components/Workout/WorkoutHeader";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -128,11 +129,27 @@ function RootLayoutNav() {
           }}
         />
       </Stack>
+
+      {/* BottomSheetModal is blocking the context from getting passed down into Workout, so I will have to manually pass everything down */}
       <BottomSheetModal
         ref={bottomSheetModalRef}
         index={1}
         snapPoints={snapPoints}
         enablePanDownToClose={false}
+        backgroundStyle={{
+          backgroundColor: colors.darkerBackground,
+        }}
+        handleComponent={() => (
+          <WorkoutHeader
+            onDeleteWorkout={() => {
+              bottomSheetModalRef.current?.close();
+            }}
+            onFinishWorkout={() => {
+              console.log("Workout Finished!");
+            }}
+            colors={colors}
+          />
+        )}
       >
         <Workout
           workoutTitle={workoutTitle}
@@ -141,9 +158,7 @@ function RootLayoutNav() {
           onLoad={() => {
             clearContext();
           }}
-          onDeleteWorkout={() => {
-            bottomSheetModalRef.current?.close(); // Dismiss the modal when delete is clicked
-          }}
+          colors={colors}
         />
       </BottomSheetModal>
     </>

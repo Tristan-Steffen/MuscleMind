@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 import { Text } from "@/components/Themed";
-import WorkoutHeader from "@/components/Workout/WorkoutHeader";
 import WorkoutItem from "@/components/Workout/WorkoutItem";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { CustomTheme } from "@/constants/Colors";
-import { useTheme } from "@react-navigation/native";
 
 interface WorkoutProps {
   workoutTitle: string;
   workoutDescription: string;
   exerciseInstances: ExerciseInstance[];
   onLoad: () => void;
-  onDeleteWorkout: () => void;
+  colors: CustomTheme["colors"];
 }
 
 const Workout: React.FC<WorkoutProps> = ({
@@ -20,27 +18,19 @@ const Workout: React.FC<WorkoutProps> = ({
   workoutDescription,
   exerciseInstances,
   onLoad,
-  onDeleteWorkout,
+  colors,
 }) => {
   const [Title, setTitle] = useState<string>(workoutTitle);
   const [Description, setDescription] = useState<string>(workoutDescription);
   const [Instances, setInstances] =
     useState<ExerciseInstance[]>(exerciseInstances);
-  const { colors } = useTheme() as CustomTheme;
 
   useEffect(() => {
     onLoad();
   }, []);
 
-  const onFinishWorkout = () => {
-    console.log("Workout finished!");
-  };
   return (
-    <View style={styles.container}>
-      <WorkoutHeader
-        onDeleteWorkout={onDeleteWorkout}
-        onFinishWorkout={onFinishWorkout}
-      />
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}
