@@ -37,7 +37,11 @@ const Workout: React.FC<WorkoutProps> = ({
       >
         {Instances.length > 0 ? (
           Instances.map((instance, index) => (
-            <WorkoutItem key={index} exerciseInstance={instance} />
+            <WorkoutItem
+              key={index}
+              exerciseInstance={instance}
+              colors={colors}
+            />
           ))
         ) : (
           <Text style={styles.noExerciseText}>No exercises selected.</Text>
@@ -50,6 +54,7 @@ const Workout: React.FC<WorkoutProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
   },
   scrollContainer: {
     paddingBottom: 100, // Extra space for scrolling
