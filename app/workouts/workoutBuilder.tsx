@@ -78,6 +78,7 @@ const TemplateBuilder: React.FC = () => {
         {selectedExerciseInstances
           ? selectedExerciseInstances.map((instance, index) => (
               <ExerciseInstanceBuilder
+                key={index}
                 exerciseInstance={instance}
                 onSetChange={(setIndex, field: "reps" | "weight", value) =>
                   onSetChange(setIndex, field, value, index)

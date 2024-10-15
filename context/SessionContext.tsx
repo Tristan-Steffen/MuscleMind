@@ -33,7 +33,9 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
 
   const removeExerciseInstance = (exerciseInstanceId: number) => {
     setSelectedExerciseInstances((prevInstances) =>
-      prevInstances.filter((_, index) => index !== exerciseInstanceId)
+      prevInstances.filter(
+        (instance) => instance.exercise.id !== exerciseInstanceId
+      )
     );
   };
 

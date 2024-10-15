@@ -38,39 +38,36 @@ const ExerciseGroup: React.FC<ExerciseGroupProps> = ({
       </Text>
 
       <View style={[styles.exercises, { borderColor: colors.border }]}>
-        {exercises.map((exercise, index) => {
-          const isSelected = isExerciseSelected(exercise.id!);
-          return (
-            <View key={exercise.id}>
+        {exercises.map((exercise, index) => (
+          <View key={index}>
+            <View
+              style={
+                index !== 0
+                  ? [styles.divider, { borderColor: colors.border }]
+                  : null
+              }
+            />
+            <TouchableOpacity
+              style={styles.exerciseRow}
+              onPress={() => toggleExerciseSelection(exercise)}
+            >
               <View
-                style={
-                  index !== 0
-                    ? [styles.divider, { borderColor: colors.border }]
-                    : null
-                }
+                style={[
+                  styles.circle,
+                  {
+                    backgroundColor: isExerciseSelected(exercise.id!)
+                      ? colors.primary
+                      : colors.background,
+                    borderColor: colors.text,
+                  },
+                ]}
               />
-              <TouchableOpacity
-                style={styles.exerciseRow}
-                onPress={() => toggleExerciseSelection(exercise)}
-              >
-                <View
-                  style={[
-                    styles.circle,
-                    {
-                      backgroundColor: isSelected
-                        ? colors.primary
-                        : colors.background,
-                      borderColor: colors.text,
-                    },
-                  ]}
-                />
-                <Text style={[styles.exerciseText, { color: colors.text }]}>
-                  {exercise.name}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          );
-        })}
+              <Text style={[styles.exerciseText, { color: colors.text }]}>
+                {exercise.name}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ))}
       </View>
     </View>
   );
