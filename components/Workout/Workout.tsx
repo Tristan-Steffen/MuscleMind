@@ -1,40 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "@/components/Themed";
-import WorkoutHeader from "@/components/Workout/WorkoutHeader";
 import WorkoutItem from "@/components/Workout/WorkoutItem";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { CustomTheme } from "@/constants/Colors";
 import WorkoutExercisePerformer from "./WorkoutExercisePerformer";
 import { useSession } from "@/hooks/useSession";
+import { useSessionContext } from "@/context/SessionContext";
+import { useTheme } from "@react-navigation/native";
 
-interface WorkoutProps {
-  workoutTitle: string;
-  workoutDescription: string;
-  exerciseInstances: ExerciseInstance[];
-  onLoad: () => void;
-  colors: CustomTheme["colors"];
-}
+interface WorkoutProps {}
 
-const Workout: React.FC<WorkoutProps> = ({
-  workoutTitle,
-  workoutDescription,
-  exerciseInstances,
-  onLoad,
-  colors,
-}) => {
-  const [Title, setTitle] = useState<string>(workoutTitle);
-  const [Description, setDescription] = useState<string>(workoutDescription);
-  const [Instances, setInstances] =
-    useState<ExerciseInstance[]>(exerciseInstances);
+const Workout: React.FC<WorkoutProps> = () => {
+  const { colors } = useTheme() as CustomTheme;
+  const { selectedExerciseInstances, clearContext } = useSessionContext();
+  const { createEmptySet } = useSession();
+
+  const [title, setTitle] = useState<string>();
+  const [description, setDescription] = useState<string>();
+  const [instances, setInstances] = useState<ExerciseInstance[]>();
 
   const [selectedExerciseInstance, setSelectedExerciseInstance] =
     useState<ExerciseInstance | null>(null);
 
-  const { createEmptySet } = useSession();
   useEffect(() => {
-    onLoad();
+    console.log("selectedExerciseInstances");
+    setInstances(selectedExerciseInstances);
+    clearContext();
   }, []);
+
+  useEffect(() => {
+    console.log("Selected exercise instance changed!");
+    if (selectedExerciseInstance) {
+      const updatedInstances = instances!.map((instance) =>
+        instance.exercise.id === selectedExerciseInstance.exercise.id
+          ? selectedExerciseInstance
+          : instance
+      );
+      setInstances(updatedInstances);
+    }
+  }, [selectedExerciseInstance?.sets]);
 
   const handleExercisePress = (exerciseInstance: ExerciseInstance) => {
     setSelectedExerciseInstance(exerciseInstance);
@@ -44,7 +49,6 @@ const Workout: React.FC<WorkoutProps> = ({
     setSelectedExerciseInstance(null);
   };
 
-  // Function to mark a set as done
   const handleSetDone = (setIndex: number) => {
     if (!selectedExerciseInstance) return;
     const updatedSets = selectedExerciseInstance.sets.map((set, index) =>
@@ -56,7 +60,6 @@ const Workout: React.FC<WorkoutProps> = ({
     });
   };
 
-  // Function to add a new set
   const handleAddSet = () => {
     if (!selectedExerciseInstance) return;
     let newSet = createEmptySet();
@@ -77,7 +80,7 @@ const Workout: React.FC<WorkoutProps> = ({
 
   const handleBackToWorkout = () => {
     if (selectedExerciseInstance) {
-      const updatedInstances = Instances.map((instance) =>
+      const updatedInstances = instances!.map((instance) =>
         instance.exercise.id === selectedExerciseInstance.exercise.id
           ? selectedExerciseInstance
           : instance
@@ -87,7 +90,24 @@ const Workout: React.FC<WorkoutProps> = ({
     }
   };
 
-  return (
+  function onSetChange(
+    setIndex: number,
+    field: "reps" | "weight",
+    value: number
+  ) {
+    if (!selectedExerciseInstance) return;
+
+    const updatedInstance = {
+      ...selectedExerciseInstance,
+      sets: selectedExerciseInstance.sets.map((set, index) =>
+        index === setIndex ? { ...set, [field]: value } : set
+      ),
+    };
+
+    setSelectedExerciseInstance(updatedInstance);
+  }
+
+  return instances ? (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {selectedExerciseInstance ? (
         <WorkoutExercisePerformer
@@ -95,14 +115,18 @@ const Workout: React.FC<WorkoutProps> = ({
           onSetDone={handleSetDone}
           onAddSet={handleAddSet}
           onBackToWorkout={handleBackToWorkout}
+          colors={colors}
+          onSetChange={(setIndex, field: "reps" | "weight", value) =>
+            onSetChange(setIndex, field, value)
+          }
         />
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContainer}
         >
-          {Instances.length > 0 ? (
-            Instances.map((instance, index) => (
+          {instances.length > 0 ? (
+            instances.map((instance, index) => (
               <WorkoutItem
                 key={index}
                 exerciseInstance={instance}
@@ -116,15 +140,16 @@ const Workout: React.FC<WorkoutProps> = ({
         </ScrollView>
       )}
     </View>
-  );
+  ) : null;
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 20,
   },
   scrollContainer: {
-    paddingBottom: 100, // Extra space for scrolling
+    paddingBottom: 100,
   },
   noExerciseText: {
     textAlign: "center",

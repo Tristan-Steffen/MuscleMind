@@ -8,18 +8,18 @@ import {
 import { Text } from "@/components/Themed";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { CustomTheme } from "@/constants/Colors";
+import { useTheme } from "@react-navigation/native";
 
 interface WorkoutHeaderProps {
   onDeleteWorkout: () => void;
   onFinishWorkout: () => void;
-  colors: CustomTheme["colors"];
 }
 
 const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
   onDeleteWorkout,
   onFinishWorkout,
-  colors,
 }) => {
+  const { colors } = useTheme() as CustomTheme;
   const [seconds, setSeconds] = useState<number>(0);
   const [minutes, setMinutes] = useState<number>(0);
   const [hours, setHours] = useState<number>(0);

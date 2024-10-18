@@ -40,26 +40,26 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <BottomSheetModalProvider>
-        <ThemeProvider value={customTheme}>
-          <SQLiteProvider
-            databaseName="fitness32.db"
-            onInit={async (db: SQLiteDatabase) => {
-              await initDatabase(db);
-              const isEmpty = await checkIfDatabaseIsEmpty(db);
-              if (isEmpty) {
-                await createTestData(db);
-              }
-            }}
-          >
-            <SessionProvider>
+    <ThemeProvider value={customTheme}>
+      <SQLiteProvider
+        databaseName="fitness32.db"
+        onInit={async (db: SQLiteDatabase) => {
+          await initDatabase(db);
+          const isEmpty = await checkIfDatabaseIsEmpty(db);
+          if (isEmpty) {
+            await createTestData(db);
+          }
+        }}
+      >
+        <SessionProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <BottomSheetModalProvider>
               <RootLayoutNav />
-            </SessionProvider>
-          </SQLiteProvider>
-        </ThemeProvider>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+            </BottomSheetModalProvider>
+          </GestureHandlerRootView>
+        </SessionProvider>
+      </SQLiteProvider>
+    </ThemeProvider>
   );
 }
 
@@ -67,13 +67,6 @@ function RootLayoutNav() {
   const { colorScheme } = useColorScheme();
   const customTheme = createTheme(colorScheme);
   const colors = customTheme.colors;
-
-  const {
-    workoutTitle,
-    workoutDescription,
-    selectedExerciseInstances,
-    clearContext,
-  } = useSessionContext();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => ["10%", "95%"], []);
@@ -102,7 +95,7 @@ function RootLayoutNav() {
             headerRight: () => (
               <TouchableOpacity
                 style={styles.headerButton}
-                onPress={handlePresentModalPress} // Trigger modal here
+                onPress={handlePresentModalPress}
               >
                 <Text style={[styles.headerText, { color: colors.text }]}>
                   Start
@@ -130,7 +123,6 @@ function RootLayoutNav() {
         />
       </Stack>
 
-      {/* BottomSheetModal is blocking the context from getting passed down into Workout, so I will have to manually pass everything down */}
       <BottomSheetModal
         ref={bottomSheetModalRef}
         index={1}
@@ -147,19 +139,10 @@ function RootLayoutNav() {
             onFinishWorkout={() => {
               console.log("Workout Finished!");
             }}
-            colors={colors}
           />
         )}
       >
-        <Workout
-          workoutTitle={workoutTitle}
-          workoutDescription={workoutDescription}
-          exerciseInstances={selectedExerciseInstances}
-          onLoad={() => {
-            clearContext();
-          }}
-          colors={colors}
-        />
+        <Workout />
       </BottomSheetModal>
     </>
   );

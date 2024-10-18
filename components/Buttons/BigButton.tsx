@@ -30,8 +30,8 @@ const BigButton: React.FC<BigButtonProps> = ({
 
   const buttonStyles = [
     styles.button,
-    style,
     { backgroundColor: colors.basicButton },
+    style,
   ];
 
   const textStyles = [styles.buttonText, { color: colors.text }, textStyle];
