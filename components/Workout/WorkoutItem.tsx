@@ -1,10 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "@/components/Themed";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { CustomTheme } from "@/constants/Colors";
-
-const placeholderImage = require("@/assets/images/exercises/bench-press.png");
+import ImageCollection from "@/utils/imageCollection";
 
 type WorkoutItemProps = {
   exerciseInstance: ExerciseInstance;
@@ -17,6 +16,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({
   colors,
   onPress,
 }) => {
+  console.log(exerciseInstance.exercise.name);
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -29,9 +29,15 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({
       ]}
     >
       <Image
-        source={placeholderImage}
+        source={
+          exerciseInstance.exercise.image
+            ? ImageCollection[
+                exerciseInstance.exercise.name as keyof typeof ImageCollection
+              ]
+            : ImageCollection["placeholderImage"]
+        }
         style={styles.image}
-        defaultSource={placeholderImage}
+        defaultSource={ImageCollection["placeholderImage"]}
       />
       <View style={styles.content}>
         <Text style={[styles.exerciseName, { color: colors.text }]}>
@@ -96,4 +102,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WorkoutItem;
+export default memo(WorkoutItem);

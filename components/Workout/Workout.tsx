@@ -1,5 +1,5 @@
-import React, { memo, useEffect, useState } from "react";
-import { View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, FlatList } from "react-native";
 import { Text } from "@/components/Themed";
 import WorkoutItem from "@/components/Workout/WorkoutItem";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
@@ -8,6 +8,7 @@ import WorkoutExercisePerformer from "./WorkoutExercisePerformer";
 import { useSession } from "@/hooks/useSession";
 import { useSessionContext } from "@/context/SessionContext";
 import { useTheme } from "@react-navigation/native";
+import { router } from "expo-router";
 
 interface WorkoutProps {}
 
@@ -24,13 +25,12 @@ const Workout: React.FC<WorkoutProps> = () => {
     useState<ExerciseInstance | null>(null);
 
   useEffect(() => {
-    console.log("selectedExerciseInstances");
     setInstances(selectedExerciseInstances);
     clearContext();
+    router.navigate({ pathname: "/" });
   }, []);
 
   useEffect(() => {
-    console.log("Selected exercise instance changed!");
     if (selectedExerciseInstance) {
       const updatedInstances = instances!.map((instance) =>
         instance.exercise.id === selectedExerciseInstance.exercise.id
@@ -43,10 +43,6 @@ const Workout: React.FC<WorkoutProps> = () => {
 
   const handleExercisePress = (exerciseInstance: ExerciseInstance) => {
     setSelectedExerciseInstance(exerciseInstance);
-  };
-
-  const handleBackToList = () => {
-    setSelectedExerciseInstance(null);
   };
 
   const handleSetDone = (setIndex: number) => {
@@ -121,26 +117,23 @@ const Workout: React.FC<WorkoutProps> = () => {
           }
         />
       ) : (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContainer}
-        >
-          {instances.length > 0 ? (
-            instances.map((instance, index) => (
-              <WorkoutItem
-                key={index}
-                exerciseInstance={instance}
-                colors={colors}
-                onPress={() => handleExercisePress(instance)} // Trigger navigation
-              />
-            ))
-          ) : (
-            <Text style={styles.noExerciseText}>No exercises selected.</Text>
+        <FlatList
+          data={instances}
+          renderItem={({ item }) => (
+            <WorkoutItem
+              exerciseInstance={item}
+              colors={colors}
+              onPress={() => handleExercisePress(item)}
+            />
           )}
-        </ScrollView>
+        />
       )}
     </View>
-  ) : null;
+  ) : (
+    <View>
+      <Text style={styles.noExerciseText}>No exercises added yet!</Text>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

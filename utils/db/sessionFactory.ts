@@ -30,7 +30,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Chest exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/bench-press.png", // Replace with the actual image path
         cues: [
           "Keep your back flat on the bench",
           "Lower the bar slowly to your chest",
@@ -46,7 +45,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Shoulder exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/overhead-press.png", // Replace with the actual image path
         cues: [
           "Keep your core tight",
           "Press overhead and lock out your elbows",
@@ -62,7 +60,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Chest isolation exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/dumbbell-flyes.png", // Replace with the actual image path
         cues: [
           "Keep a slight bend in your elbows",
           "Lower the dumbbells in a wide arc",
@@ -78,7 +75,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Triceps exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/triceps-pushdown.png", // Replace with the actual image path
         cues: [
           "Keep your elbows close to your body",
           "Push the bar straight down",
@@ -96,7 +92,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Back exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/deadlift.png", // Replace with the actual image path
         cues: [
           "Keep your chest up and back flat",
           "Drive through your heels",
@@ -112,7 +107,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Back and biceps exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/pull-ups.png", // Replace with the actual image path
         cues: [
           "Engage your lats at the start",
           "Pull with your elbows, not your hands",
@@ -128,7 +122,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Back and biceps exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/barbell-rows.png", // Replace with the actual image path
         cues: [
           "Keep your back straight and core engaged",
           "Row the bar towards your belly button",
@@ -144,7 +137,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Biceps exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/bicep-curls.png", // Replace with the actual image path
         cues: [
           "Keep your elbows close to your sides",
           "Curl the weight up in a controlled motion",
@@ -162,7 +154,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Leg exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/squat.png", // Replace with the actual image path
         cues: [
           "Keep your chest up",
           "Push through your heels",
@@ -178,7 +169,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Leg exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/leg-press.png", // Replace with the actual image path
         cues: [
           "Place your feet shoulder-width apart",
           "Lower the platform slowly",
@@ -194,7 +184,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Leg exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/lunges.png", // Replace with the actual image path
         cues: [
           "Keep your chest up and core tight",
           "Step forward and lower your hips until both knees are bent at 90 degrees",
@@ -210,7 +199,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Hamstring exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/leg-curls.png", // Replace with the actual image path
         cues: [
           "Keep your hips on the pad",
           "Curl your legs as high as you can",
@@ -226,7 +214,6 @@ export const createTestData = async (db: SQLiteDatabase) => {
         description: "Calf exercise",
         createdAt: new Date(),
         updatedAt: new Date(),
-        image: "/images/exercises/calf-raises.png", // Replace with the actual image path
         cues: [
           "Stand with your feet shoulder-width apart",
           "Raise your heels off the ground",
