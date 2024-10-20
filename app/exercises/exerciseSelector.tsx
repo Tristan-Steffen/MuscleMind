@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { useTheme } from "@react-navigation/native";
-import { CustomTheme } from "@/constants/Colors";
 import { getAllExercises } from "@/utils/db/exercise";
-import { Exercise, ExerciseInstance } from "@/Interfaces/sessionInterfaces";
+import { Exercise } from "@/Interfaces/sessionInterfaces";
 import { useSQLiteContext } from "expo-sqlite";
 import SearchInput from "@/components/Inputs/SearchInput";
 import ExerciseGroup from "@/components/Inputs/ExerciseGroup";
@@ -12,7 +10,6 @@ import { useSession } from "@/hooks/useSession";
 
 const ExerciseSelector: React.FC = () => {
   const db = useSQLiteContext();
-  const { colors } = useTheme() as CustomTheme;
   const [searchValue, setSearchValue] = useState<string>("");
   const [allExercises, setAllExercises] = useState<Exercise[] | null>(null);
   const [groupedExercises, setGroupedExercises] = useState<Exercise[][] | null>(
@@ -20,9 +17,9 @@ const ExerciseSelector: React.FC = () => {
   );
 
   const {
-    addExerciseInstance,
-    removeExerciseInstance,
-    selectedExerciseInstances,
+    addSelectionExerciseInstance,
+    removeSelectionExerciseInstance,
+    newSelections,
   } = useSessionContext();
 
   useEffect(() => {
@@ -55,9 +52,9 @@ const ExerciseSelector: React.FC = () => {
     if (selected) {
       const exerciseInstance =
         useSession().createExerciseInstanceWithExercise(exercise);
-      addExerciseInstance(exerciseInstance);
+      addSelectionExerciseInstance(exerciseInstance);
     } else {
-      removeExerciseInstance(exercise.name);
+      removeSelectionExerciseInstance(exercise.name);
     }
   };
 
@@ -95,7 +92,7 @@ const ExerciseSelector: React.FC = () => {
                 group[0].targetMuscles?.primary?.[0]?.name || "Unknown"
               }
               exercises={group}
-              selectedExercises={selectedExerciseInstances.map(
+              selectedExercises={newSelections.map(
                 (instance) => instance.exercise
               )}
               onExerciseSelect={handleExerciseSelect}

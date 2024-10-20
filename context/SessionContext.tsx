@@ -5,11 +5,16 @@ type SessionContextType = {
   workoutTitle: string;
   workoutDescription: string;
   selectedExerciseInstances: ExerciseInstance[];
+  newSelections: ExerciseInstance[];
   editSelectedExerciseInstance: (exerciseInstance: ExerciseInstance) => void;
   setWorkoutTitle: (title: string) => void;
   setWorkoutDescription: (description: string) => void;
-  addExerciseInstance: (exerciseInstance: ExerciseInstance) => void;
+  addSelectionExerciseInstance: (exerciseInstance: ExerciseInstance) => void;
   removeExerciseInstance: (exerciseName: string) => void;
+  removeSelectionExerciseInstance: (exerciseName: string) => void;
+  isSelectionNew: () => boolean;
+  applyNewSelections: () => void;
+  revertNewSelections: () => void;
   clearContext: () => void;
 };
 
@@ -23,16 +28,29 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
   const [selectedExerciseInstances, setSelectedExerciseInstances] = useState<
     ExerciseInstance[]
   >([]);
-
-  const addExerciseInstance = (exerciseInstance: ExerciseInstance) => {
-    setSelectedExerciseInstances((prevInstances) => [
-      ...prevInstances,
-      exerciseInstance,
-    ]);
-  };
+  const [newSelections, setNewSelections] = React.useState<ExerciseInstance[]>(
+    []
+  );
 
   const removeExerciseInstance = (exerciseName: string) => {
     setSelectedExerciseInstances((prevInstances) =>
+      prevInstances.filter(
+        (instance) => instance.exercise.name !== exerciseName
+      )
+    );
+    setNewSelections((prevInstances) =>
+      prevInstances.filter(
+        (instance) => instance.exercise.name !== exerciseName
+      )
+    );
+  };
+
+  const addSelectionExerciseInstance = (exerciseInstance: ExerciseInstance) => {
+    setNewSelections((prevInstances) => [...prevInstances, exerciseInstance]);
+  };
+
+  const removeSelectionExerciseInstance = (exerciseName: string) => {
+    setNewSelections((prevInstances) =>
       prevInstances.filter(
         (instance) => instance.exercise.name !== exerciseName
       )
@@ -55,18 +73,38 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
     setSelectedExerciseInstances([]);
   };
 
+  const isSelectionNew = () => {
+    return (
+      JSON.stringify(selectedExerciseInstances) !==
+      JSON.stringify(newSelections)
+    );
+  };
+
+  const applyNewSelections = () => {
+    setSelectedExerciseInstances(newSelections);
+  };
+
+  const revertNewSelections = () => {
+    setNewSelections(selectedExerciseInstances);
+  };
+
   return (
     <SessionContext.Provider
       value={{
         workoutTitle,
         workoutDescription,
         selectedExerciseInstances,
+        newSelections,
         clearContext,
         editSelectedExerciseInstance,
         setWorkoutTitle,
         setWorkoutDescription,
-        addExerciseInstance,
+        addSelectionExerciseInstance,
         removeExerciseInstance,
+        removeSelectionExerciseInstance,
+        isSelectionNew,
+        applyNewSelections,
+        revertNewSelections,
       }}
     >
       {children}

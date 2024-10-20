@@ -10,7 +10,7 @@ import useColorScheme from "@/hooks/useColorScheme";
 import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
 import { initDatabase, checkIfDatabaseIsEmpty } from "@/utils/db/database";
 import { createTestData } from "@/utils/db/sessionFactory";
-import { TouchableOpacity, StyleSheet, Text } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
 import { SessionProvider, useSessionContext } from "@/context/SessionContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
@@ -19,6 +19,8 @@ import {
 } from "@gorhom/bottom-sheet";
 import Workout from "@/components/Workout/Workout";
 import WorkoutHeader from "@/components/Workout/WorkoutHeader";
+import BackButton from "@/components/Buttons/BackButton";
+import HeaderButton from "@/components/Buttons/HeaderButton";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -75,6 +77,13 @@ function RootLayoutNav() {
     bottomSheetModalRef.current?.present();
   }, []);
 
+  const {
+    isSelectionNew,
+    applyNewSelections,
+    revertNewSelections,
+    selectedExerciseInstances,
+  } = useSessionContext();
+
   return (
     <>
       <Stack screenOptions={{ animation: "fade" }}>
@@ -84,23 +93,36 @@ function RootLayoutNav() {
           name="workouts/workouts"
           options={{
             title: "Example Workouts",
-            headerBackTitle: "Back",
+            headerLeft: () => {
+              return (
+                <BackButton
+                  onPress={() => {
+                    router.back();
+                  }}
+                />
+              );
+            },
           }}
         />
         <Stack.Screen
           name="workouts/workoutBuilder"
           options={{
             title: "New Workout",
-            headerBackTitle: "Back",
+            headerLeft: () => {
+              return (
+                <BackButton
+                  onPress={() => {
+                    router.back();
+                  }}
+                />
+              );
+            },
             headerRight: () => (
-              <TouchableOpacity
-                style={styles.headerButton}
+              <HeaderButton
                 onPress={handlePresentModalPress}
-              >
-                <Text style={[styles.headerText, { color: colors.text }]}>
-                  Start
-                </Text>
-              </TouchableOpacity>
+                text="Start"
+                active={selectedExerciseInstances.length > 0}
+              />
             ),
           }}
         />
@@ -108,16 +130,25 @@ function RootLayoutNav() {
           name="exercises/exerciseSelector"
           options={{
             title: "Exercise Selector",
-            headerBackTitle: "Back",
+            headerLeft: () => {
+              return (
+                <BackButton
+                  onPress={() => {
+                    revertNewSelections();
+                    router.back();
+                  }}
+                />
+              );
+            },
             headerRight: () => (
-              <TouchableOpacity
-                style={styles.headerButton}
+              <HeaderButton
                 onPress={() => {
-                  console.log("Custom button pressed!");
+                  applyNewSelections();
+                  router.back();
                 }}
-              >
-                <FontAwesome name="plus" size={24} color="white" />
-              </TouchableOpacity>
+                text="Save"
+                active={isSelectionNew()}
+              />
             ),
           }}
         />
