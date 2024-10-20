@@ -30,8 +30,8 @@ const TemplateBuilder: React.FC = () => {
     editSelectedExerciseInstance(newInstance);
   }
 
-  function onInstanceDelete(instanceIndex: number) {
-    removeExerciseInstance(instanceIndex);
+  function onInstanceDelete(exerciseName: string) {
+    removeExerciseInstance(exerciseName);
   }
 
   function onAddInstanceSet(instanceIndex: number) {
@@ -83,7 +83,9 @@ const TemplateBuilder: React.FC = () => {
                 onSetChange={(setIndex, field: "reps" | "weight", value) =>
                   onSetChange(setIndex, field, value, index)
                 }
-                onInstanceDelete={() => onInstanceDelete(index)}
+                onInstanceDelete={() =>
+                  onInstanceDelete(instance.exercise.name)
+                }
                 onAddSet={() => onAddInstanceSet(index)}
                 onSetDelete={(setIndex) => onDeleteInstanceSet(index, setIndex)}
               />

@@ -57,7 +57,7 @@ const ExerciseSelector: React.FC = () => {
         useSession().createExerciseInstanceWithExercise(exercise);
       addExerciseInstance(exerciseInstance);
     } else {
-      removeExerciseInstance(exercise.id!);
+      removeExerciseInstance(exercise.name);
     }
   };
 

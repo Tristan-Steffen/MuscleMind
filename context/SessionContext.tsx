@@ -9,7 +9,7 @@ type SessionContextType = {
   setWorkoutTitle: (title: string) => void;
   setWorkoutDescription: (description: string) => void;
   addExerciseInstance: (exerciseInstance: ExerciseInstance) => void;
-  removeExerciseInstance: (index: number) => void;
+  removeExerciseInstance: (exerciseName: string) => void;
   clearContext: () => void;
 };
 
@@ -31,10 +31,11 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
     ]);
   };
 
-  const removeExerciseInstance = (index: number) => {
-    console.log(index);
+  const removeExerciseInstance = (exerciseName: string) => {
     setSelectedExerciseInstances((prevInstances) =>
-      prevInstances.filter((_, i) => i !== index)
+      prevInstances.filter(
+        (instance) => instance.exercise.name !== exerciseName
+      )
     );
   };
 
