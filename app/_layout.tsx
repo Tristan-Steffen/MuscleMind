@@ -10,17 +10,46 @@ import useColorScheme from "@/hooks/useColorScheme";
 import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
 import { initDatabase, checkIfDatabaseIsEmpty } from "@/utils/db/database";
 import { createTestData } from "@/utils/db/sessionFactory";
-import { TouchableOpacity, StyleSheet } from "react-native";
 import { SessionProvider, useSessionContext } from "@/context/SessionContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
+  BottomSheetBackdropProps,
 } from "@gorhom/bottom-sheet";
 import Workout from "@/components/Workout/Workout";
 import WorkoutHeader from "@/components/Workout/WorkoutHeader";
 import BackButton from "@/components/Buttons/BackButton";
 import HeaderButton from "@/components/Buttons/HeaderButton";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle,
+} from "react-native-reanimated";
+
+const CustomBackdrop = ({ animatedIndex, style }: BottomSheetBackdropProps) => {
+  const containerAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      animatedIndex.value,
+      [0, 1],
+      [0, 1],
+      Extrapolation.CLAMP
+    ),
+  }));
+
+  const containerStyle = useMemo(
+    () => [
+      style,
+      {
+        backgroundColor: "black",
+      },
+      containerAnimatedStyle,
+    ],
+    [style, containerAnimatedStyle]
+  );
+
+  return <Animated.View style={containerStyle} />;
+};
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -159,6 +188,7 @@ function RootLayoutNav() {
         index={1}
         snapPoints={snapPoints}
         enablePanDownToClose={false}
+        backdropComponent={CustomBackdrop}
         backgroundStyle={{
           backgroundColor: colors.darkerBackground,
         }}
@@ -178,13 +208,3 @@ function RootLayoutNav() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  headerButton: {
-    marginRight: 15,
-  },
-  headerText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});
