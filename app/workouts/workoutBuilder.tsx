@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Text, ScrollView } from "react-native";
 import InputField from "@/components/Inputs/TextInput";
 import BigButton from "@/components/Buttons/BigButton";
@@ -15,9 +15,14 @@ const TemplateBuilder: React.FC = () => {
     selectedExerciseInstances,
     editSelectedExerciseInstance,
     removeExerciseInstance,
+    revertNewSelections,
   } = useSessionContext();
 
   const { createEmptySet } = useSession();
+
+  useEffect(() => {
+    revertNewSelections();
+  }, []);
 
   function onSetChange(
     setIndex: number,
