@@ -1,8 +1,10 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Touchable } from "react-native";
 import { Session } from "@/Interfaces/sessionInterfaces";
 import { useTheme } from "@react-navigation/native";
 import { CustomTheme } from "@/constants/Colors";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { router } from "expo-router";
 
 type PresetCardProps = {
   session: Session;
@@ -13,45 +15,56 @@ const PresetCard: React.FC<PresetCardProps> = ({ session, style }) => {
   const lastIndex = session.exercise_instances.length - 1;
   const { colors } = useTheme() as CustomTheme;
 
+  const onPressCard = () => {
+    return () => {
+      router.navigate({
+        pathname: "/workouts/workoutBuilder",
+        params: { session: JSON.stringify(session) },
+      });
+    };
+  };
+
   return (
     <View
       style={[styles.card, style, { backgroundColor: colors.darkBackground }]}
     >
-      <View
-        style={[
-          styles.sessionNameContainer,
-          { backgroundColor: colors.basicButton },
-        ]}
-      >
-        <Text style={[styles.sessionName, { color: colors.text }]}>
-          {session.name}
-        </Text>
-      </View>
+      <TouchableOpacity onPress={onPressCard()}>
+        <View
+          style={[
+            styles.sessionNameContainer,
+            { backgroundColor: colors.basicButton },
+          ]}
+        >
+          <Text style={[styles.sessionName, { color: colors.text }]}>
+            {session.name}
+          </Text>
+        </View>
 
-      <View>
-        {session.exercise_instances.map((exerciseInstance, index) => (
-          <View
-            key={exerciseInstance.exercise.id?.toString() || index}
-            style={[
-              styles.exerciseRow,
-              {
-                backgroundColor:
-                  index % 2 === 0
-                    ? colors.darkBackground
-                    : colors.darkerBackground,
-              },
-              index === lastIndex && styles.lastRow,
-            ]}
-          >
-            <Text style={[styles.exerciseName, { color: colors.text }]}>
-              {exerciseInstance.exercise.name}
-            </Text>
-            <Text style={[styles.setsCount, { color: colors.text }]}>
-              {exerciseInstance.sets.length} sets
-            </Text>
-          </View>
-        ))}
-      </View>
+        <View>
+          {session.exercise_instances.map((exerciseInstance, index) => (
+            <View
+              key={exerciseInstance.exercise.id?.toString() || index}
+              style={[
+                styles.exerciseRow,
+                {
+                  backgroundColor:
+                    index % 2 === 0
+                      ? colors.darkBackground
+                      : colors.darkerBackground,
+                },
+                index === lastIndex && styles.lastRow,
+              ]}
+            >
+              <Text style={[styles.exerciseName, { color: colors.text }]}>
+                {exerciseInstance.exercise.name}
+              </Text>
+              <Text style={[styles.setsCount, { color: colors.text }]}>
+                {exerciseInstance.sets.length} sets
+              </Text>
+            </View>
+          ))}
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };

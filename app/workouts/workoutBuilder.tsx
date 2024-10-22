@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import InputField from "@/components/Inputs/TextInput";
 import BigButton from "@/components/Buttons/BigButton";
 import { useSessionContext } from "@/context/SessionContext";
 import ExerciseInstanceBuilder from "@/components/Exercise/ExerciseInstanceBuilder";
 import { useSession } from "@/hooks/useSession";
+import { useLocalSearchParams } from "expo-router";
 
 const TemplateBuilder: React.FC = () => {
   const {
@@ -13,15 +14,34 @@ const TemplateBuilder: React.FC = () => {
     setWorkoutTitle,
     setWorkoutDescription,
     selectedExerciseInstances,
+    addSelectionExerciseInstance,
+    applyNewSelections,
     editSelectedExerciseInstance,
     removeExerciseInstance,
     revertNewSelections,
   } = useSessionContext();
 
   const { createEmptySet } = useSession();
+  const local = useLocalSearchParams();
 
   useEffect(() => {
     revertNewSelections();
+
+    if (local.session) {
+      const sessionData = JSON.parse(
+        Array.isArray(local.session) ? local.session[0] : local.session
+      );
+
+      const { name, description, exercise_instances: instances } = sessionData;
+
+      setWorkoutTitle(name);
+      setWorkoutDescription(description);
+
+      instances.forEach((instance: any) => {
+        addSelectionExerciseInstance(instance);
+      });
+      applyNewSelections();
+    }
   }, []);
 
   function onSetChange(
