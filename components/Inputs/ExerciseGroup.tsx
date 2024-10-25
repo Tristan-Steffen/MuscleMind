@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Exercise } from "@/Interfaces/sessionInterfaces";
 import { useTheme } from "@react-navigation/native";
 import { CustomTheme } from "@/constants/Colors";
+import { FontAwesome } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 type ExerciseGroupProps = {
   muscleGroup: string;
@@ -29,6 +31,13 @@ const ExerciseGroup: React.FC<ExerciseGroupProps> = ({
     } else {
       onExerciseSelect(exercise, true);
     }
+  };
+
+  const navigateToInfoPage = (exercise: Exercise) => {
+    router.navigate({
+      pathname: "/exercises/exerciseInfo",
+      params: { exerciseID: exercise.id },
+    });
   };
 
   return (
@@ -62,9 +71,21 @@ const ExerciseGroup: React.FC<ExerciseGroupProps> = ({
                   },
                 ]}
               />
-              <Text style={[styles.exerciseText, { color: colors.text }]}>
-                {exercise.name}
-              </Text>
+              <View style={styles.body}>
+                <Text style={[styles.exerciseText, { color: colors.text }]}>
+                  {exercise.name}
+                </Text>
+                <TouchableOpacity
+                  style={{ width: 20, alignItems: "center" }}
+                  onPress={() => navigateToInfoPage(exercise)}
+                >
+                  <FontAwesome
+                    name="info"
+                    size={20}
+                    color={colors.lightBackground}
+                  />
+                </TouchableOpacity>
+              </View>
             </TouchableOpacity>
           </View>
         ))}
@@ -106,6 +127,12 @@ const styles = StyleSheet.create({
     height: 1,
     borderBottomWidth: 1,
     marginHorizontal: 15,
+  },
+  body: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "90%",
+    paddingRight: 20,
   },
 });
 
