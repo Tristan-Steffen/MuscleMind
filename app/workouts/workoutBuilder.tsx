@@ -87,7 +87,7 @@ const TemplateBuilder: React.FC = () => {
           onChangeText={setWorkoutTitle}
         />
         <InputField
-          placeholder="Workout Description"
+          placeholder="Workout Description (optional)"
           style={{ height: 120, paddingTop: 15, marginTop: 15 }}
           value={workoutDescription}
           onChangeText={setWorkoutDescription}
@@ -102,19 +102,19 @@ const TemplateBuilder: React.FC = () => {
         />
         {selectedExerciseInstances
           ? selectedExerciseInstances.map((instance, index) => (
-              <ExerciseInstanceBuilder
-                key={index}
-                exerciseInstance={instance}
-                onSetChange={(setIndex, field: "reps" | "weight", value) =>
-                  onSetChange(setIndex, field, value, index)
-                }
-                onInstanceDelete={() =>
-                  onInstanceDelete(instance.exercise.name)
-                }
-                onAddSet={() => onAddInstanceSet(index)}
-                onSetDelete={(setIndex) => onDeleteInstanceSet(index, setIndex)}
-              />
-            ))
+            <ExerciseInstanceBuilder
+              key={index}
+              exerciseInstance={instance}
+              onSetChange={(setIndex, field: "reps" | "weight", value) =>
+                onSetChange(setIndex, field, value, index)
+              }
+              onInstanceDelete={() =>
+                onInstanceDelete(instance.exercise.name)
+              }
+              onAddSet={() => onAddInstanceSet(index)}
+              onSetDelete={(setIndex) => onDeleteInstanceSet(index, setIndex)}
+            />
+          ))
           : null}
       </ScrollView>
     </View>

@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.tristansteffen.MuscleMemory"
+      "bundleIdentifier": "com.tristansteffen.MuscleMemory",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -42,6 +45,7 @@
       "eas": {
         "projectId": "da5ec18f-7417-4297-9f37-31a79a49ae09"
       }
-    }
+    },
+    "owner": "tristan-steffen"
   }
 }

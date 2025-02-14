@@ -43,6 +43,7 @@ export default function TabTwoScreen() {
           <BigButton
             title="New Workout"
             onPress={() =>
+
               router.navigate({ pathname: "/workouts/workoutBuilder" })
             }
             style={styles.button}
