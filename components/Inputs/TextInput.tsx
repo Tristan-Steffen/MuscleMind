@@ -1,6 +1,6 @@
 import React from "react";
-import { TextInput, StyleSheet, TextInputProps, ViewStyle } from "react-native";
-import { useTheme } from "@react-navigation/native"; // To access theme colors
+import { TextInput, TextInputProps } from "react-native";
+import { useTheme } from "@react-navigation/native";
 import { CustomTheme } from "@/constants/Colors";
 
 type InputFieldProps = {
@@ -8,7 +8,7 @@ type InputFieldProps = {
   onChangeText: (text: string) => void;
   placeholder: string;
   multiline?: boolean;
-  style?: ViewStyle;
+  style?: any;
 } & TextInputProps;
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -23,14 +23,8 @@ const InputField: React.FC<InputFieldProps> = ({
 
   return (
     <TextInput
-      style={[
-        styles.input,
-        {
-          borderColor: colors.border,
-          color: colors.text,
-        },
-        style,
-      ]}
+      className="h-12 border rounded-full px-4 text-base"
+      style={[{ borderColor: colors.border, color: colors.text }, style]}
       placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
@@ -39,15 +33,5 @@ const InputField: React.FC<InputFieldProps> = ({
     />
   );
 };
-
-const styles = StyleSheet.create({
-  input: {
-    height: 50,
-    borderWidth: 1,
-    borderRadius: 25,
-    paddingHorizontal: 15,
-    fontSize: 16,
-  },
-});
 
 export default InputField;

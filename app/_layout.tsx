@@ -19,14 +19,14 @@ import {
 } from "@gorhom/bottom-sheet";
 import Workout from "@/components/Workout/Workout";
 import WorkoutHeader from "@/components/Workout/WorkoutHeader";
-import BackButton from "@/components/Buttons/BackButton";
-import HeaderButton from "@/components/Buttons/HeaderButton";
+import IconButton from "@/components/Buttons/IconButton";
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
 import "../global.css";
+import HeaderButton from "@/components/Buttons/HeaderButton";
 
 const CustomBackdrop = ({ animatedIndex, style }: BottomSheetBackdropProps) => {
   const containerAnimatedStyle = useAnimatedStyle(() => ({
@@ -123,30 +123,26 @@ function RootLayoutNav() {
           name="workouts/workouts"
           options={{
             title: "Example Workouts",
-            headerLeft: () => {
-              return (
-                <BackButton
-                  onPress={() => {
-                    router.back();
-                  }}
-                />
-              );
-            },
+            headerLeft: () => (
+              <IconButton
+                onPress={() => {
+                  router.back();
+                }}
+              />
+            ),
           }}
         />
         <Stack.Screen
           name="workouts/workoutBuilder"
           options={{
             title: "New Workout",
-            headerLeft: () => {
-              return (
-                <BackButton
-                  onPress={() => {
-                    router.back();
-                  }}
-                />
-              );
-            },
+            headerLeft: () => (
+              <IconButton
+                onPress={() => {
+                  router.back();
+                }}
+              />
+            ),
             headerRight: () => (
               <HeaderButton
                 onPress={handlePresentModalPress}
@@ -160,16 +156,14 @@ function RootLayoutNav() {
           name="exercises/exerciseSelector"
           options={{
             title: "Exercise Selector",
-            headerLeft: () => {
-              return (
-                <BackButton
-                  onPress={() => {
-                    revertNewSelections();
-                    router.back();
-                  }}
-                />
-              );
-            },
+            headerLeft: () => (
+              <IconButton
+                onPress={() => {
+                  revertNewSelections();
+                  router.back();
+                }}
+              />
+            ),
             headerRight: () => (
               <HeaderButton
                 onPress={() => {

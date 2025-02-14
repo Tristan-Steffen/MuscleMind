@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import InputField from "@/components/Inputs/TextInput";
 import { CustomTheme } from "@/constants/Colors";
@@ -32,34 +32,25 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
   const incrementReps = (value: number | null) => (value || 0) + 1;
   const decrementReps = (value: number | null) => Math.max((value || 0) - 1, 0);
 
-  const incrementWeigth = (value: number | null) => (value || 0) + 2.5;
-  const decrementWeigth = (value: number | null) =>
+  const incrementWeight = (value: number | null) => (value || 0) + 2.5;
+  const decrementWeight = (value: number | null) =>
     Math.max((value || 0) - 2.5, 0);
 
   return (
     <View
-      style={
-        showExercise
-          ? [styles.container, { backgroundColor: colors.card }]
-          : null
-      }
+      className={showExercise ? "rounded-2xl mb-5" : ""}
+      style={showExercise ? { backgroundColor: colors.card } : undefined}
     >
       <TouchableOpacity
-        style={[styles.header, { backgroundColor: colors.lightBackground }]}
-        onPress={() => {
-          setShowExercise(!showExercise);
-        }}
+        className="flex-row items-center justify-between rounded-2xl h-10 px-2.5 mb-2.5"
+        style={{ backgroundColor: colors.lightBackground }}
+        onPress={() => setShowExercise(!showExercise)}
       >
-        <Text style={[styles.exerciseName]}>
+        <Text className="text-lg font-bold">
           {exerciseInstance.exercise.name}
         </Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <TouchableOpacity
-            style={{ paddingRight: 20 }}
-            onPress={() => {
-              onInstanceDelete();
-            }}
-          >
+        <View className="flex-row items-center">
+          <TouchableOpacity className="pr-5" onPress={onInstanceDelete}>
             <FontAwesome name="trash" size={20} />
           </TouchableOpacity>
           <FontAwesome
@@ -68,40 +59,37 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
           />
         </View>
       </TouchableOpacity>
+
       {showExercise && (
         <>
-          <View style={styles.setsHeaderContainer}>
-            <View style={[styles.setsHeader, { paddingRight: 10 }]}>
+          <View className="flex-row justify-between mb-2.5 mr-9">
+            <View className="flex-row w-1/2 justify-center pr-2.5">
               <Text style={{ color: colors.text }}>Reps</Text>
             </View>
-            <View style={styles.setsHeader}>
+            <View className="flex-row w-1/2 justify-center">
               <Text style={{ color: colors.text }}>Weight</Text>
             </View>
           </View>
 
           {exerciseInstance.sets.map((set, setIndex) => (
-            <View key={setIndex} style={styles.setContainer}>
-              <View style={styles.inputContainer}>
+            <View key={setIndex} className="flex-row justify-between mb-2.5">
+              <View className="flex-row items-center">
                 <TouchableOpacity
                   onPress={() =>
                     onSetChange(setIndex, "reps", decrementReps(set.reps))
                   }
-                  style={styles.button}
+                  className="p-2.5"
                 >
                   <FontAwesome
-                    name={"minus-circle"}
+                    name="minus-circle"
                     size={30}
                     color={colors.lightBackground}
                   />
                 </TouchableOpacity>
                 <InputField
                   placeholder="0"
-                  style={[
-                    styles.inputField,
-                    {
-                      backgroundColor: colors.background,
-                    },
-                  ]}
+                  className="w-15 text-center"
+                  style={{ backgroundColor: colors.background }}
                   value={set.reps === 0 ? "" : set.reps?.toString() || ""}
                   keyboardType="numeric"
                   onChangeText={(value) =>
@@ -112,7 +100,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   onPress={() =>
                     onSetChange(setIndex, "reps", incrementReps(set.reps))
                   }
-                  style={styles.button}
+                  className="p-2.5"
                 >
                   <FontAwesome
                     name="plus-circle"
@@ -122,27 +110,23 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.inputContainer}>
+              <View className="flex-row items-center">
                 <TouchableOpacity
                   onPress={() =>
-                    onSetChange(setIndex, "weight", decrementWeigth(set.weight))
+                    onSetChange(setIndex, "weight", decrementWeight(set.weight))
                   }
-                  style={styles.button}
+                  className="p-2.5"
                 >
                   <FontAwesome
-                    name={"minus-circle"}
+                    name="minus-circle"
                     size={30}
                     color={colors.lightBackground}
                   />
                 </TouchableOpacity>
                 <InputField
                   placeholder="0"
-                  style={[
-                    styles.inputField,
-                    {
-                      backgroundColor: colors.background,
-                    },
-                  ]}
+                  className="w-15 text-center"
+                  style={{ backgroundColor: colors.background }}
                   value={set.weight === 0 ? "" : set.weight?.toString() || ""}
                   keyboardType="numeric"
                   onChangeText={(value) =>
@@ -151,9 +135,9 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                 />
                 <TouchableOpacity
                   onPress={() =>
-                    onSetChange(setIndex, "weight", incrementWeigth(set.weight))
+                    onSetChange(setIndex, "weight", incrementWeight(set.weight))
                   }
-                  style={styles.button}
+                  className="p-2.5"
                 >
                   <FontAwesome
                     name="plus-circle"
@@ -162,12 +146,8 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   />
                 </TouchableOpacity>
               </View>
-              <View style={styles.trashContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    onSetDelete(setIndex);
-                  }}
-                >
+              <View className="mr-2.5 justify-center">
+                <TouchableOpacity onPress={() => onSetDelete(setIndex)}>
                   <FontAwesome name="trash" size={20} color={colors.text} />
                 </TouchableOpacity>
               </View>
@@ -176,74 +156,14 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
 
           <ButtonAsText
             title="Add Set"
-            style={styles.buttonAsText}
-            textStyle={{ fontSize: 20 }}
-            onPress={() => {
-              onAddSet();
-            }}
-          ></ButtonAsText>
+            style="justify-center items-center h-8 mb-2.5"
+            textStyle="text-xl"
+            onPress={onAddSet}
+          />
         </>
       )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 20,
-    marginBottom: 20,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 20,
-    justifyContent: "space-between",
-    height: 40,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-  exerciseName: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  setContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 10,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  inputField: {
-    width: 60,
-    textAlign: "center",
-    paddingHorizontal: 0,
-  },
-  button: {
-    padding: 10,
-  },
-  buttonAsText: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: 30,
-    marginBottom: 10,
-  },
-  trashContainer: {
-    marginRight: 10,
-    justifyContent: "center",
-  },
-  setsHeaderContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 10,
-    marginRight: 36,
-  },
-  setsHeader: {
-    flexDirection: "row",
-    width: "50%",
-    justifyContent: "center",
-  },
-});
 
 export default ExerciseInstanceBuilder;

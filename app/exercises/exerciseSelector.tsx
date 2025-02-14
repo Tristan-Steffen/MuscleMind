@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import { getAllExercises } from "@/utils/db/exercise";
 import { Exercise } from "@/Interfaces/sessionInterfaces";
 import { useSQLiteContext } from "expo-sqlite";
@@ -12,9 +12,7 @@ const ExerciseSelector: React.FC = () => {
   const db = useSQLiteContext();
   const [searchValue, setSearchValue] = useState<string>("");
   const [allExercises, setAllExercises] = useState<Exercise[] | null>(null);
-  const [groupedExercises, setGroupedExercises] = useState<Exercise[][] | null>(
-    null
-  );
+  const [groupedExercises, setGroupedExercises] = useState<Exercise[][] | null>(null);
 
   const {
     addSelectionExerciseInstance,
@@ -28,14 +26,12 @@ const ExerciseSelector: React.FC = () => {
       setAllExercises(response);
       setGroupedExercises(groupExercises(response));
     };
-
     fetchExercises();
   }, [db]);
 
   const groupExercises = (exercises: Exercise[]) => {
     return exercises.reduce((acc: Exercise[][], exercise) => {
-      const primaryMuscle =
-        exercise.targetMuscles?.primary?.[0]?.name || "Unknown";
+      const primaryMuscle = exercise.targetMuscles?.primary?.[0]?.name || "Unknown";
       const muscleGroupIndex = acc.findIndex(
         (group) => group[0].targetMuscles?.primary?.[0]?.name === primaryMuscle
       );
@@ -50,8 +46,7 @@ const ExerciseSelector: React.FC = () => {
 
   const handleExerciseSelect = (exercise: Exercise, selected: boolean) => {
     if (selected) {
-      const exerciseInstance =
-        useSession().createExerciseInstanceWithExercise(exercise);
+      const exerciseInstance = useSession().createExerciseInstanceWithExercise(exercise);
       addSelectionExerciseInstance(exerciseInstance);
     } else {
       removeSelectionExerciseInstance(exercise.name);
@@ -60,7 +55,6 @@ const ExerciseSelector: React.FC = () => {
 
   const onSearch = (value: string) => {
     setSearchValue(value);
-
     if (!value) {
       setGroupedExercises(groupExercises(allExercises!));
     } else {
@@ -72,12 +66,9 @@ const ExerciseSelector: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={styles.spacer}></View>
+    <View className="flex-1 px-5">
+      <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+        <View className="h-5" />
         <SearchInput
           placeholder="Search"
           value={searchValue}
@@ -88,30 +79,16 @@ const ExerciseSelector: React.FC = () => {
           groupedExercises.map((group, index) => (
             <ExerciseGroup
               key={index}
-              muscleGroup={
-                group[0].targetMuscles?.primary?.[0]?.name || "Unknown"
-              }
+              muscleGroup={group[0].targetMuscles?.primary?.[0]?.name || "Unknown"}
               exercises={group}
-              selectedExercises={newSelections.map(
-                (instance) => instance.exercise
-              )}
+              selectedExercises={newSelections.map((instance) => instance.exercise)}
               onExerciseSelect={handleExerciseSelect}
             />
           ))}
-        <View style={styles.spacer}></View>
+        <View className="h-5" />
       </ScrollView>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  spacer: {
-    height: 20,
-  },
-});
 
 export default ExerciseSelector;

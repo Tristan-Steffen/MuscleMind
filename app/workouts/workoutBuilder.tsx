@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 import InputField from "@/components/Inputs/TextInput";
 import BigButton from "@/components/Buttons/BigButton";
 import { useSessionContext } from "@/context/SessionContext";
@@ -31,12 +31,9 @@ const TemplateBuilder: React.FC = () => {
       const sessionData = JSON.parse(
         Array.isArray(local.session) ? local.session[0] : local.session
       );
-
       const { name, description, exercise_instances: instances } = sessionData;
-
       setWorkoutTitle(name);
       setWorkoutDescription(description);
-
       instances.forEach((instance: any) => {
         addSelectionExerciseInstance(instance);
       });
@@ -76,11 +73,8 @@ const TemplateBuilder: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ paddingVertical: 15 }}
-      >
+    <View className="flex-1 px-5">
+      <ScrollView showsVerticalScrollIndicator={false} className="py-4">
         <InputField
           placeholder="Workout Title"
           value={workoutTitle}
@@ -95,40 +89,25 @@ const TemplateBuilder: React.FC = () => {
         />
         <BigButton
           title="Add Exercises"
-          href={{
-            pathname: "/exercises/exerciseSelector",
-          }}
-          style={styles.addButton}
+          href={{ pathname: "/exercises/exerciseSelector" }}
+          style="mt-6"
         />
-        {selectedExerciseInstances
-          ? selectedExerciseInstances.map((instance, index) => (
+        {selectedExerciseInstances &&
+          selectedExerciseInstances.map((instance, index) => (
             <ExerciseInstanceBuilder
               key={index}
               exerciseInstance={instance}
-              onSetChange={(setIndex, field: "reps" | "weight", value) =>
+              onSetChange={(setIndex, field, value) =>
                 onSetChange(setIndex, field, value, index)
               }
-              onInstanceDelete={() =>
-                onInstanceDelete(instance.exercise.name)
-              }
+              onInstanceDelete={() => onInstanceDelete(instance.exercise.name)}
               onAddSet={() => onAddInstanceSet(index)}
               onSetDelete={(setIndex) => onDeleteInstanceSet(index, setIndex)}
             />
-          ))
-          : null}
+          ))}
       </ScrollView>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  addButton: {
-    marginTop: 25,
-  },
-});
 
 export default TemplateBuilder;

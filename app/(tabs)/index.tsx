@@ -1,5 +1,4 @@
-import { StyleSheet, ScrollView } from "react-native";
-
+import { ScrollView } from "react-native";
 import { Text, View } from "@/components/Themed";
 import { useSQLiteContext } from "expo-sqlite/build/hooks";
 import FiveDaysHistory from "@/components/fiveDaysHistory/FiveDaysHistory";
@@ -28,29 +27,26 @@ export default function TabTwoScreen() {
   if (!sessions) return null;
 
   return (
-    <View style={styles.container}>
+    <View className="mt-10 px-5 h-full">
       <ScrollView showsVerticalScrollIndicator={false}>
         <FiveDaysHistory />
-        <View style={styles.buttons}>
+        <View className="flex-row justify-between mt-5">
           <BigButton
             title="Workout Program"
             href={{
               pathname: "/workouts/workouts",
               params: { type: "custom" },
             }}
-            style={styles.button}
+            style="max-w-[48%]"
           />
           <BigButton
             title="New Workout"
-            onPress={() =>
-
-              router.navigate({ pathname: "/workouts/workoutBuilder" })
-            }
-            style={styles.button}
+            onPress={() => router.navigate({ pathname: "/workouts/workoutBuilder" })}
+            style="max-w-[48%]"
           />
         </View>
-        <View style={styles.header}>
-          <Text style={{ fontSize: 16 }}>Your Workouts</Text>
+        <View className="flex-row justify-between items-center mt-5 mx-1.5">
+          <Text className="text-base">Your Workouts</Text>
           <ButtonAsText
             title="View all"
             href={{
@@ -59,8 +55,8 @@ export default function TabTwoScreen() {
             }}
           />
         </View>
-        <View style={styles.header}>
-          <Text style={{ fontSize: 16 }}>Example Workouts</Text>
+        <View className="flex-row justify-between items-center mt-5 mx-1.5">
+          <Text className="text-base">Example Workouts</Text>
           <ButtonAsText
             title="View all"
             href={{
@@ -69,7 +65,7 @@ export default function TabTwoScreen() {
             }}
           />
         </View>
-        <View style={styles.exampleWorkouts}>
+        <View className="flex-row justify-between mt-2.5">
           {sessions && sessions.length > 1 ? (
             <PresetCard session={sessions[0]} />
           ) : null}
@@ -81,27 +77,3 @@ export default function TabTwoScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { marginTop: 40, paddingHorizontal: 20, height: "100%" },
-  buttons: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    marginTop: 20,
-  },
-  exampleWorkouts: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10,
-  },
-  header: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 20,
-    marginHorizontal: 5,
-  },
-  button: {
-    width: "48%",
-  },
-});

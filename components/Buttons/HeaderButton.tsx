@@ -1,50 +1,43 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
-import { Text, View } from "@/components/Themed";
+import { TouchableOpacity, View } from "react-native";
+import { Text } from "@/components/Themed";
 import { CustomTheme } from "@/constants/Colors";
 import { useTheme } from "@react-navigation/native";
 
-type BackButtonProps = {
+type HeaderButtonProps = {
   onPress: () => void;
   text: string;
   active?: boolean;
 };
 
-const BackButton: React.FC<BackButtonProps> = ({ onPress, text, active }) => {
+const HeaderButton: React.FC<HeaderButtonProps> = ({ onPress, text, active }) => {
   const { colors } = useTheme() as CustomTheme;
 
-  if (active == undefined || active) {
+  const buttonClasses = "h-7 w-[70px] rounded-full justify-center items-center mx-1";
+  const textClasses = "text-base font-bold mx-2.5";
+
+  if (active === undefined || active) {
     return (
       <TouchableOpacity
         onPress={onPress}
-        style={[styles.button, { backgroundColor: colors.text }]}
+        className={buttonClasses}
+        style={{ backgroundColor: colors.text }}
+        activeOpacity={0.8}
       >
-        <Text style={[styles.text, { color: colors.card }]}>{text}</Text>
+        <Text className={textClasses} style={{ color: colors.card }}>
+          {text}
+        </Text>
       </TouchableOpacity>
     );
   } else {
     return (
-      <View style={[styles.button, { backgroundColor: colors.border }]}>
-        <Text style={[styles.text, { color: colors.card }]}>{text}</Text>
+      <View className={buttonClasses} style={{ backgroundColor: colors.border }}>
+        <Text className={textClasses} style={{ color: colors.card }}>
+          {text}
+        </Text>
       </View>
     );
   }
 };
 
-const styles = StyleSheet.create({
-  button: {
-    height: 28,
-    width: 70,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 4,
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: 700,
-    marginHorizontal: 10,
-  },
-});
-
-export default BackButton;
+export default HeaderButton;

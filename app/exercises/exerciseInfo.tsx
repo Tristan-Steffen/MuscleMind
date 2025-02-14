@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Text, StyleSheet, Image, ScrollView, View } from "react-native";
-import { Exercise } from "@/Interfaces/sessionInterfaces"; // Import the Exercise interface
+import { ScrollView, Image, View } from "react-native";
+import { Text } from "@/components/Themed";
+import { Exercise } from "@/Interfaces/sessionInterfaces";
 import { CustomTheme } from "@/constants/Colors";
 import { useTheme } from "@react-navigation/native";
-import ImageCollection from "@/utils/imageCollection"; // Collection of images
+import ImageCollection from "@/utils/imageCollection";
 import { useLocalSearchParams } from "expo-router";
 import { getExerciseById } from "@/utils/db/exercise";
 import { useSQLiteContext } from "expo-sqlite";
@@ -15,47 +16,42 @@ const ExerciseInfo: React.FC = () => {
   const db = useSQLiteContext();
 
   useEffect(() => {
-    async function loadSessions() {
+    async function loadExercise() {
       if (db && local) {
-        const exerciseFromDb = await getExerciseById(
-          db,
-          Number(local.exerciseID)
-        );
+        const exerciseFromDb = await getExerciseById(db, Number(local.exerciseID));
         setExercise(exerciseFromDb);
       }
     }
-    loadSessions();
+    loadExercise();
   }, [db, local.exerciseID]);
 
   if (!exercise) return null;
   return (
     <ScrollView
-      style={[styles.container, { backgroundColor: colors.background }]}
+      className="flex-1 p-4"
+      style={{ backgroundColor: colors.background }}
     >
+      {/* Title Field */}
       <View
-        style={[
-          styles.textField,
-          {
-            borderColor: colors.border,
-          },
-        ]}
+        className="h-12 border rounded-full px-4 justify-center mb-4"
+        style={{ borderColor: colors.border }}
       >
-        <Text style={[styles.title, { color: colors.text }]}>
+        <Text className="text-2xl font-bold" style={{ color: colors.text }}>
           {exercise.name}
         </Text>
       </View>
+
+      {/* Description Field */}
       <View
-        style={[
-          styles.textField,
-          {
-            borderColor: colors.border,
-          },
-        ]}
+        className="h-12 border rounded-full px-4 justify-center mb-4"
+        style={{ borderColor: colors.border }}
       >
-        <Text style={[styles.description, { color: colors.text }]}>
+        <Text className="text-base leading-6" style={{ color: colors.text }}>
           {exercise.description}
         </Text>
       </View>
+
+      {/* Image */}
       {exercise.image ? (
         <Image
           source={
@@ -63,61 +59,59 @@ const ExerciseInfo: React.FC = () => {
               uri: exercise.image,
             }
           }
-          style={styles.image}
+          className="w-full h-[200px] rounded-lg mb-4"
           defaultSource={ImageCollection["placeholderImage"]}
         />
       ) : (
         <Image
           source={ImageCollection["placeholderImage"]}
-          style={styles.image}
+          className="w-full h-[200px] rounded-lg mb-4"
         />
       )}
 
+      {/* Target Muscles */}
       {exercise.targetMuscles && (
         <>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          <Text className="text-lg font-bold mb-2" style={{ color: colors.text }}>
             Target Muscles
           </Text>
 
-          <Text style={[styles.subTitle, { color: colors.text }]}>
+          <Text className="text-base font-semibold mb-1" style={{ color: colors.text }}>
             Primary:
           </Text>
           {exercise.targetMuscles.primary.length > 0 ? (
-            <Text style={[styles.muscleText, { color: colors.text }]}>
-              {exercise.targetMuscles.primary
-                .map((muscle) => muscle.name)
-                .join(", ")}
+            <Text className="text-sm mb-2" style={{ color: colors.text }}>
+              {exercise.targetMuscles.primary.map((muscle) => muscle.name).join(", ")}
             </Text>
           ) : (
-            <Text style={[styles.muscleText, { color: colors.text }]}>
+            <Text className="text-sm mb-2" style={{ color: colors.text }}>
               None
             </Text>
           )}
 
-          <Text style={[styles.subTitle, { color: colors.text }]}>
+          <Text className="text-base font-semibold mb-1" style={{ color: colors.text }}>
             Secondary:
           </Text>
           {exercise.targetMuscles.secondary.length > 0 ? (
-            <Text style={[styles.muscleText, { color: colors.text }]}>
-              {exercise.targetMuscles.secondary
-                .map((muscle) => muscle.name)
-                .join(", ")}
+            <Text className="text-sm mb-2" style={{ color: colors.text }}>
+              {exercise.targetMuscles.secondary.map((muscle) => muscle.name).join(", ")}
             </Text>
           ) : (
-            <Text style={[styles.muscleText, { color: colors.text }]}>
+            <Text className="text-sm mb-2" style={{ color: colors.text }}>
               None
             </Text>
           )}
         </>
       )}
 
+      {/* Cues */}
       {exercise.cues && exercise.cues.length > 0 && (
         <>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          <Text className="text-lg font-bold mb-2" style={{ color: colors.text }}>
             Cues
           </Text>
           {exercise.cues.map((cue, index) => (
-            <Text key={index} style={[styles.cueText, { color: colors.text }]}>
+            <Text key={index} className="text-sm mb-1" style={{ color: colors.text }}>
               {index + 1}. {cue}
             </Text>
           ))}
@@ -126,53 +120,5 @@ const ExerciseInfo: React.FC = () => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  textField: {
-    height: 50,
-    borderWidth: 1,
-    borderRadius: 25,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    justifyContent: "center",
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  image: {
-    width: "100%",
-    height: 200,
-    borderRadius: 10,
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  description: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  subTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  muscleText: {
-    fontSize: 14,
-    marginBottom: 8,
-  },
-  cueText: {
-    fontSize: 14,
-    marginBottom: 4,
-  },
-});
 
 export default ExerciseInfo;

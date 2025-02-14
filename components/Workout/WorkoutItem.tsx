@@ -1,8 +1,9 @@
 import React, { memo } from "react";
-import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { TouchableOpacity, Image, View } from "react-native";
 import { Text } from "@/components/Themed";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { CustomTheme } from "@/constants/Colors";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import ImageCollection from "@/utils/imageCollection";
 
 type WorkoutItemProps = {
@@ -16,90 +17,45 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({
   colors,
   onPress,
 }) => {
-  console.log(exerciseInstance.exercise.name);
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[
-        styles.container,
-        {
-          backgroundColor: colors.darkerBackground,
-          borderColor: colors.border,
-        },
-      ]}
+      className="flex-row items-center mt-[20px] rounded-[20px] border"
+      style={{ backgroundColor: colors.darkerBackground, borderColor: colors.border }}
     >
       <Image
         source={
           exerciseInstance.exercise.image
             ? ImageCollection[
-                exerciseInstance.exercise.name as keyof typeof ImageCollection
-              ]
+            exerciseInstance.exercise.name as keyof typeof ImageCollection
+            ]
             : ImageCollection["placeholderImage"]
         }
-        style={styles.image}
+        className="w-[60px] h-[60px] rounded-[20px] m-[10px]"
         defaultSource={ImageCollection["placeholderImage"]}
       />
-      <View style={styles.content}>
-        <Text style={[styles.exerciseName, { color: colors.text }]}>
+      <View className="flex-1 justify-center">
+        <Text className="text-[18px] font-bold" style={{ color: colors.text }}>
           {exerciseInstance.exercise.name}
         </Text>
-        <View style={[styles.line, { borderColor: colors.border }]}></View>
-        <View style={styles.sets}>
+        <View className="flex-row justify-between mr-[10px] items-center">
           {exerciseInstance.sets.map((set, index) => (
             <View
               key={index}
-              style={[
-                styles.setOval,
-                set.done ? { backgroundColor: colors.success } : null,
-              ]}
+              className="flex-1 h-[20px] rounded-[10px] mr-[5px]"
+              style={{
+                backgroundColor: set.done ? colors.success : "#ccc",
+              }}
             />
           ))}
         </View>
+        <View
+          className="border-b my-[8px] mr-[15px]"
+          style={{ borderColor: colors.border }}
+        />
       </View>
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 20,
-    borderRadius: 20,
-    borderWidth: 1,
-  },
-  image: {
-    width: 60,
-    height: 60,
-    borderRadius: 20,
-    margin: 10,
-  },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  exerciseName: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  sets: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginRight: 10,
-    alignItems: "center",
-  },
-  setOval: {
-    flex: 1,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: "#ccc",
-    marginRight: 5,
-  },
-  line: {
-    borderBottomWidth: 1,
-    marginVertical: 8,
-    marginRight: 15,
-  },
-});
 
 export default memo(WorkoutItem);

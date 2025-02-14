@@ -1,29 +1,10 @@
-import { StyleSheet } from "react-native";
-
 import { Text, View } from "@/components/Themed";
 
 export default function TabTwoScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Profile and Settings</Text>
-      <View style={styles.separator} />
+    <View className="flex-1 items-center justify-center">
+      <Text className="text-[20px] font-bold">Profile and Settings</Text>
+      <View className="my-8 h-[1px] w-[80%]" />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});

@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  TouchableOpacity,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-} from "react-native";
+import { TouchableOpacity } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Text } from "@/components/Themed";
 import { CustomTheme } from "@/constants/Colors";
@@ -13,8 +8,8 @@ import { Href, useRouter } from "expo-router";
 type BigButtonProps = {
   title: string;
   onPress?: () => void;
-  style?: ViewStyle;
-  textStyle?: TextStyle;
+  style?: string; // Use string for Tailwind classes
+  textStyle?: string; // Use string for Tailwind classes
   href?: Href;
 };
 
@@ -28,14 +23,6 @@ const BigButton: React.FC<BigButtonProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const router = useRouter();
 
-  const buttonStyles = [
-    styles.button,
-    { backgroundColor: colors.basicButton },
-    style,
-  ];
-
-  const textStyles = [styles.buttonText, { color: colors.text }, textStyle];
-
   const handlePress = () => {
     if (href) {
       router.push(href);
@@ -46,28 +33,16 @@ const BigButton: React.FC<BigButtonProps> = ({
 
   return (
     <TouchableOpacity
-      style={buttonStyles}
+      className={`w-full py-4 rounded-full items-center justify-center my-2.5 ${style}`}
+      style={{ backgroundColor: colors.basicButton }} // Dynamic color from theme
       onPress={handlePress}
       activeOpacity={0.8}
     >
-      <Text style={textStyles}>{title}</Text>
+      <Text className={`text-lg font-semibold ${textStyle}`} style={{ color: colors.text }}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  button: {
-    width: "100%",
-    paddingVertical: 15,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: "600",
-  },
-});
 
 export default BigButton;

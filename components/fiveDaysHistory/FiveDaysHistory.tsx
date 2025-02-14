@@ -1,6 +1,4 @@
-// components/FiveDaysHistory.tsx
 import React from "react";
-import { StyleSheet } from "react-native";
 import { View } from "@/components/Themed";
 import DayCard from "./DayCard";
 
@@ -29,7 +27,7 @@ const FiveDaysHistory: React.FC = () => {
   }));
 
   return (
-    <View style={styles.container}>
+    <View className="flex-row justify-evenly">
       {fiveDays.map((dayInfo, index) => (
         <DayCard
           key={index}
@@ -41,12 +39,5 @@ const FiveDaysHistory: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "space-evenly",
-    flexDirection: "row",
-  },
-});
 
 export default FiveDaysHistory;

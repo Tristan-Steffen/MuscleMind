@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import { Text } from "@/components/Themed";
 import WorkoutItem from "@/components/Workout/WorkoutItem";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
@@ -10,17 +10,12 @@ import { useSessionContext } from "@/context/SessionContext";
 import { useTheme } from "@react-navigation/native";
 import { router } from "expo-router";
 
-interface WorkoutProps {}
-
-const Workout: React.FC<WorkoutProps> = () => {
+const Workout: React.FC = () => {
   const { colors } = useTheme() as CustomTheme;
   const { selectedExerciseInstances, clearContext } = useSessionContext();
   const { createEmptySet } = useSession();
 
-  const [title, setTitle] = useState<string>();
-  const [description, setDescription] = useState<string>();
   const [instances, setInstances] = useState<ExerciseInstance[]>();
-
   const [selectedExerciseInstance, setSelectedExerciseInstance] =
     useState<ExerciseInstance | null>(null);
 
@@ -31,8 +26,8 @@ const Workout: React.FC<WorkoutProps> = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedExerciseInstance) {
-      const updatedInstances = instances!.map((instance) =>
+    if (selectedExerciseInstance && instances) {
+      const updatedInstances = instances.map((instance) =>
         instance.exercise.id === selectedExerciseInstance.exercise.id
           ? selectedExerciseInstance
           : instance
@@ -75,8 +70,8 @@ const Workout: React.FC<WorkoutProps> = () => {
   };
 
   const handleBackToWorkout = () => {
-    if (selectedExerciseInstance) {
-      const updatedInstances = instances!.map((instance) =>
+    if (selectedExerciseInstance && instances) {
+      const updatedInstances = instances.map((instance) =>
         instance.exercise.id === selectedExerciseInstance.exercise.id
           ? selectedExerciseInstance
           : instance
@@ -104,7 +99,10 @@ const Workout: React.FC<WorkoutProps> = () => {
   }
 
   return instances ? (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View
+      className="flex-1 px-5"
+      style={{ backgroundColor: colors.background }}
+    >
       {selectedExerciseInstance ? (
         <WorkoutExercisePerformer
           exerciseInstance={selectedExerciseInstance}
@@ -112,7 +110,7 @@ const Workout: React.FC<WorkoutProps> = () => {
           onAddSet={handleAddSet}
           onBackToWorkout={handleBackToWorkout}
           colors={colors}
-          onSetChange={(setIndex, field: "reps" | "weight", value) =>
+          onSetChange={(setIndex, field, value) =>
             onSetChange(setIndex, field, value)
           }
         />
@@ -130,25 +128,12 @@ const Workout: React.FC<WorkoutProps> = () => {
       )}
     </View>
   ) : (
-    <View>
-      <Text style={styles.noExerciseText}>No exercises added yet!</Text>
+    <View className="flex-1 items-center justify-center">
+      <Text className="text-lg" style={{ color: "gray" }}>
+        No exercises added yet!
+      </Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  scrollContainer: {
-    paddingBottom: 100,
-  },
-  noExerciseText: {
-    textAlign: "center",
-    fontSize: 18,
-    color: "gray",
-  },
-});
 
 export default Workout;

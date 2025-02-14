@@ -1,5 +1,7 @@
+import React, { useEffect, useState } from "react";
+import { ScrollView, View } from "react-native";
 import PresetCard from "@/components/preset/PresetCard";
-import { View, Text } from "@/components/Themed";
+import { Text } from "@/components/Themed";
 import { Session } from "@/Interfaces/sessionInterfaces";
 import {
   getCustomPresetSessions,
@@ -7,8 +9,6 @@ import {
 } from "@/utils/db/session";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
 
 const Workouts: React.FC = () => {
   const local = useLocalSearchParams();
@@ -19,12 +19,12 @@ const Workouts: React.FC = () => {
     async function loadSession() {
       if (!db) return;
       if (local.type === "example") {
-        let sessions = await getExamplePresetSessions(db);
-        sessions ? setSessions(sessions) : null;
+        const sessions = await getExamplePresetSessions(db);
+        if (sessions) setSessions(sessions);
       }
       if (local.type === "custom") {
-        let sessions = await getCustomPresetSessions(db);
-        sessions ? setSessions(sessions) : null;
+        const sessions = await getCustomPresetSessions(db);
+        if (sessions) setSessions(sessions);
       }
     }
     loadSession();
@@ -33,34 +33,22 @@ const Workouts: React.FC = () => {
   return (
     <ScrollView>
       {sessions && sessions.length > 0 ? (
-        <View style={styles.gridContainer}>
+        <View className="flex-row flex-wrap justify-between mx-2.5">
           {sessions.map((session, index) => (
             <PresetCard
               session={session}
               key={session.id || index}
-              style={styles.card}
+              className="mt-4"
             />
           ))}
         </View>
       ) : (
-        <View>
+        <View className="p-4">
           <Text>No sessions available</Text>
         </View>
       )}
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  gridContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginHorizontal: 10,
-  },
-  card: {
-    marginTop: 15,
-  },
-});
 
 export default Workouts;

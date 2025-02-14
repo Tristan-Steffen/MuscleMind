@@ -1,17 +1,17 @@
 import React from "react";
-import { View, Text, StyleSheet, Touchable } from "react-native";
-import { Session } from "@/Interfaces/sessionInterfaces";
+import { View, Text } from "@/components/Themed";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTheme } from "@react-navigation/native";
 import { CustomTheme } from "@/constants/Colors";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { router } from "expo-router";
+import { Session } from "@/Interfaces/sessionInterfaces";
 
 type PresetCardProps = {
   session: Session;
-  style?: object;
+  className?: string;
 };
 
-const PresetCard: React.FC<PresetCardProps> = ({ session, style }) => {
+const PresetCard: React.FC<PresetCardProps> = ({ session, className }) => {
   const lastIndex = session.exercise_instances.length - 1;
   const { colors } = useTheme() as CustomTheme;
 
@@ -26,16 +26,15 @@ const PresetCard: React.FC<PresetCardProps> = ({ session, style }) => {
 
   return (
     <View
-      style={[styles.card, style, { backgroundColor: colors.darkBackground }]}
+      className={`rounded-[25px] w-[48%] ${className || ""}`}
+      style={[{ backgroundColor: colors.darkBackground }]}
     >
       <TouchableOpacity onPress={onPressCard()}>
         <View
-          style={[
-            styles.sessionNameContainer,
-            { backgroundColor: colors.basicButton },
-          ]}
+          className="h-10 rounded-[25px] px-2.5 justify-center"
+          style={{ backgroundColor: colors.basicButton }}
         >
-          <Text style={[styles.sessionName, { color: colors.text }]}>
+          <Text className="text-base font-semibold" style={{ color: colors.text }}>
             {session.name}
           </Text>
         </View>
@@ -44,21 +43,17 @@ const PresetCard: React.FC<PresetCardProps> = ({ session, style }) => {
           {session.exercise_instances.map((exerciseInstance, index) => (
             <View
               key={exerciseInstance.exercise.id?.toString() || index}
-              style={[
-                styles.exerciseRow,
-                {
-                  backgroundColor:
-                    index % 2 === 0
-                      ? colors.darkBackground
-                      : colors.darkerBackground,
-                },
-                index === lastIndex && styles.lastRow,
-              ]}
+              className={`h-10 flex-row justify-between items-center px-1.5 ${index === lastIndex ? "rounded-b-[25px]" : ""
+                }`}
+              style={{
+                backgroundColor:
+                  index % 2 === 0 ? colors.darkBackground : colors.darkerBackground,
+              }}
             >
-              <Text style={[styles.exerciseName, { color: colors.text }]}>
+              <Text className="text-xs" style={{ color: colors.text }}>
                 {exerciseInstance.exercise.name}
               </Text>
-              <Text style={[styles.setsCount, { color: colors.text }]}>
+              <Text className="text-xs font-medium" style={{ color: colors.text }}>
                 {exerciseInstance.sets.length} sets
               </Text>
             </View>
@@ -68,40 +63,5 @@ const PresetCard: React.FC<PresetCardProps> = ({ session, style }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 25,
-    width: "48%",
-  },
-  sessionNameContainer: {
-    height: 40,
-    borderRadius: 25,
-    paddingHorizontal: 10,
-    justifyContent: "center",
-  },
-  sessionName: {
-    fontSize: 16,
-    fontWeight: "semibold",
-  },
-  exerciseRow: {
-    height: 40,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 6,
-    alignItems: "center",
-  },
-  lastRow: {
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
-  },
-  exerciseName: {
-    fontSize: 12,
-  },
-  setsCount: {
-    fontSize: 12,
-    fontWeight: "medium",
-  },
-});
 
 export default PresetCard;

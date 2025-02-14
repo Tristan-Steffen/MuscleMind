@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-} from "react-native";
+import { View, TouchableOpacity, useWindowDimensions } from "react-native";
 import { Text } from "@/components/Themed";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { CustomTheme } from "@/constants/Colors";
@@ -42,7 +37,6 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
         return prevSeconds + 1;
       });
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
@@ -50,57 +44,37 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
 
   return (
     <View
-      style={[
-        styles.container,
-        {
-          height: screenHeight,
-          backgroundColor: colors.darkerBackground,
-        },
-      ]}
+      className="justify-center rounded-t-[20px]"
+      style={{
+        height: screenHeight,
+        backgroundColor: colors.darkerBackground,
+      }}
     >
-      <View style={[styles.bar, { backgroundColor: colors.text }]}></View>
-      <View style={[styles.headerContent]}>
-        <TouchableOpacity style={styles.button} onPress={onDeleteWorkout}>
+      {/* Timer Bar */}
+      <View
+        className="absolute top-[10px] left-1/2 w-[80px] h-[5px] rounded-[20px]"
+        style={{ marginLeft: -40, backgroundColor: colors.text }}
+      />
+
+      {/* Header Content */}
+      <View className="flex-row justify-between px-5">
+        <TouchableOpacity className="w-[25px]" onPress={onDeleteWorkout}>
           <FontAwesome name="trash" size={24} color={colors.text} />
         </TouchableOpacity>
 
-        <Text style={[styles.timerText, { color: colors.text }]}>
+        <Text
+          className="text-[20px] font-bold"
+          style={{ color: colors.text }}
+        >
           {formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}
         </Text>
 
-        <TouchableOpacity style={styles.button} onPress={onFinishWorkout}>
+        <TouchableOpacity className="w-[25px]" onPress={onFinishWorkout}>
           <FontAwesome name="check" size={24} color={colors.text} />
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-  },
-  bar: {
-    position: "absolute",
-    top: 10,
-    height: 5,
-    left: "50%",
-    marginLeft: -40,
-    width: 80,
-    borderRadius: 20,
-  },
-  headerContent: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-  },
-  button: { width: 25 },
-  timerText: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-});
 
 export default WorkoutHeader;
