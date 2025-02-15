@@ -9,33 +9,44 @@ type IconButtonProps = {
     onPress: () => void;
     text?: string;
     active?: boolean;
+    containerStyle?: string; // Additional Tailwind classes for the container
+    textStyle?: string;      // Additional Tailwind classes for the text
 };
 
-const IconButton: React.FC<IconButtonProps> = ({ onPress, text, active }) => {
+const IconButton: React.FC<IconButtonProps> = ({
+    onPress,
+    text,
+    active,
+    containerStyle = "",
+    textStyle = "",
+}) => {
     const { colors } = useTheme() as CustomTheme;
 
     // Render the icon variant if no text is provided.
     if (text === undefined) {
         return (
-            <TouchableOpacity onPress={onPress} className="mx-1">
+            <TouchableOpacity onPress={onPress} className={`mx-1 ${containerStyle}`}>
                 <FontAwesome name="arrow-circle-left" size={32} color={colors.text} />
             </TouchableOpacity>
         );
     }
 
-    // Text button styling and classes.
-    const buttonClasses = "h-7 w-[70px] rounded-full justify-center items-center mx-1";
-    const textClasses = "text-base font-bold mx-2.5";
+    // Default classes.
+    const defaultButtonClasses = "h-7 w-[70px] rounded-full justify-center items-center mx-1";
+    const defaultTextClasses = "text-base font-bold mx-2.5";
     const isActive = active === undefined || active;
 
     if (isActive) {
         return (
             <TouchableOpacity
                 onPress={onPress}
-                className={buttonClasses}
+                className={`${defaultButtonClasses} ${containerStyle}`}
                 style={{ backgroundColor: colors.text }}
             >
-                <Text style={{ color: colors.card }} className={textClasses}>
+                <Text
+                    className={`${defaultTextClasses} ${textStyle}`}
+                    style={{ color: colors.card }}
+                >
                     {text}
                 </Text>
             </TouchableOpacity>
@@ -43,10 +54,13 @@ const IconButton: React.FC<IconButtonProps> = ({ onPress, text, active }) => {
     } else {
         return (
             <View
-                className={buttonClasses}
+                className={`${defaultButtonClasses} ${containerStyle}`}
                 style={{ backgroundColor: colors.border }}
             >
-                <Text style={{ color: colors.card }} className={textClasses}>
+                <Text
+                    className={`${defaultTextClasses} ${textStyle}`}
+                    style={{ color: colors.card }}
+                >
                     {text}
                 </Text>
             </View>

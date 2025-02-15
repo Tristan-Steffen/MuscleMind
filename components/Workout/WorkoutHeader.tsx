@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, useWindowDimensions } from "react-native";
+import { View, useWindowDimensions } from "react-native";
 import { Text } from "@/components/Themed";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { CustomTheme } from "@/constants/Colors";
 import { useTheme } from "@react-navigation/native";
+import { CustomTheme } from "@/constants/Colors";
+import { useSessionContext } from "@/context/SessionContext";
+import IconButton from "@/components/Buttons/IconButton";
+import BigButton from "@/components/Buttons/BigButton";
 
 interface WorkoutHeaderProps {
-  onBackToWorkout: () => void; // updated prop
+  onBackToWorkout: () => void;
   onFinishWorkout: () => void;
 }
 
@@ -15,32 +17,31 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
   onFinishWorkout,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const [seconds, setSeconds] = useState<number>(0);
-  const [minutes, setMinutes] = useState<number>(0);
-  const [hours, setHours] = useState<number>(0);
-
+  const { workoutStartTime, selectedExerciseInstance } = useSessionContext();
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
   const screenHeight = useWindowDimensions().height * 0.1;
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setSeconds((prevSeconds) => {
-        if (prevSeconds === 59) {
-          setMinutes((prevMinutes) => {
-            if (prevMinutes === 59) {
-              setHours((prevHours) => prevHours + 1);
-              return 0;
-            }
-            return prevMinutes + 1;
-          });
-          return 0;
-        }
-        return prevSeconds + 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
+    if (!workoutStartTime) return;
+    setElapsedTime(Date.now() - workoutStartTime);
   }, []);
 
-  const formatTime = (value: number) => (value < 10 ? `0${value}` : value);
+  // Update elapsed time every second
+  useEffect(() => {
+    if (!workoutStartTime) return;
+    const timer = setInterval(() => {
+      setElapsedTime(Date.now() - workoutStartTime);
+    }, 200);
+    return () => clearInterval(timer);
+  }, [workoutStartTime]);
+
+  const formatTime = (milliseconds: number) => {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+  };
 
   return (
     <View
@@ -50,34 +51,23 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
         backgroundColor: colors.darkerBackground,
       }}
     >
+      {/* Timer Bar */}
       <View
         className="absolute top-[10px] left-1/2 w-[80px] h-[5px] rounded-[20px]"
         style={{ marginLeft: -40, backgroundColor: colors.text }}
       />
 
+      {/* Header Content */}
       <View className="flex-row justify-between items-center px-5">
-        <TouchableOpacity
-          onPress={onBackToWorkout}
-          className="flex-row items-center"
-        >
-          <FontAwesome name="arrow-left" size={24} color={colors.text} />
-          <Text className="ml-2 text-base font-bold" style={{ color: colors.text }}>
-            Back to Workout
-          </Text>
-        </TouchableOpacity>
-
-        <Text className="text-[20px] font-bold" style={{ color: colors.text }}>
-          {formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}
+        <View className="w-1/3 flex-row justify-start">
+          {selectedExerciseInstance && (
+            <IconButton onPress={onBackToWorkout} />
+          )}
+        </View>
+        <Text className="text-[20px] font-bold text-center" style={{ color: colors.text }}>
+          {formatTime(elapsedTime)}
         </Text>
-
-        <TouchableOpacity
-          onPress={onFinishWorkout}
-          className="px-3 py-1 rounded bg-blue-500"
-        >
-          <Text className="text-base font-bold" style={{ color: colors.text }}>
-            Finish Workout
-          </Text>
-        </TouchableOpacity>
+        <BigButton title="End Workout" onPress={onFinishWorkout} style="w-1/3 py-2" />
       </View>
     </View>
   );

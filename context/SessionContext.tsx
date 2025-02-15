@@ -8,6 +8,7 @@ type SessionContextType = {
   selectedExerciseInstances: ExerciseInstance[];
   newSelections: ExerciseInstance[];
   selectedExerciseInstance: ExerciseInstance | null; // new state
+  workoutStartTime: number | null;  // new state: timestamp in milliseconds
   setSelectedExerciseInstance: (instance: ExerciseInstance | null) => void; // new setter
   editSelectedExerciseInstance: (exerciseInstance: ExerciseInstance) => void;
   setWorkoutTitle: (title: string) => void;
@@ -21,6 +22,7 @@ type SessionContextType = {
   clearContext: () => void;
   updateSelectedExerciseInstances: (instances: ExerciseInstance[]) => void;
   updateNewSelections: (instances: ExerciseInstance[]) => void;
+  setWorkoutStartTime: (time: number | null) => void; // new setter
 };
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
@@ -31,6 +33,7 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [selectedExerciseInstances, setSelectedExerciseInstances] = useState<ExerciseInstance[]>([]);
   const [newSelections, setNewSelections] = useState<ExerciseInstance[]>([]);
   const [selectedExerciseInstance, setSelectedExerciseInstance] = useState<ExerciseInstance | null>(null);
+  const [workoutStartTime, setWorkoutStartTime] = useState<number | null>(null);
 
   const removeExerciseInstance = (exerciseName: string) => {
     setSelectedExerciseInstances((prev) =>
@@ -95,6 +98,7 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children })
         selectedExerciseInstances,
         newSelections,
         selectedExerciseInstance, // exposed state
+        workoutStartTime,
         setSelectedExerciseInstance, // exposed setter
         clearContext,
         editSelectedExerciseInstance,
@@ -108,6 +112,7 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children })
         revertNewSelections,
         updateSelectedExerciseInstances,
         updateNewSelections,
+        setWorkoutStartTime,
       }}
     >
       {children}

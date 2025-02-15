@@ -8,21 +8,26 @@ import WorkoutExercisePerformer from "./WorkoutExercisePerformer";
 import { useSession } from "@/hooks/useSession";
 import { useSessionContext } from "@/context/SessionContext";
 import { useTheme } from "@react-navigation/native";
-import { router } from "expo-router";
 
 const Workout: React.FC = () => {
   const { colors } = useTheme() as CustomTheme;
   const {
     selectedExerciseInstances,
     selectedExerciseInstance,
+    workoutStartTime,
     setSelectedExerciseInstance,
-    clearContext
+    setWorkoutStartTime
   } = useSessionContext();
   const { createEmptySet } = useSession();
 
   const [instances, setInstances] = useState<ExerciseInstance[]>();
 
-  // Instead of clearing context here, assume TemplateBuilder has already set the new selections.
+  useEffect(() => {
+    if (!workoutStartTime) {
+      setWorkoutStartTime(Date.now());
+    }
+  }, []);
+
   useEffect(() => {
     setInstances(selectedExerciseInstances);
   }, [selectedExerciseInstances]);
@@ -71,11 +76,6 @@ const Workout: React.FC = () => {
     console.log("New set added!");
   };
 
-  const handleBackToWorkout = () => {
-    // This simply clears the currently selected exercise, reverting to the workout list view.
-    setSelectedExerciseInstance(null);
-  };
-
   function onSetChange(
     setIndex: number,
     field: "reps" | "weight",
@@ -98,7 +98,6 @@ const Workout: React.FC = () => {
           exerciseInstance={selectedExerciseInstance}
           onSetDone={handleSetDone}
           onAddSet={handleAddSet}
-          onBackToWorkout={handleBackToWorkout}
           colors={colors}
           onSetChange={(setIndex, field, value) => onSetChange(setIndex, field, value)}
         />

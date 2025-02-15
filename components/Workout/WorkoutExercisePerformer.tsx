@@ -11,7 +11,6 @@ type WorkoutExercisePerformerProps = {
   exerciseInstance: ExerciseInstance;
   onSetDone: (setIndex: number) => void;
   onAddSet: () => void;
-  onBackToWorkout: () => void;
   onSetChange: (
     setIndex: number,
     field: "reps" | "weight",
@@ -24,7 +23,6 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
   exerciseInstance,
   onSetDone,
   onAddSet,
-  onBackToWorkout,
   onSetChange,
   colors,
 }) => {
@@ -37,16 +35,6 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
         className="p-5 rounded-lg my-2.5"
         style={{ backgroundColor: colors.card }}
       >
-        {/* Back to Workout Button */}
-        <TouchableOpacity
-          onPress={onBackToWorkout}
-          className="flex-row items-center mb-5"
-        >
-          <FontAwesome name="arrow-left" size={24} color={colors.text} />
-          <Text className="text-xl ml-2" style={{ color: colors.text }}>
-            Back to Workout
-          </Text>
-        </TouchableOpacity>
 
         {/* Exercise Name */}
         <Text className="text-2xl font-bold mb-5" style={{ color: colors.text }}>
