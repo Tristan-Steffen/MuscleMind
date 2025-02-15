@@ -244,9 +244,9 @@ export const createTestData = async (db: SQLiteDatabase) => {
     };
 
     const sets: Set[] = [
-      { reps: 12, weight: 50 + i * 5, rest: 90, exerciseInstanceId: null },
-      { reps: 10, weight: 55 + i * 5, rest: 90, exerciseInstanceId: null },
-      { reps: 8, weight: 60 + i * 5, rest: 90, exerciseInstanceId: null },
+      { reps: 12, weight: 50 + i * 5, rest: 90, exerciseInstanceId: null, repsInReserve: 2 },
+      { reps: 10, weight: 55 + i * 5, rest: 90, exerciseInstanceId: null, repsInReserve: null },
+      { reps: 8, weight: 60 + i * 5, rest: 90, exerciseInstanceId: null, repsInReserve: 4 },
     ];
 
     exerciseInstances.push({

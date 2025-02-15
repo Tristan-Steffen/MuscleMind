@@ -5,6 +5,7 @@ export interface Set {
   rest: number | null;
   exerciseInstanceId: number | null;
   done?: boolean;
+  repsInReserve: number | null;
 }
 
 export interface Exercise {

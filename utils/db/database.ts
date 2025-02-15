@@ -1,11 +1,13 @@
 import { type SQLiteDatabase } from "expo-sqlite";
 
-const DATABASE_VERSION = 1;
+const DATABASE_VERSION = 2;
 
 export async function initDatabase(db: SQLiteDatabase) {
   let user_version = await db.getFirstAsync<{
     user_version: number;
   }>("PRAGMA user_version");
+
+  console.log("user version", user_version)
 
   if (
     user_version &&
@@ -74,9 +76,21 @@ export async function initDatabase(db: SQLiteDatabase) {
         FOREIGN KEY (muscleId) REFERENCES muscles(id)
       );
     `);
+    user_version.user_version ++
   }
+  console.log("user version", user_version)
+
+
+  if (user_version && user_version.user_version === 1) {
+    // Migration from version 1 to version 2
+    await db.execAsync(`
+      ALTER TABLE sets ADD COLUMN repsInReserve INTEGER;
+    `);
+    user_version.user_version ++
+  }
+
   console.log("Database initialized");
-  await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
+  await db.execAsync(`PRAGMA user_version = ${user_version!.user_version}`);
 }
 
 export async function checkIfDatabaseIsEmpty(

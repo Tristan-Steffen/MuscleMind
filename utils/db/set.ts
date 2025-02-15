@@ -4,7 +4,7 @@ import { SQLiteDatabase } from "expo-sqlite";
 // Add a new set to the database
 export async function addSet(db: SQLiteDatabase, set: Set): Promise<number> {
   const statement = await db.prepareAsync(
-    "INSERT INTO sets (reps, weight, rest, exerciseInstanceId) VALUES ($reps, $weight, $rest, $exerciseInstanceId)"
+    "INSERT INTO sets (reps, weight, rest, exerciseInstanceId, repsInReserve) VALUES ($reps, $weight, $rest, $exerciseInstanceId, $repsInReserve)"
   );
 
   try {
@@ -13,6 +13,7 @@ export async function addSet(db: SQLiteDatabase, set: Set): Promise<number> {
       $weight: set.weight,
       $rest: set.rest,
       $exerciseInstanceId: set.exerciseInstanceId,
+      $repsInReserve: set.repsInReserve,
     });
 
     return result.lastInsertRowId;
@@ -36,6 +37,7 @@ export async function updateSet(db: SQLiteDatabase, set: Set): Promise<void> {
       $rest: set.rest,
       $exerciseInstanceId: set.exerciseInstanceId,
       $id: set.id,
+      $repsInReserve: set.repsInReserve,
     });
   } finally {
     await statement.finalizeAsync();
