@@ -12,18 +12,20 @@ import { router } from "expo-router";
 
 const Workout: React.FC = () => {
   const { colors } = useTheme() as CustomTheme;
-  const { selectedExerciseInstances, clearContext } = useSessionContext();
+  const {
+    selectedExerciseInstances,
+    selectedExerciseInstance,
+    setSelectedExerciseInstance,
+    clearContext
+  } = useSessionContext();
   const { createEmptySet } = useSession();
 
   const [instances, setInstances] = useState<ExerciseInstance[]>();
-  const [selectedExerciseInstance, setSelectedExerciseInstance] =
-    useState<ExerciseInstance | null>(null);
 
+  // Instead of clearing context here, assume TemplateBuilder has already set the new selections.
   useEffect(() => {
     setInstances(selectedExerciseInstances);
-    clearContext();
-    router.navigate({ pathname: "/" });
-  }, []);
+  }, [selectedExerciseInstances]);
 
   useEffect(() => {
     if (selectedExerciseInstance && instances) {
@@ -70,15 +72,8 @@ const Workout: React.FC = () => {
   };
 
   const handleBackToWorkout = () => {
-    if (selectedExerciseInstance && instances) {
-      const updatedInstances = instances.map((instance) =>
-        instance.exercise.id === selectedExerciseInstance.exercise.id
-          ? selectedExerciseInstance
-          : instance
-      );
-      setInstances(updatedInstances);
-      setSelectedExerciseInstance(null);
-    }
+    // This simply clears the currently selected exercise, reverting to the workout list view.
+    setSelectedExerciseInstance(null);
   };
 
   function onSetChange(
@@ -87,22 +82,17 @@ const Workout: React.FC = () => {
     value: number
   ) {
     if (!selectedExerciseInstance) return;
-
     const updatedInstance = {
       ...selectedExerciseInstance,
       sets: selectedExerciseInstance.sets.map((set, index) =>
         index === setIndex ? { ...set, [field]: value } : set
       ),
     };
-
     setSelectedExerciseInstance(updatedInstance);
   }
 
   return instances ? (
-    <View
-      className="flex-1 px-5"
-      style={{ backgroundColor: colors.background }}
-    >
+    <View className="flex-1 px-5" style={{ backgroundColor: colors.background }}>
       {selectedExerciseInstance ? (
         <WorkoutExercisePerformer
           exerciseInstance={selectedExerciseInstance}
@@ -110,9 +100,7 @@ const Workout: React.FC = () => {
           onAddSet={handleAddSet}
           onBackToWorkout={handleBackToWorkout}
           colors={colors}
-          onSetChange={(setIndex, field, value) =>
-            onSetChange(setIndex, field, value)
-          }
+          onSetChange={(setIndex, field, value) => onSetChange(setIndex, field, value)}
         />
       ) : (
         <FlatList

@@ -6,12 +6,12 @@ import { CustomTheme } from "@/constants/Colors";
 import { useTheme } from "@react-navigation/native";
 
 interface WorkoutHeaderProps {
-  onDeleteWorkout: () => void;
+  onBackToWorkout: () => void; // updated prop
   onFinishWorkout: () => void;
 }
 
 const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
-  onDeleteWorkout,
+  onBackToWorkout,
   onFinishWorkout,
 }) => {
   const { colors } = useTheme() as CustomTheme;
@@ -50,27 +50,33 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
         backgroundColor: colors.darkerBackground,
       }}
     >
-      {/* Timer Bar */}
       <View
         className="absolute top-[10px] left-1/2 w-[80px] h-[5px] rounded-[20px]"
         style={{ marginLeft: -40, backgroundColor: colors.text }}
       />
 
-      {/* Header Content */}
-      <View className="flex-row justify-between px-5">
-        <TouchableOpacity className="w-[25px]" onPress={onDeleteWorkout}>
-          <FontAwesome name="trash" size={24} color={colors.text} />
+      <View className="flex-row justify-between items-center px-5">
+        <TouchableOpacity
+          onPress={onBackToWorkout}
+          className="flex-row items-center"
+        >
+          <FontAwesome name="arrow-left" size={24} color={colors.text} />
+          <Text className="ml-2 text-base font-bold" style={{ color: colors.text }}>
+            Back to Workout
+          </Text>
         </TouchableOpacity>
 
-        <Text
-          className="text-[20px] font-bold"
-          style={{ color: colors.text }}
-        >
+        <Text className="text-[20px] font-bold" style={{ color: colors.text }}>
           {formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}
         </Text>
 
-        <TouchableOpacity className="w-[25px]" onPress={onFinishWorkout}>
-          <FontAwesome name="check" size={24} color={colors.text} />
+        <TouchableOpacity
+          onPress={onFinishWorkout}
+          className="px-3 py-1 rounded bg-blue-500"
+        >
+          <Text className="text-base font-bold" style={{ color: colors.text }}>
+            Finish Workout
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

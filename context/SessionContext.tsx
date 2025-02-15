@@ -1,3 +1,4 @@
+// SessionContext.tsx
 import React, { createContext, useState, ReactNode } from "react";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 
@@ -6,6 +7,8 @@ type SessionContextType = {
   workoutDescription: string;
   selectedExerciseInstances: ExerciseInstance[];
   newSelections: ExerciseInstance[];
+  selectedExerciseInstance: ExerciseInstance | null; // new state
+  setSelectedExerciseInstance: (instance: ExerciseInstance | null) => void; // new setter
   editSelectedExerciseInstance: (exerciseInstance: ExerciseInstance) => void;
   setWorkoutTitle: (title: string) => void;
   setWorkoutDescription: (description: string) => void;
@@ -27,6 +30,7 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [workoutDescription, setWorkoutDescription] = useState<string>("");
   const [selectedExerciseInstances, setSelectedExerciseInstances] = useState<ExerciseInstance[]>([]);
   const [newSelections, setNewSelections] = useState<ExerciseInstance[]>([]);
+  const [selectedExerciseInstance, setSelectedExerciseInstance] = useState<ExerciseInstance | null>(null);
 
   const removeExerciseInstance = (exerciseName: string) => {
     setSelectedExerciseInstances((prev) =>
@@ -60,6 +64,7 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children })
     setWorkoutDescription("");
     setSelectedExerciseInstances([]);
     setNewSelections([]);
+    setSelectedExerciseInstance(null);
   };
 
   const isSelectionNew = () => {
@@ -74,7 +79,6 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children })
     setNewSelections(selectedExerciseInstances);
   };
 
-  // New functions that directly update the arrays:
   const updateSelectedExerciseInstances = (instances: ExerciseInstance[]) => {
     setSelectedExerciseInstances(instances);
   };
@@ -90,6 +94,8 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children })
         workoutDescription,
         selectedExerciseInstances,
         newSelections,
+        selectedExerciseInstance, // exposed state
+        setSelectedExerciseInstance, // exposed setter
         clearContext,
         editSelectedExerciseInstance,
         setWorkoutTitle,

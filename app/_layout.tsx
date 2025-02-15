@@ -112,6 +112,7 @@ function RootLayoutNav() {
     applyNewSelections,
     revertNewSelections,
     selectedExerciseInstances,
+    setSelectedExerciseInstance,
   } = useSessionContext();
 
   return (
@@ -189,8 +190,8 @@ function RootLayoutNav() {
         }}
         handleComponent={() => (
           <WorkoutHeader
-            onDeleteWorkout={() => {
-              bottomSheetModalRef.current?.close();
+            onBackToWorkout={() => {
+              setSelectedExerciseInstance(null);
             }}
             onFinishWorkout={() => {
               console.log("Workout Finished!");
