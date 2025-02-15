@@ -27,6 +27,7 @@ import Animated, {
 } from "react-native-reanimated";
 import "../global.css";
 import HeaderButton from "@/components/Buttons/HeaderButton";
+import { Exercise } from "@/Interfaces/sessionInterfaces";
 
 const CustomBackdrop = ({ animatedIndex, style }: BottomSheetBackdropProps) => {
   const containerAnimatedStyle = useAnimatedStyle(() => ({
@@ -106,6 +107,16 @@ function RootLayoutNav() {
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
+
+  const handleNavigateToInfo = (exercise: Exercise) => {
+    // Minimize the modal (snap to index 0)
+    bottomSheetModalRef.current?.snapToIndex(0);
+    // Optionally wait a short moment (if needed) then navigate
+    router.navigate({
+      pathname: "/exercises/exerciseInfo",
+      params: { exerciseID: exercise.id },
+    });
+  };
 
   const {
     isSelectionNew,
@@ -199,7 +210,7 @@ function RootLayoutNav() {
           />
         )}
       >
-        <Workout />
+        <Workout onNavigateToInfo={handleNavigateToInfo} />
       </BottomSheetModal>
     </>
   );

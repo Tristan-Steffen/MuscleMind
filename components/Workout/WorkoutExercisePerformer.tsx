@@ -1,11 +1,12 @@
 import React from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "@/components/Themed";
-import { ExerciseInstance, Set } from "@/Interfaces/sessionInterfaces";
+import { Exercise, ExerciseInstance, Set } from "@/Interfaces/sessionInterfaces";
 import { CustomTheme } from "@/constants/Colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import InputField from "@/components/Inputs/TextInput";
 import BigButton from "../Buttons/BigButton";
+import { router } from "expo-router";
 
 type WorkoutExercisePerformerProps = {
   exerciseInstance: ExerciseInstance;
@@ -17,6 +18,7 @@ type WorkoutExercisePerformerProps = {
     value: number
   ) => void;
   colors: CustomTheme["colors"];
+  onNavigateToInfo: (exercise: Exercise) => void;
 };
 
 const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
@@ -24,6 +26,7 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
   onSetDone,
   onAddSet,
   onSetChange,
+  onNavigateToInfo,
   colors,
 }) => {
   const incrementReps = (value: number | null) => (value || 0) + 1;
@@ -32,15 +35,24 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
   return (
     <ScrollView>
       <View
-        className="p-5 rounded-lg my-2.5"
-        style={{ backgroundColor: colors.card }}
       >
 
         {/* Exercise Name */}
-        <Text className="text-2xl font-bold mb-5" style={{ color: colors.text }}>
-          {exerciseInstance.exercise.name}
-        </Text>
-
+        <View className="border-b mb-5 flex flex-row" style={{ borderColor: colors.border }}>
+          <Text className="text-2xl font-bold pr-2" style={{ color: colors.text }}>
+            {exerciseInstance.exercise.name}
+          </Text >
+          <TouchableOpacity
+            className="items-center justify-end pb-1"
+            onPress={() => onNavigateToInfo(exerciseInstance.exercise)}
+          >
+            <FontAwesome
+              name="info-circle"
+              size={26}
+              color={colors.lightBackground}
+            />
+          </TouchableOpacity>
+        </View>
         {/* Reps and Weight Headers */}
         <View className="flex-row justify-between mb-2.5 mr-9">
           <View className="flex-row w-1/2 justify-center">

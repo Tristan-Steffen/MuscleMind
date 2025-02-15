@@ -23,7 +23,7 @@ const Colors = {
   dark: {
     text: white,
     placeHolderText: "#666",
-    background: "#080813",
+    background: "#161629",
     darkBackground: "#2D2538",
     darkerBackground: "#1C1624",
     lightBackground: "#FFEEE7",

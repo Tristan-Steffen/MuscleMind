@@ -63,6 +63,7 @@ export function useSession() {
       weight: null,
       rest: null,
       exerciseInstanceId: null,
+      repsInReserve: null,
     };
   };
 

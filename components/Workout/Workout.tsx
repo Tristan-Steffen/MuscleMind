@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
 import { Text } from "@/components/Themed";
 import WorkoutItem from "@/components/Workout/WorkoutItem";
-import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
+import { Exercise, ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { CustomTheme } from "@/constants/Colors";
 import WorkoutExercisePerformer from "./WorkoutExercisePerformer";
 import { useSession } from "@/hooks/useSession";
 import { useSessionContext } from "@/context/SessionContext";
 import { useTheme } from "@react-navigation/native";
 
-const Workout: React.FC = () => {
+const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void }> = ({ onNavigateToInfo }) => {
   const { colors } = useTheme() as CustomTheme;
   const {
     selectedExerciseInstances,
@@ -100,6 +100,7 @@ const Workout: React.FC = () => {
           onAddSet={handleAddSet}
           colors={colors}
           onSetChange={(setIndex, field, value) => onSetChange(setIndex, field, value)}
+          onNavigateToInfo={onNavigateToInfo}
         />
       ) : (
         <FlatList

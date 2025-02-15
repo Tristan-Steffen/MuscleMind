@@ -2,10 +2,10 @@ export interface Set {
   id?: number;
   reps: number | null;
   weight: number | null;
-  rest: number | null;
+  rest?: number | null;
   exerciseInstanceId: number | null;
   done?: boolean;
-  repsInReserve: number | null;
+  repsInReserve?: number | null;
 }
 
 export interface Exercise {
