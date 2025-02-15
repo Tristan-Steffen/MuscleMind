@@ -41,7 +41,7 @@ const ExerciseGroup: React.FC<ExerciseGroupProps> = ({
       <Text className="text-lg font-bold my-2.5" style={{ color: colors.text }}>
         {muscleGroup}
       </Text>
-      <View className="border rounded-full" style={{ borderColor: colors.border }}>
+      <View className="border rounded-3xl" style={{ borderColor: colors.border }}>
         {exercises.map((exercise, index) => (
           <View key={index}>
             {index !== 0 && (

@@ -23,7 +23,7 @@ const InputField: React.FC<InputFieldProps> = ({
 
   return (
     <TextInput
-      className="h-12 border rounded-full px-4 text-base"
+      className="h-12 border rounded-3xl px-4 text-base"
       style={[{ borderColor: colors.border, color: colors.text }, style]}
       placeholder={placeholder}
       value={value}

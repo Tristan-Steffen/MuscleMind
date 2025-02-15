@@ -16,53 +16,41 @@ type SessionContextType = {
   applyNewSelections: () => void;
   revertNewSelections: () => void;
   clearContext: () => void;
+  updateSelectedExerciseInstances: (instances: ExerciseInstance[]) => void;
+  updateNewSelections: (instances: ExerciseInstance[]) => void;
 };
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
-export const SessionProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [workoutTitle, setWorkoutTitle] = useState<string>("");
   const [workoutDescription, setWorkoutDescription] = useState<string>("");
-  const [selectedExerciseInstances, setSelectedExerciseInstances] = useState<
-    ExerciseInstance[]
-  >([]);
-  const [newSelections, setNewSelections] = React.useState<ExerciseInstance[]>(
-    []
-  );
+  const [selectedExerciseInstances, setSelectedExerciseInstances] = useState<ExerciseInstance[]>([]);
+  const [newSelections, setNewSelections] = useState<ExerciseInstance[]>([]);
 
   const removeExerciseInstance = (exerciseName: string) => {
-    setSelectedExerciseInstances((prevInstances) =>
-      prevInstances.filter(
-        (instance) => instance.exercise.name !== exerciseName
-      )
+    setSelectedExerciseInstances((prev) =>
+      prev.filter(instance => instance.exercise.name !== exerciseName)
     );
-    setNewSelections((prevInstances) =>
-      prevInstances.filter(
-        (instance) => instance.exercise.name !== exerciseName
-      )
+    setNewSelections((prev) =>
+      prev.filter(instance => instance.exercise.name !== exerciseName)
     );
   };
 
   const addSelectionExerciseInstance = (exerciseInstance: ExerciseInstance) => {
-    setNewSelections((prevInstances) => [...prevInstances, exerciseInstance]);
+    setNewSelections((prev) => [...prev, exerciseInstance]);
   };
 
   const removeSelectionExerciseInstance = (exerciseName: string) => {
-    setNewSelections((prevInstances) =>
-      prevInstances.filter(
-        (instance) => instance.exercise.name !== exerciseName
-      )
+    setNewSelections((prev) =>
+      prev.filter(instance => instance.exercise.name !== exerciseName)
     );
   };
 
   const editSelectedExerciseInstance = (exerciseInstance: ExerciseInstance) => {
-    setSelectedExerciseInstances((prevInstances) =>
-      prevInstances.map((instance) =>
-        instance.exercise.id === exerciseInstance.exercise.id
-          ? exerciseInstance
-          : instance
+    setSelectedExerciseInstances((prev) =>
+      prev.map(instance =>
+        instance.exercise.id === exerciseInstance.exercise.id ? exerciseInstance : instance
       )
     );
   };
@@ -71,13 +59,11 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
     setWorkoutTitle("");
     setWorkoutDescription("");
     setSelectedExerciseInstances([]);
+    setNewSelections([]);
   };
 
   const isSelectionNew = () => {
-    return (
-      JSON.stringify(selectedExerciseInstances) !==
-      JSON.stringify(newSelections)
-    );
+    return JSON.stringify(selectedExerciseInstances) !== JSON.stringify(newSelections);
   };
 
   const applyNewSelections = () => {
@@ -86,6 +72,15 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
 
   const revertNewSelections = () => {
     setNewSelections(selectedExerciseInstances);
+  };
+
+  // New functions that directly update the arrays:
+  const updateSelectedExerciseInstances = (instances: ExerciseInstance[]) => {
+    setSelectedExerciseInstances(instances);
+  };
+
+  const updateNewSelections = (instances: ExerciseInstance[]) => {
+    setNewSelections(instances);
   };
 
   return (
@@ -105,6 +100,8 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
         isSelectionNew,
         applyNewSelections,
         revertNewSelections,
+        updateSelectedExerciseInstances,
+        updateNewSelections,
       }}
     >
       {children}

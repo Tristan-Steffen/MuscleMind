@@ -14,7 +14,7 @@ const DayCard: React.FC<DayCardProps> = ({ day, date, isToday = false }) => {
 
   return (
     <View
-      className="flex-1 h-[75px] rounded-md items-center justify-center mx-1"
+      className="flex-1 h-[75px] rounded-3xl items-center justify-center mx-1"
       style={{
         backgroundColor: isToday ? colors.lightBackground : colors.card,
       }}

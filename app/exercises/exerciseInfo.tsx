@@ -33,7 +33,7 @@ const ExerciseInfo: React.FC = () => {
     >
       {/* Title Field */}
       <View
-        className="h-12 border rounded-full px-4 justify-center mb-4"
+        className="h-12 border rounded-3xl px-4 justify-center mb-4"
         style={{ borderColor: colors.border }}
       >
         <Text className="text-2xl font-bold" style={{ color: colors.text }}>
@@ -43,7 +43,7 @@ const ExerciseInfo: React.FC = () => {
 
       {/* Description Field */}
       <View
-        className="h-12 border rounded-full px-4 justify-center mb-4"
+        className="h-12 border rounded-3xl px-4 justify-center mb-4"
         style={{ borderColor: colors.border }}
       >
         <Text className="text-base leading-6" style={{ color: colors.text }}>

@@ -14,32 +14,37 @@ const TemplateBuilder: React.FC = () => {
     setWorkoutTitle,
     setWorkoutDescription,
     selectedExerciseInstances,
-    addSelectionExerciseInstance,
-    applyNewSelections,
+    clearContext,
     editSelectedExerciseInstance,
     removeExerciseInstance,
-    revertNewSelections,
+    updateSelectedExerciseInstances,
+    updateNewSelections
   } = useSessionContext();
 
   const { createEmptySet } = useSession();
   const local = useLocalSearchParams();
 
   useEffect(() => {
-    revertNewSelections();
-
     if (local.session) {
+      // Parse session data.
       const sessionData = JSON.parse(
         Array.isArray(local.session) ? local.session[0] : local.session
       );
       const { name, description, exercise_instances: instances } = sessionData;
+
+      // Clear the context first.
+      clearContext();
+
+      // Set the new title/description.
       setWorkoutTitle(name);
       setWorkoutDescription(description);
-      instances.forEach((instance: any) => {
-        addSelectionExerciseInstance(instance);
-      });
-      applyNewSelections();
+
+      // Directly update both arrays.
+      updateSelectedExerciseInstances(instances);
+      updateNewSelections(instances);
     }
-  }, []);
+  }, [local.session]);
+
 
   function onSetChange(
     setIndex: number,
