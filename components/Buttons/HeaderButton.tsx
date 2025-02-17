@@ -13,7 +13,7 @@ type HeaderButtonProps = {
 const HeaderButton: React.FC<HeaderButtonProps> = ({ onPress, text, active }) => {
   const { colors } = useTheme() as CustomTheme;
 
-  const buttonClasses = "h-7 w-[70px] rounded-full justify-center items-center mx-1";
+  const buttonClasses = "h-7 rounded-full justify-center items-center mx-1";
   const textClasses = "text-base font-bold mx-2.5";
 
   if (active === undefined || active) {

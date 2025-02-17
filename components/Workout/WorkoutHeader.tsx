@@ -6,6 +6,8 @@ import { CustomTheme } from "@/constants/Colors";
 import { useSessionContext } from "@/context/SessionContext";
 import IconButton from "@/components/Buttons/IconButton";
 import BigButton from "@/components/Buttons/BigButton";
+import Button from "../Buttons/Button";
+import HeaderButton from "../Buttons/HeaderButton";
 
 interface WorkoutHeaderProps {
   onBackToWorkout: () => void;
@@ -48,7 +50,7 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
       className="justify-center rounded-t-[20px]"
       style={{
         height: screenHeight,
-        backgroundColor: colors.darkerBackground,
+        backgroundColor: colors.background,
       }}
     >
       {/* Timer Bar */}
@@ -67,7 +69,7 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
         <Text className="text-[20px] font-bold text-center" style={{ color: colors.text }}>
           {formatTime(elapsedTime)}
         </Text>
-        <BigButton title="End Workout" onPress={onFinishWorkout} style="w-1/3 py-2" />
+        <HeaderButton text="End Workout" onPress={onFinishWorkout} />
       </View>
     </View>
   );
