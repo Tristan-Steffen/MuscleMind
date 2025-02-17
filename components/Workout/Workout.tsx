@@ -1,3 +1,4 @@
+// src/components/Workout/Workout.tsx
 import React, { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
 import { Text } from "@/components/Themed";
@@ -5,19 +6,26 @@ import WorkoutItem from "@/components/Workout/WorkoutItem";
 import { Exercise, ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import { CustomTheme } from "@/constants/Colors";
 import WorkoutExercisePerformer from "./WorkoutExercisePerformer";
+import { useWorkoutContext } from "@/context/WorkoutContext";
+import { useTheme } from "@react-navigation/native";
 import { useSession } from "@/hooks/useSession";
 import { useSessionContext } from "@/context/SessionContext";
-import { useTheme } from "@react-navigation/native";
 
 const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void }> = ({ onNavigateToInfo }) => {
   const { colors } = useTheme() as CustomTheme;
   const {
-    selectedExerciseInstances,
-    selectedExerciseInstance,
+    selectedWorkoutInstances,
+    selectedWorkoutInstance,
     workoutStartTime,
-    setSelectedExerciseInstance,
-    setWorkoutStartTime
+    setWorkoutStartTime,
+    updateselectedWorkoutInstances,
+    setselectedWorkoutInstance,
+  } = useWorkoutContext();
+
+  const {
+    selectedExerciseInstances,
   } = useSessionContext();
+
   const { createEmptySet } = useSession();
 
   const [instances, setInstances] = useState<ExerciseInstance[]>();
@@ -26,80 +34,54 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void }> = ({
     if (!workoutStartTime) {
       setWorkoutStartTime(Date.now());
     }
+    updateselectedWorkoutInstances(selectedExerciseInstances)
   }, []);
 
   useEffect(() => {
-    setInstances(selectedExerciseInstances);
-  }, [selectedExerciseInstances]);
+    setInstances(selectedWorkoutInstances);
+  }, [selectedWorkoutInstances]);
 
   useEffect(() => {
-    if (selectedExerciseInstance && instances) {
+    if (selectedWorkoutInstance && instances) {
       const updatedInstances = instances.map((instance) =>
-        instance.exercise.id === selectedExerciseInstance.exercise.id
-          ? selectedExerciseInstance
+        instance.exercise.id === selectedWorkoutInstance.exercise.id
+          ? selectedWorkoutInstance
           : instance
       );
       setInstances(updatedInstances);
+      updateselectedWorkoutInstances(updatedInstances);
     }
-  }, [selectedExerciseInstance?.sets]);
+  }, [selectedWorkoutInstance?.sets]);
 
   const handleExercisePress = (exerciseInstance: ExerciseInstance) => {
-    setSelectedExerciseInstance(exerciseInstance);
-  };
-
-  const handleSetDone = (setIndex: number) => {
-    if (!selectedExerciseInstance) return;
-    const updatedSets = selectedExerciseInstance.sets.map((set, index) =>
-      index === setIndex ? { ...set, done: !set.done } : set
-    );
-    setSelectedExerciseInstance({
-      ...selectedExerciseInstance,
-      sets: updatedSets,
-    });
+    setselectedWorkoutInstance(exerciseInstance);
   };
 
   const handleAddSet = () => {
-    if (!selectedExerciseInstance) return;
+    if (!selectedWorkoutInstance) return;
     let newSet = createEmptySet();
     const lastSet =
-      selectedExerciseInstance.sets[selectedExerciseInstance.sets.length - 1];
+      selectedWorkoutInstance.sets[selectedWorkoutInstance.sets.length - 1];
     newSet = {
       ...newSet,
       reps: lastSet.reps,
       weight: lastSet.weight,
       done: false,
     };
-    setSelectedExerciseInstance({
-      ...selectedExerciseInstance,
-      sets: [...selectedExerciseInstance.sets, newSet],
+    setselectedWorkoutInstance({
+      ...selectedWorkoutInstance,
+      sets: [...selectedWorkoutInstance.sets, newSet],
     });
     console.log("New set added!");
   };
 
-  function onSetChange(
-    setIndex: number,
-    field: "reps" | "weight",
-    value: number
-  ) {
-    if (!selectedExerciseInstance) return;
-    const updatedInstance = {
-      ...selectedExerciseInstance,
-      sets: selectedExerciseInstance.sets.map((set, index) =>
-        index === setIndex ? { ...set, [field]: value } : set
-      ),
-    };
-    setSelectedExerciseInstance(updatedInstance);
-  }
-
   return instances ? (
     <View className="flex-1 px-5" style={{ backgroundColor: colors.background }}>
-      {selectedExerciseInstance ? (
+      {selectedWorkoutInstance ? (
         <WorkoutExercisePerformer
-          exerciseInstance={selectedExerciseInstance}
-          onSetDone={handleSetDone}
+          exerciseInstance={selectedWorkoutInstance}
           onAddSet={handleAddSet}
           colors={colors}
-          onSetChange={(setIndex, field, value) => onSetChange(setIndex, field, value)}
           onNavigateToInfo={onNavigateToInfo}
         />
       ) : (

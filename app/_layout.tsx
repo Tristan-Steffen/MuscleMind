@@ -4,7 +4,7 @@ import { createTheme } from "@/constants/Colors";
 import { useFonts } from "expo-font";
 import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import "react-native-reanimated";
 import useColorScheme from "@/hooks/useColorScheme";
 import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
@@ -28,6 +28,7 @@ import Animated, {
 import "../global.css";
 import HeaderButton from "@/components/Buttons/HeaderButton";
 import { Exercise } from "@/Interfaces/sessionInterfaces";
+import { useWorkoutContext, WorkoutProvider } from "@/context/WorkoutContext";
 
 const CustomBackdrop = ({ animatedIndex, style }: BottomSheetBackdropProps) => {
   const containerAnimatedStyle = useAnimatedStyle(() => ({
@@ -86,9 +87,11 @@ export default function RootLayout() {
       >
         <SessionProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <BottomSheetModalProvider>
-              <RootLayoutNav />
-            </BottomSheetModalProvider>
+            <WorkoutProvider>
+              <BottomSheetModalProvider>
+                <RootLayoutNav />
+              </BottomSheetModalProvider>
+            </WorkoutProvider>
           </GestureHandlerRootView>
         </SessionProvider>
       </SQLiteProvider>
@@ -109,9 +112,7 @@ function RootLayoutNav() {
   }, []);
 
   const handleNavigateToInfo = (exercise: Exercise) => {
-    // Minimize the modal (snap to index 0)
     bottomSheetModalRef.current?.snapToIndex(0);
-    // Optionally wait a short moment (if needed) then navigate
     router.navigate({
       pathname: "/exercises/exerciseInfo",
       params: { exerciseID: exercise.id },
@@ -123,8 +124,8 @@ function RootLayoutNav() {
     applyNewSelections,
     revertNewSelections,
     selectedExerciseInstances,
-    setSelectedExerciseInstance,
   } = useSessionContext();
+  const { setselectedWorkoutInstance } = useWorkoutContext();
 
   return (
     <>
@@ -202,7 +203,7 @@ function RootLayoutNav() {
         handleComponent={() => (
           <WorkoutHeader
             onBackToWorkout={() => {
-              setSelectedExerciseInstance(null);
+              setselectedWorkoutInstance(null);
             }}
             onFinishWorkout={() => {
               console.log("Workout Finished!");

@@ -3,11 +3,9 @@ import { View, useWindowDimensions } from "react-native";
 import { Text } from "@/components/Themed";
 import { useTheme } from "@react-navigation/native";
 import { CustomTheme } from "@/constants/Colors";
-import { useSessionContext } from "@/context/SessionContext";
 import IconButton from "@/components/Buttons/IconButton";
-import BigButton from "@/components/Buttons/BigButton";
-import Button from "../Buttons/Button";
 import HeaderButton from "../Buttons/HeaderButton";
+import { useWorkoutContext } from "@/context/WorkoutContext";
 
 interface WorkoutHeaderProps {
   onBackToWorkout: () => void;
@@ -19,7 +17,7 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
   onFinishWorkout,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { workoutStartTime, selectedExerciseInstance } = useSessionContext();
+  const { workoutStartTime, selectedWorkoutInstance } = useWorkoutContext();
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const screenHeight = useWindowDimensions().height * 0.1;
 
@@ -62,7 +60,7 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
       {/* Header Content */}
       <View className="flex-row justify-between items-center px-5">
         <View className="w-1/3 flex-row justify-start">
-          {selectedExerciseInstance && (
+          {selectedWorkoutInstance && (
             <IconButton onPress={onBackToWorkout} />
           )}
         </View>

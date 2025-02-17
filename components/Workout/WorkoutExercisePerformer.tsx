@@ -1,3 +1,4 @@
+// src/components/Workout/WorkoutExercisePerformer.tsx
 import React from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "@/components/Themed";
@@ -9,35 +10,23 @@ import { CurrentSetInput } from "./CurrentSetInput";
 
 type WorkoutExercisePerformerProps = {
   exerciseInstance: ExerciseInstance;
-  onSetDone: (setIndex: number) => void;
   onAddSet: () => void;
-  onSetChange: (
-    setIndex: number,
-    field: "reps" | "weight" | "repsInReserve",
-    value: number
-  ) => void;
   colors: CustomTheme["colors"];
   onNavigateToInfo: (exercise: Exercise) => void;
 };
 
 const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
   exerciseInstance,
-  onSetDone,
   onAddSet,
-  onSetChange,
   onNavigateToInfo,
   colors,
 }) => {
-  // Find the first unfinished set to use as the current one.
   const currentSetIndex = exerciseInstance.sets.findIndex((set: Set) => !set.done);
   const currentSet = currentSetIndex !== -1 ? exerciseInstance.sets[currentSetIndex] : null;
-
-  // Define a muted text color for planned values.
   const mutedColor = "#999";
 
   return (
     <ScrollView className="p-4">
-      {/* Exercise Header */}
       <View
         className="border-b mb-5 flex-row items-center justify-between"
         style={{ borderColor: colors.border }}
@@ -54,8 +43,6 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
         <CurrentSetInput
           currentSet={currentSet}
           currentSetIndex={currentSetIndex}
-          onSetChange={onSetChange}
-          onSetDone={onSetDone}
           colors={colors}
         />
       )}
@@ -67,8 +54,6 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
         colors={colors}
         mutedColor={mutedColor}
       />
-
-
     </ScrollView>
   );
 };
