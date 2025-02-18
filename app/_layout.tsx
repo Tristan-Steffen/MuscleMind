@@ -4,7 +4,7 @@ import { createTheme } from "@/constants/Colors";
 import { useFonts } from "expo-font";
 import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "react-native-reanimated";
 import useColorScheme from "@/hooks/useColorScheme";
 import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
@@ -12,47 +12,15 @@ import { initDatabase, checkIfDatabaseIsEmpty } from "@/utils/db/database";
 import { createTestData } from "@/utils/db/sessionFactory";
 import { SessionProvider, useSessionContext } from "@/context/SessionContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-  BottomSheetBackdropProps,
-} from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import Workout from "@/components/Workout/Workout";
 import WorkoutHeader from "@/components/Workout/WorkoutHeader";
 import IconButton from "@/components/Buttons/IconButton";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import "../global.css";
 import HeaderButton from "@/components/Buttons/HeaderButton";
 import { Exercise } from "@/Interfaces/sessionInterfaces";
 import { useWorkoutContext, WorkoutProvider } from "@/context/WorkoutContext";
-
-const CustomBackdrop = ({ animatedIndex, style }: BottomSheetBackdropProps) => {
-  const containerAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(
-      animatedIndex.value,
-      [0, 1],
-      [0, 1],
-      Extrapolation.CLAMP
-    ),
-  }));
-
-  const containerStyle = useMemo(
-    () => [
-      style,
-      {
-        backgroundColor: "black",
-      },
-      containerAnimatedStyle,
-    ],
-    [style, containerAnimatedStyle]
-  );
-
-  return <Animated.View style={containerStyle} />;
-};
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -69,9 +37,7 @@ export default function RootLayout() {
     }
   }, [error, loaded]);
 
-  if (!loaded) {
-    return null;
-  }
+  if (!loaded) return null;
 
   return (
     <ThemeProvider value={customTheme}>
@@ -88,9 +54,7 @@ export default function RootLayout() {
         <SessionProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <WorkoutProvider>
-              <BottomSheetModalProvider>
-                <RootLayoutNav />
-              </BottomSheetModalProvider>
+              <RootLayoutNav />
             </WorkoutProvider>
           </GestureHandlerRootView>
         </SessionProvider>
@@ -104,22 +68,27 @@ function RootLayoutNav() {
   const customTheme = createTheme(colorScheme);
   const colors = customTheme.colors;
 
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  // Create a ref for the BottomSheet
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  // Use two snap points: minimized ("10%") and expanded ("95%")
   const snapPoints = useMemo(() => ["10%", "95%"], []);
 
-  const closeModal = () => {
-    bottomSheetModalRef.current?.close();
-  };
+  // Control whether the sheet is rendered
+  const [sheetVisible, setSheetVisible] = useState(false);
 
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-    router.navigate({
-      pathname: "/",
-    });
+  // Open the sheet when the Start button is pressed.
+  const handlePresentSheetPress = useCallback(() => {
+    setSheetVisible(true);
+    // After mounting, open the sheet by snapping to the expanded index (1).
+    setTimeout(() => {
+      bottomSheetRef.current?.snapToIndex(0);
+    }, 50);
+    router.navigate({ pathname: "/" });
   }, []);
 
   const handleNavigateToInfo = (exercise: Exercise) => {
-    bottomSheetModalRef.current?.snapToIndex(0);
+    // When navigating, unmount the sheet.
+    setSheetVisible(false);
     router.navigate({
       pathname: "/exercises/exerciseInfo",
       params: { exerciseID: exercise.id },
@@ -143,29 +112,17 @@ function RootLayoutNav() {
           name="workouts/workouts"
           options={{
             title: "Example Workouts",
-            headerLeft: () => (
-              <IconButton
-                onPress={() => {
-                  router.back();
-                }}
-              />
-            ),
+            headerLeft: () => <IconButton onPress={() => router.back()} />,
           }}
         />
         <Stack.Screen
           name="workouts/workoutBuilder"
           options={{
             title: "New Workout",
-            headerLeft: () => (
-              <IconButton
-                onPress={() => {
-                  router.back();
-                }}
-              />
-            ),
+            headerLeft: () => <IconButton onPress={() => router.back()} />,
             headerRight: () => (
               <HeaderButton
-                onPress={handlePresentModalPress}
+                onPress={handlePresentSheetPress}
                 text="Start"
                 active={selectedExerciseInstances.length > 0}
               />
@@ -198,30 +155,41 @@ function RootLayoutNav() {
         />
       </Stack>
 
-      <BottomSheetModal
-        ref={bottomSheetModalRef}
-        index={1}
-        snapPoints={snapPoints}
-        enablePanDownToClose={false}
-        backdropComponent={CustomBackdrop}
-        backgroundStyle={{
-          backgroundColor: colors.darkerBackground,
-        }}
-        handleComponent={() => (
-          <WorkoutHeader
-            onBackToWorkout={() => {
-              setselectedWorkoutInstance(null);
-            }}
+      {/* Conditionally render the BottomSheet */}
+      {sheetVisible && (
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={1} // When mounted, start in the expanded state
+          snapPoints={snapPoints}
+          enablePanDownToClose={false} // Disable dismissal by swipe; user can drag between snap points.
+          backgroundStyle={{ backgroundColor: colors.darkerBackground }}
+          handleComponent={() => (
+            <WorkoutHeader
+              onBackToWorkout={() => {
+                setselectedWorkoutInstance(null);
+              }}
+              onFinishWorkout={() => {
+                // When End Workout is confirmed, finishWorkout saves state and then unmounts the sheet.
+                finishWorkout(() => setSheetVisible(false));
+              }}
+            />
+          )}
+          containerStyle={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 10,
+          }}
+        >
+          <Workout
+            onNavigateToInfo={handleNavigateToInfo}
             onFinishWorkout={() => {
-              finishWorkout(closeModal);
+              finishWorkout(() => setSheetVisible(false));
             }}
           />
-        )}
-      >
-        <Workout onNavigateToInfo={handleNavigateToInfo} onFinishWorkout={() => {
-          finishWorkout(closeModal);
-        }} />
-      </BottomSheetModal>
+        </BottomSheet>
+      )}
     </>
   );
 }
