@@ -8,8 +8,8 @@ import { Href, useRouter } from "expo-router";
 type ButtonProps = {
     title: string;
     onPress?: () => void;
-    style?: string; // Use string for Tailwind classes
-    textStyle?: string; // Use string for Tailwind classes
+    style?: string;
+    textStyle?: string;
     href?: Href;
 };
 
@@ -33,7 +33,7 @@ const Button: React.FC<ButtonProps> = ({
 
     return (
         <TouchableOpacity
-            className={`py-1 rounded-full items-center justify-center ${style}`}
+            className={`py-1 rounded-full items-center justify-center px-2 ${style}`}
             style={{ backgroundColor: colors.basicButton }} // Dynamic color from theme
             onPress={handlePress}
             activeOpacity={0.8}

@@ -7,6 +7,8 @@ import { CustomTheme } from "@/constants/Colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { PlannedSets } from "./PlannedSets";
 import { CurrentSetInput } from "./CurrentSetInput";
+import { useWorkoutContext } from "@/context/WorkoutContext";
+import Button from "../Buttons/Button";
 
 type WorkoutExercisePerformerProps = {
   exerciseInstance: ExerciseInstance;
@@ -25,8 +27,39 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
   const currentSet = currentSetIndex !== -1 ? exerciseInstance.sets[currentSetIndex] : null;
   const mutedColor = "#999";
 
+  // Access the workout context to get the list of exercises and update function.
+  const { selectedWorkoutInstances, setselectedWorkoutInstance } = useWorkoutContext();
+
+  // Find the index of the current exercise in the selectedWorkoutInstances list.
+  const currentIndex = selectedWorkoutInstances.findIndex(
+    instance => instance.exercise.id === exerciseInstance.exercise.id
+  );
+
+  // Determine previous and next exercise (if available).
+  const prevExercise = currentIndex > 0 ? selectedWorkoutInstances[currentIndex - 1] : null;
+  const nextExercise =
+    currentIndex < selectedWorkoutInstances.length - 1 ? selectedWorkoutInstances[currentIndex + 1] : null;
+
+  const handlePrevPress = () => {
+    if (prevExercise) {
+      setselectedWorkoutInstance(prevExercise);
+    }
+  };
+
+  const handleNextPress = () => {
+    if (nextExercise) {
+      setselectedWorkoutInstance(nextExercise);
+    }
+  };
+
+  const handleFinishWorkout = () => {
+    // Place your finish workout logic here.
+    console.log("Workout Finished!");
+  };
+
   return (
     <ScrollView className="p-4">
+      {/* Header */}
       <View
         className="border-b mb-5 flex-row items-center justify-between"
         style={{ borderColor: colors.border }}
@@ -39,6 +72,7 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
         </TouchableOpacity>
       </View>
 
+      {/* Current Set Input */}
       {currentSet && (
         <CurrentSetInput
           currentSet={currentSet}
@@ -47,6 +81,7 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
         />
       )}
 
+      {/* Planned Sets */}
       <PlannedSets
         sets={exerciseInstance.sets}
         currentSetIndex={currentSetIndex}
@@ -54,6 +89,30 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
         colors={colors}
         mutedColor={mutedColor}
       />
+
+      {/* Navigation Buttons */}
+      <View className="flex-row justify-between mt-4 pb-14 w-full">
+        {prevExercise ? (
+          <Button
+            onPress={handlePrevPress}
+            title={prevExercise.exercise.name}
+            style="w-2/5"
+          />
+        ) : <View />}
+        {nextExercise ? (
+          <Button
+            onPress={handleNextPress}
+            title={nextExercise.exercise.name}
+            style="w-2/5"
+          />
+        ) : (
+          <Button
+            onPress={handleFinishWorkout}
+            title="Finish Workout"
+            style="w-2/5"
+          />
+        )}
+      </View>
     </ScrollView>
   );
 };
