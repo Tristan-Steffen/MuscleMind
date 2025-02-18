@@ -107,8 +107,15 @@ function RootLayoutNav() {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => ["10%", "95%"], []);
 
+  const closeModal = () => {
+    bottomSheetModalRef.current?.close();
+  };
+
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
+    router.navigate({
+      pathname: "/",
+    });
   }, []);
 
   const handleNavigateToInfo = (exercise: Exercise) => {
@@ -125,7 +132,7 @@ function RootLayoutNav() {
     revertNewSelections,
     selectedExerciseInstances,
   } = useSessionContext();
-  const { setselectedWorkoutInstance } = useWorkoutContext();
+  const { setselectedWorkoutInstance, finishWorkout } = useWorkoutContext();
 
   return (
     <>
@@ -206,12 +213,14 @@ function RootLayoutNav() {
               setselectedWorkoutInstance(null);
             }}
             onFinishWorkout={() => {
-              console.log("Workout Finished!");
+              finishWorkout(closeModal);
             }}
           />
         )}
       >
-        <Workout onNavigateToInfo={handleNavigateToInfo} />
+        <Workout onNavigateToInfo={handleNavigateToInfo} onFinishWorkout={() => {
+          finishWorkout(closeModal);
+        }} />
       </BottomSheetModal>
     </>
   );

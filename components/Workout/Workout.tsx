@@ -11,7 +11,7 @@ import { useTheme } from "@react-navigation/native";
 import { useSession } from "@/hooks/useSession";
 import { useSessionContext } from "@/context/SessionContext";
 
-const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void }> = ({ onNavigateToInfo }) => {
+const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void, onFinishWorkout: () => void }> = ({ onNavigateToInfo, onFinishWorkout }) => {
   const { colors } = useTheme() as CustomTheme;
   const {
     selectedWorkoutInstances,
@@ -20,10 +20,14 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void }> = ({
     setWorkoutStartTime,
     updateselectedWorkoutInstances,
     setselectedWorkoutInstance,
+    setWorkoutTitle,
+    setWorkoutDescription,
   } = useWorkoutContext();
 
   const {
     selectedExerciseInstances,
+    workoutTitle,
+    workoutDescription,
   } = useSessionContext();
 
   const { createEmptySet } = useSession();
@@ -35,6 +39,8 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void }> = ({
       setWorkoutStartTime(Date.now());
     }
     updateselectedWorkoutInstances(selectedExerciseInstances)
+    setWorkoutTitle(workoutTitle),
+      setWorkoutDescription(workoutDescription)
   }, []);
 
   useEffect(() => {
@@ -83,6 +89,7 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void }> = ({
           onAddSet={handleAddSet}
           colors={colors}
           onNavigateToInfo={onNavigateToInfo}
+          onFinishWorkout={onFinishWorkout}
         />
       ) : (
         <FlatList

@@ -1,6 +1,6 @@
 // src/components/Workout/WorkoutExercisePerformer.tsx
 import React from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View, Alert } from "react-native";
 import { Text } from "@/components/Themed";
 import { Exercise, ExerciseInstance, Set } from "@/Interfaces/sessionInterfaces";
 import { CustomTheme } from "@/constants/Colors";
@@ -15,12 +15,14 @@ type WorkoutExercisePerformerProps = {
   onAddSet: () => void;
   colors: CustomTheme["colors"];
   onNavigateToInfo: (exercise: Exercise) => void;
+  onFinishWorkout: () => void;
 };
 
 const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
   exerciseInstance,
   onAddSet,
   onNavigateToInfo,
+  onFinishWorkout,
   colors,
 }) => {
   const currentSetIndex = exerciseInstance.sets.findIndex((set: Set) => !set.done);
@@ -52,9 +54,17 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
     }
   };
 
-  const handleFinishWorkout = () => {
-    // Place your finish workout logic here.
-    console.log("Workout Finished!");
+  // Confirmation popup for finishing workout.
+  const confirmFinishWorkout = () => {
+    Alert.alert(
+      "Finish Workout",
+      "Are you sure you want to finish the workout?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "OK", onPress: onFinishWorkout },
+      ],
+      { cancelable: true }
+    );
   };
 
   return (
@@ -98,7 +108,9 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
             title={prevExercise.exercise.name}
             style="w-2/5"
           />
-        ) : <View />}
+        ) : (
+          <View style={{ width: "40%" }} />
+        )}
         {nextExercise ? (
           <Button
             onPress={handleNextPress}
@@ -107,7 +119,7 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
           />
         ) : (
           <Button
-            onPress={handleFinishWorkout}
+            onPress={confirmFinishWorkout}
             title="Finish Workout"
             style="w-2/5"
           />

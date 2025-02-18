@@ -1,5 +1,6 @@
+// src/components/Workout/WorkoutHeader.tsx
 import React, { useEffect, useState } from "react";
-import { View, useWindowDimensions } from "react-native";
+import { View, useWindowDimensions, Alert } from "react-native";
 import { Text } from "@/components/Themed";
 import { useTheme } from "@react-navigation/native";
 import { CustomTheme } from "@/constants/Colors";
@@ -26,7 +27,7 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
     setElapsedTime(Date.now() - workoutStartTime);
   }, []);
 
-  // Update elapsed time every second
+  // Update elapsed time every 200ms
   useEffect(() => {
     if (!workoutStartTime) return;
     const timer = setInterval(() => {
@@ -40,7 +41,21 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
-    return `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+    return `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes
+      }:${seconds < 10 ? `0${seconds}` : seconds}`;
+  };
+
+  // Show confirmation dialog when finishing the workout.
+  const handleFinishWorkoutConfirmation = () => {
+    Alert.alert(
+      "End Workout",
+      "Are you sure you want to end and save the workout so far?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "OK", onPress: onFinishWorkout },
+      ],
+      { cancelable: true }
+    );
   };
 
   return (
@@ -56,7 +71,6 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
         className="absolute top-[10px] left-1/2 w-[80px] h-[5px] rounded-[20px]"
         style={{ marginLeft: -40, backgroundColor: colors.text }}
       />
-
       {/* Header Content */}
       <View className="flex-row justify-between items-center px-5">
         <View className="w-1/3 flex-row justify-start">
@@ -67,7 +81,7 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
         <Text className="text-[20px] font-bold text-center" style={{ color: colors.text }}>
           {formatTime(elapsedTime)}
         </Text>
-        <HeaderButton text="End Workout" onPress={onFinishWorkout} />
+        <HeaderButton text="End Workout" onPress={handleFinishWorkoutConfirmation} />
       </View>
     </View>
   );
