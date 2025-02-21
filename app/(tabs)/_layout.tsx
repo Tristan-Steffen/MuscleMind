@@ -3,6 +3,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
 import Colors from "@/constants/Colors";
 import useColorScheme from "@/hooks/useColorScheme";
+import { useWorkoutContext } from "@/context/WorkoutContext";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -12,6 +13,7 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
+  const { selectedWorkoutInstances } = useWorkoutContext();
   const { colorScheme, toggleColorScheme } = useColorScheme();
 
   return (
@@ -20,6 +22,9 @@ export default function TabLayout() {
         screenOptions={{
           tabBarActiveTintColor: Colors[colorScheme].tint,
           headerShown: false,
+          tabBarStyle: {
+            marginBottom: selectedWorkoutInstances.length != 0 ? 70 : 0
+          }
         }}
       >
         <Tabs.Screen

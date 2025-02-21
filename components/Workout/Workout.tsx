@@ -28,6 +28,7 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void, onFini
     selectedExerciseInstances,
     workoutTitle,
     workoutDescription,
+    clearContext,
   } = useSessionContext();
 
   const { createEmptySet } = useSession();
@@ -41,6 +42,7 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void, onFini
     updateselectedWorkoutInstances(selectedExerciseInstances)
     setWorkoutTitle(workoutTitle),
       setWorkoutDescription(workoutDescription)
+    clearContext()
   }, []);
 
   useEffect(() => {
