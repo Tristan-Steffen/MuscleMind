@@ -88,7 +88,7 @@ function RootLayoutNav() {
 
   const handleNavigateToInfo = (exercise: Exercise) => {
     // When navigating, unmount the sheet.
-    setSheetVisible(false);
+    bottomSheetRef.current?.snapToIndex(0);
     router.navigate({
       pathname: "/exercises/exerciseInfo",
       params: { exerciseID: exercise.id },
