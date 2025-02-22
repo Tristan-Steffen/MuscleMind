@@ -1,13 +1,13 @@
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { Text } from "@/components/Themed";
-import { FontAwesome } from "@expo/vector-icons";
 import { CustomTheme } from "@/constants/Colors";
 import { useTheme } from "@react-navigation/native";
 
 type IconButtonProps = {
     onPress: () => void;
     text?: string;
+    icon?: React.ReactNode; // Accepts any React component as an icon
     active?: boolean;
     containerStyle?: string; // Additional Tailwind classes for the container
     textStyle?: string;      // Additional Tailwind classes for the text
@@ -16,17 +16,18 @@ type IconButtonProps = {
 const IconButton: React.FC<IconButtonProps> = ({
     onPress,
     text,
+    icon,
     active,
     containerStyle = "",
     textStyle = "",
 }) => {
     const { colors } = useTheme() as CustomTheme;
 
-    // Render the icon variant if no text is provided.
-    if (text === undefined) {
+    // If only an icon is provided, render it as a button
+    if (!text && icon) {
         return (
             <TouchableOpacity onPress={onPress} className={`mx-1 ${containerStyle}`}>
-                <FontAwesome name="arrow-circle-left" size={32} color={colors.text} />
+                {icon}
             </TouchableOpacity>
         );
     }

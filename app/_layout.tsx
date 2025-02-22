@@ -112,14 +112,14 @@ function RootLayoutNav() {
           name="workouts/workouts"
           options={{
             title: "Example Workouts",
-            headerLeft: () => <IconButton onPress={() => router.back()} />,
+            headerLeft: () => <IconButton icon={<FontAwesome name="arrow-circle-left" size={32} color={colors.text} />} onPress={() => router.back()} />,
           }}
         />
         <Stack.Screen
           name="workouts/workoutBuilder"
           options={{
             title: "New Workout",
-            headerLeft: () => <IconButton onPress={() => router.back()} />,
+            headerLeft: () => <IconButton icon={<FontAwesome name="arrow-circle-left" size={32} color={colors.text} />} onPress={() => router.back()} />,
             headerRight: () => (
               <HeaderButton
                 onPress={handlePresentSheetPress}
@@ -135,6 +135,7 @@ function RootLayoutNav() {
             title: "Exercise Selector",
             headerLeft: () => (
               <IconButton
+                icon={<FontAwesome name="arrow-circle-left" size={32} color={colors.text} />}
                 onPress={() => {
                   revertNewSelections();
                   router.back();
