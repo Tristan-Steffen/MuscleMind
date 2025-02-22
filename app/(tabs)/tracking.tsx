@@ -8,6 +8,8 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { CustomTheme } from "@/constants/Colors";
 import { getAllSessions } from "@/utils/db/session";
 import { useSQLiteContext } from "expo-sqlite";
+import SessionDetails from "@/components/tracking/SessionDetails";
+import { ScrollView } from "react-native";
 
 const TrackingPage: React.FC = () => {
   const { colors } = useTheme() as CustomTheme;
@@ -75,11 +77,15 @@ const TrackingPage: React.FC = () => {
     isSameDay(new Date(session.date), selectedDate)
   );
 
+  console.log("test")
+
+  console.log(sessionsForSelectedDay[0])
+
   const weekRange = `${weekDays[0].getDate()} - ${weekDays[6].getDate()} ${weekDays[0].toLocaleString('en-US', { month: 'long' })} ${weekDays[0].getFullYear()}`;
 
   return (
-    <View className="flex-1 p-4 mt-10">
-      <View className="flex-col items-center justify-between mb-4">
+    <View className="flex-1 mt-14">
+      <View className="flex-col items-center justify-between pb-4 border-b w-full" style={{ borderColor: colors.border }}>
         <View className="flex-row items-center justify-between w-full mb-4">
           <IconButton onPress={handlePrevWeek} icon={<FontAwesome name="arrow-circle-left" size={36} color={colors.basicButton} />} />
           <Text className="text-lg font-bold" style={{ color: colors.text }}>{weekRange}</Text>
@@ -99,30 +105,19 @@ const TrackingPage: React.FC = () => {
         </View>
       </View>
 
-      <View>
+      <ScrollView showsVerticalScrollIndicator={false} className="p-4">
         <Text className="text-xl font-bold mb-2" style={{ color: colors.text }}>
           Sessions for {selectedDate.toLocaleDateString()}
         </Text>
         {sessionsForSelectedDay.length > 0 ? (
           sessionsForSelectedDay.map((session) => (
-            <View
-              key={session.id}
-              className="p-4 mb-2 rounded-lg"
-              style={{ backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border }}
-            >
-              <Text className="font-bold" style={{ color: colors.text }}>
-                {session.name}
-              </Text>
-              <Text style={{ color: colors.text }}>{session.description}</Text>
-              <Text style={{ color: colors.text }}>
-                {new Date(session.date).toLocaleTimeString()}
-              </Text>
-            </View>
+            <SessionDetails session={session} />
           ))
         ) : (
           <Text style={{ color: colors.text }}>No sessions found for this day.</Text>
         )}
-      </View>
+        <View className="h-4"></View>
+      </ScrollView>
     </View>
   );
 };

@@ -21,7 +21,7 @@ export async function addExerciseInstance(
     });
 
     exerciseInstance.id = result.lastInsertRowId;
-    updateSetsForExerciseInstance(db, exerciseInstance);
+    await updateSetsForExerciseInstance(db, exerciseInstance);
     return result.lastInsertRowId;
   } catch (error) {
     console.log(error);

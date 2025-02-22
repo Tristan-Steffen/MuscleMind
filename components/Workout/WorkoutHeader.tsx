@@ -7,6 +7,7 @@ import { CustomTheme } from "@/constants/Colors";
 import IconButton from "@/components/Buttons/IconButton";
 import HeaderButton from "../Buttons/HeaderButton";
 import { useWorkoutContext } from "@/context/WorkoutContext";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 interface WorkoutHeaderProps {
   onBackToWorkout: () => void;
@@ -75,7 +76,7 @@ const WorkoutHeader: React.FC<WorkoutHeaderProps> = ({
       <View className="flex-row justify-between items-center px-5">
         <View className="w-1/3 flex-row justify-start">
           {selectedWorkoutInstance && (
-            <IconButton onPress={onBackToWorkout} />
+            <IconButton icon={<FontAwesome name="arrow-circle-left" size={32} color={colors.text} />} onPress={onBackToWorkout} />
           )}
         </View>
         <Text className="text-[20px] font-bold text-center" style={{ color: colors.text }}>

@@ -15,7 +15,6 @@ export interface DayCardProps {
 const DayCard: React.FC<DayCardProps> = ({ day, date, isToday = false, onPress, classname }) => {
   const { colors } = useTheme() as CustomTheme;
 
-  console.log(day)
   return (
     <TouchableOpacity onPress={onPress}>
       <View

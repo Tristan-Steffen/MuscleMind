@@ -27,21 +27,22 @@ export async function updateSet(db: SQLiteDatabase, set: Set): Promise<void> {
   if (!set.id) throw new Error("Set ID is required");
 
   const statement = await db.prepareAsync(
-    "UPDATE sets SET reps = $reps, weight = $weight, rest = $rest, exerciseInstanceId = $exerciseInstanceId WHERE id = $id"
+    "UPDATE sets SET reps = ?, weight = ?, rest = ?, exerciseInstanceId = ?, repsInReserve = ? WHERE id = ?"
   );
-
+  
   try {
-    await statement.executeAsync({
-      $reps: set.reps,
-      $weight: set.weight,
-      $rest: set.rest,
-      $exerciseInstanceId: set.exerciseInstanceId,
-      $id: set.id,
-      $repsInReserve: set.repsInReserve,
-    });
+    await statement.executeAsync([
+      set.reps,
+      set.weight,
+      set.rest ?? null,
+      set.exerciseInstanceId,
+      set.repsInReserve ?? null,
+      set.id,
+    ]);
   } finally {
     await statement.finalizeAsync();
   }
+  
 }
 
 // Delete a set from the database
