@@ -1,37 +1,42 @@
 import React from "react";
+import { TouchableOpacity } from "react-native";
 import { View, Text } from "@/components/Themed";
 import { useTheme } from "@react-navigation/native";
 import { CustomTheme } from "@/constants/Colors";
 
-type DayCardProps = {
+export interface DayCardProps {
   day: string;
   date: number;
   isToday?: boolean;
-};
+  onPress?: () => void;
+}
 
-const DayCard: React.FC<DayCardProps> = ({ day, date, isToday = false }) => {
+const DayCard: React.FC<DayCardProps> = ({ day, date, isToday = false, onPress }) => {
   const { colors } = useTheme() as CustomTheme;
 
+  console.log(day)
   return (
-    <View
-      className="flex-1 h-[75px] rounded-3xl items-center justify-center mx-1"
-      style={{
-        backgroundColor: isToday ? colors.lightBackground : colors.card,
-      }}
-    >
-      <Text
-        className="text-xs font-semibold"
-        style={{ color: isToday ? colors.background : colors.text }}
+    <TouchableOpacity onPress={onPress}>
+      <View
+        className="h-[75px] rounded-3xl items-center justify-center mx-1"
+        style={{
+          backgroundColor: isToday ? colors.lightBackground : colors.card,
+        }}
       >
-        {day}
-      </Text>
-      <Text
-        className="text-xl mt-1"
-        style={{ color: isToday ? colors.background : colors.text }}
-      >
-        {date}
-      </Text>
-    </View>
+        <Text
+          className="text-xs font-semibold"
+          style={{ color: isToday ? colors.background : colors.text }}
+        >
+          {day}
+        </Text>
+        <Text
+          className="text-xl mt-1"
+          style={{ color: isToday ? colors.background : colors.text }}
+        >
+          {date}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
