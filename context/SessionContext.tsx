@@ -97,9 +97,9 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children })
         workoutDescription,
         selectedExerciseInstances,
         newSelections,
-        selectedExerciseInstance, // exposed state
+        selectedExerciseInstance,
         workoutStartTime,
-        setSelectedExerciseInstance, // exposed setter
+        setSelectedExerciseInstance,
         clearContext,
         editSelectedExerciseInstance,
         setWorkoutTitle,
