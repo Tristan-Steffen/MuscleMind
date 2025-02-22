@@ -8,17 +8,18 @@ export interface DayCardProps {
   day: string;
   date: number;
   isToday?: boolean;
+  classname?: string;
   onPress?: () => void;
 }
 
-const DayCard: React.FC<DayCardProps> = ({ day, date, isToday = false, onPress }) => {
+const DayCard: React.FC<DayCardProps> = ({ day, date, isToday = false, onPress, classname }) => {
   const { colors } = useTheme() as CustomTheme;
 
   console.log(day)
   return (
     <TouchableOpacity onPress={onPress}>
       <View
-        className="h-[75px] rounded-3xl items-center justify-center mx-1"
+        className={`h-24 w-16 rounded-3xl items-center justify-center mx-1 ${classname}`}
         style={{
           backgroundColor: isToday ? colors.lightBackground : colors.card,
         }}

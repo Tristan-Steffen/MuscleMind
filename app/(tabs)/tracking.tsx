@@ -75,18 +75,13 @@ const TrackingPage: React.FC = () => {
   );
 
   return (
-    <View className="flex-1 p-4">
-      <Text className="text-[20px] font-bold mb-4" style={{ color: colors.text }}>
-        Tracking
-      </Text>
-
-      {/* Week Navigation */}
+    <View className="flex-1 p-4 mt-10">
       <View className="flex-col items-center justify-between mb-4">
-        <View className="flex-row items-center justify-between w-full">
+        <View className="flex-row items-center justify-between w-full mb-4">
           <Button title="Prev Week" onPress={() => setWeekOffset(weekOffset - 1)} />
           <Button title="Next Week" onPress={() => setWeekOffset(weekOffset + 1)} />
         </View>
-        <View className="flex-row">
+        <View className="flex-row justify-between w-full">
           {weekDays.map((day, index) => (
             <DayCard
               key={index}
@@ -94,6 +89,7 @@ const TrackingPage: React.FC = () => {
               date={day.getDate()}
               isToday={isSameDay(day, selectedDate)}
               onPress={() => setSelectedDate(day)}
+              classname="w-14 h-14 rounded-xl mx-0"
             />
           ))}
         </View>
