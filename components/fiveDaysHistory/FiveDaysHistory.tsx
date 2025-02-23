@@ -34,6 +34,7 @@ const FiveDaysHistory: React.FC = () => {
           day={dayInfo.day}
           date={dayInfo.date}
           isToday={dayInfo.isToday}
+          classname="h-24 w-16"
         />
       ))}
     </View>

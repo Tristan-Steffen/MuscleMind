@@ -91,7 +91,7 @@ const TrackingPage: React.FC = () => {
           <Text className="text-lg font-bold" style={{ color: colors.text }}>{weekRange}</Text>
           <IconButton onPress={handleNextWeek} icon={<FontAwesome name="arrow-circle-right" size={36} color={colors.basicButton} />} />
         </View>
-        <View className="flex-row justify-between w-full">
+        <View className="flex-row justify-evenly w-full">
           {weekDays.map((day, index) => (
             <DayCard
               key={index}
@@ -99,7 +99,7 @@ const TrackingPage: React.FC = () => {
               date={day.getDate()}
               isToday={isSameDay(day, selectedDate)}
               onPress={() => handleSelectDate(day)}
-              classname="w-14 h-14 rounded-xl mx-0"
+              classname="w-14 h-14 rounded"
             />
           ))}
         </View>

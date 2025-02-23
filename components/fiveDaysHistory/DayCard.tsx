@@ -16,26 +16,21 @@ const DayCard: React.FC<DayCardProps> = ({ day, date, isToday = false, onPress, 
   const { colors } = useTheme() as CustomTheme;
 
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View
-        className={`h-24 w-16 rounded-3xl items-center justify-center mx-1 ${classname}`}
-        style={{
-          backgroundColor: isToday ? colors.lightBackground : colors.card,
-        }}
+    <TouchableOpacity onPress={onPress} className={`rounded-3xl items-center justify-center mx-1 ${classname}`} style={{
+      backgroundColor: isToday ? colors.lightBackground : colors.card,
+    }}>
+      <Text
+        className="text-xs font-semibold"
+        style={{ color: isToday ? colors.background : colors.text }}
       >
-        <Text
-          className="text-xs font-semibold"
-          style={{ color: isToday ? colors.background : colors.text }}
-        >
-          {day}
-        </Text>
-        <Text
-          className="text-xl mt-1"
-          style={{ color: isToday ? colors.background : colors.text }}
-        >
-          {date}
-        </Text>
-      </View>
+        {day}
+      </Text>
+      <Text
+        className="text-xl mt-1"
+        style={{ color: isToday ? colors.background : colors.text }}
+      >
+        {date}
+      </Text>
     </TouchableOpacity>
   );
 };
