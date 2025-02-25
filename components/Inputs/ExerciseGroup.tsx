@@ -51,8 +51,8 @@ const ExerciseGroup: React.FC<ExerciseGroupProps> = ({
             >
               <View
                 className={`w-5 h-5 rounded-full mr-2.5 border border-text ${isExerciseSelected(exercise.id!)
-                    ? "bg-primary"
-                    : "bg-background"
+                  ? "bg-primary"
+                  : "bg-background"
                   }`}
               />
               <View className="flex-row justify-between w-[90%] pr-5">
@@ -64,7 +64,7 @@ const ExerciseGroup: React.FC<ExerciseGroupProps> = ({
                   <FontAwesome
                     name="info"
                     size={20}
-                    color={colors.lightBackground}  // Use resolved value here
+                    color={colors.highlight}  // Use resolved value here
                   />
                 </TouchableOpacity>
               </View>
