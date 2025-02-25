@@ -20,7 +20,7 @@ const DayCard: React.FC<DayCardProps> = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={`rounded-3xl items-center justify-center mx-1 ${classname} ${isToday ? "bg-highlight" : "bg-card"
+      className={`rounded-3xl items-center justify-center mx-1 ${classname} ${isToday ? "bg-lightBackground" : "bg-card"
         }`}
     >
       <Text className={`text-xs font-semibold ${isToday ? "text-background" : "text-text"}`}>

@@ -1,3 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /* Light mode defaults */
+  :root {
+    --color-text: #000;
+    --color-placeHolderText: #666;
+    --color-background: #fff;
+    --color-lightBackground: #FFEEE7;
+    --color-darkBackground: #40455C;
+    --color-darkerBackground: #383C4E;
+    --color-navigator: #fff;
+    --color-tint: #2f95dc;
+    --color-tabIconDefault: #ccc;
+    --color-tabIconSelected: #2f95dc;
+    --color-card: #f9f9f9;
+    --color-border: #666778;
+    --color-notification: #ff453a;
+    --color-basicButton: #505F9E;
+    --color-success: #4CD964;
+  }
+
+  /* Dark mode overrides – apply these when the "dark" class is added to a parent element (e.g., <html> or <body>) */
+  .dark {
+    --color-text: #fff;
+    --color-placeHolderText: #666;
+    --color-background: #161629;
+    --color-lightBackground: #FFEEE7;
+    --color-darkBackground: #0A0814;
+    --color-darkerBackground: #0F0F11;
+    --color-navigator: #010103;
+    --color-tint: #fff;
+    --color-tabIconDefault: #ccc;
+    --color-tabIconSelected: #fff;
+    --color-card: #16213E;
+    --color-border: #51515B;
+    --color-notification: #ff453a;
+    --color-basicButton: #505F9E;
+    --color-success: #4CD964;
+  }
+}

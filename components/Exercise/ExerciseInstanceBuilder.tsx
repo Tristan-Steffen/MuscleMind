@@ -1,10 +1,9 @@
 import React from "react";
-import { View, Text, TouchableOpacity, useColorScheme } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import InputField from "@/components/Inputs/TextInput";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import ButtonAsText from "../Buttons/ButtonAsText";
-import { lightColors, darkColors } from "@/constants/colors"
 
 type ExerciseInstanceBuilderProps = {
   exerciseInstance: ExerciseInstance;
@@ -26,8 +25,6 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
   onSetDelete,
 }) => {
   const [showExercise, setShowExercise] = React.useState(true);
-  const scheme = useColorScheme() || "light";
-  const colors = scheme === "dark" ? darkColors : lightColors;
 
   const incrementReps = (value: number | null) => (value || 0) + 1;
   const decrementReps = (value: number | null) => Math.max((value || 0) - 1, 0);
@@ -39,20 +36,21 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
   return (
     <View className={showExercise ? "rounded-2xl mb-5 bg-card" : ""}>
       <TouchableOpacity
-        className="flex-row items-center justify-between rounded-2xl h-10 px-2.5 mb-2.5 text-text bg-highlight"
+        className="flex-row items-center justify-between rounded-2xl h-10 px-2.5 mb-2.5 bg-lightBackground"
         onPress={() => setShowExercise(!showExercise)}
       >
-        <Text className="text-lg font-bold">
+        <Text className="text-lg font-bold text-text">
           {exerciseInstance.exercise.name}
         </Text>
         <View className="flex-row items-center">
           <TouchableOpacity className="pr-5" onPress={onInstanceDelete}>
             {/* For icons that need a color value, we’re using CSS variable strings */}
-            <FontAwesome name="trash" size={20} />
+            <FontAwesome name="trash" size={20} color="var(--color-text)" />
           </TouchableOpacity>
           <FontAwesome
             name={showExercise ? "chevron-up" : "chevron-down"}
             size={20}
+            color="var(--color-text)"
           />
         </View>
       </TouchableOpacity>
@@ -80,7 +78,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="minus-circle"
                     size={30}
-                    color={colors.highlight}
+                    color="var(--color-lightBackground)"
                   />
                 </TouchableOpacity>
                 <InputField
@@ -101,7 +99,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="plus-circle"
                     size={30}
-                    color={colors.highlight}
+                    color="var(--color-lightBackground)"
                   />
                 </TouchableOpacity>
               </View>
@@ -116,7 +114,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="minus-circle"
                     size={30}
-                    color={colors.highlight}
+                    color="var(--color-lightBackground)"
                   />
                 </TouchableOpacity>
                 <InputField
@@ -137,7 +135,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="plus-circle"
                     size={30}
-                    color={colors.highlight}
+                    color="var(--color-lightBackground)"
                   />
                 </TouchableOpacity>
               </View>
@@ -146,7 +144,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="trash"
                     size={20}
-                    color={colors.highlight}
+                    color="var(--color-text)"
                   />
                 </TouchableOpacity>
               </View>
