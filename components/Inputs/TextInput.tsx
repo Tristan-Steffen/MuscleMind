@@ -6,7 +6,7 @@ type InputFieldProps = {
   onChangeText: (text: string) => void;
   placeholder: string;
   multiline?: boolean;
-  style?: any;
+  className?: string;
 } & TextInputProps;
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -14,18 +14,17 @@ const InputField: React.FC<InputFieldProps> = ({
   onChangeText,
   placeholder,
   multiline = false,
-  style,
+  className,
   ...props
 }) => {
   return (
     <TextInput
-      className="h-12 border rounded-3xl px-4 text-base border-border text-text bg-background"
+      className={`h-12 border rounded-3xl px-4 text-base border-border text-text bg-background ${className}`}
       placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
       multiline={multiline}
       {...props}
-      style={style}
     />
   );
 };

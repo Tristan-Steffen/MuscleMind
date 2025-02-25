@@ -86,10 +86,10 @@ const TemplateBuilder: React.FC = () => {
         />
         <InputField
           placeholder="Workout Description (optional)"
-          className="h-[120px] pt-4 mt-4" // Tailwind classes for height, padding-top and margin-top
           value={workoutDescription}
           onChangeText={setWorkoutDescription}
           multiline={true}
+          className="h-[120px] pt-4 mt-4"
         />
         <BigButton
           title="Add Exercises"
