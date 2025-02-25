@@ -1,8 +1,6 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { useTheme } from "@react-navigation/native";
 import { Text } from "@/components/Themed";
-import { CustomTheme } from "@/constants/Colors";
 import { Href, useRouter } from "expo-router";
 
 type ButtonProps = {
@@ -20,7 +18,6 @@ const Button: React.FC<ButtonProps> = ({
     textStyle,
     href,
 }) => {
-    const { colors } = useTheme() as CustomTheme;
     const router = useRouter();
 
     const handlePress = () => {
@@ -33,12 +30,11 @@ const Button: React.FC<ButtonProps> = ({
 
     return (
         <TouchableOpacity
-            className={`py-1 rounded-full items-center justify-center px-2 ${style}`}
-            style={{ backgroundColor: colors.basicButton }} // Dynamic color from theme
+            className={`py-1 rounded-full items-center justify-center px-2 bg-basicButton ${style}`}
             onPress={handlePress}
             activeOpacity={0.8}
         >
-            <Text className={`text-lg font-semibold ${textStyle}`} style={{ color: colors.text }}>
+            <Text className={`text-lg font-semibold text-text ${textStyle}`}>
                 {title}
             </Text>
         </TouchableOpacity>

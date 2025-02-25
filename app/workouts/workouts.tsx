@@ -3,10 +3,7 @@ import { ScrollView, View } from "react-native";
 import PresetCard from "@/components/preset/PresetCard";
 import { Text } from "@/components/Themed";
 import { Session } from "@/Interfaces/sessionInterfaces";
-import {
-  getCustomPresetSessions,
-  getExamplePresetSessions,
-} from "@/utils/db/session";
+import { getCustomPresetSessions, getExamplePresetSessions } from "@/utils/db/session";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 
@@ -44,7 +41,7 @@ const Workouts: React.FC = () => {
         </View>
       ) : (
         <View className="p-4">
-          <Text>No sessions available</Text>
+          <Text className="text-text">No sessions available</Text>
         </View>
       )}
     </ScrollView>

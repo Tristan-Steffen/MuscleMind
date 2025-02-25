@@ -2,8 +2,6 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { ExerciseInstance } from "@/Interfaces/sessionInterfaces";
 import InputField from "@/components/Inputs/TextInput";
-import { CustomTheme } from "@/constants/Colors";
-import { useTheme } from "@react-navigation/native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import ButtonAsText from "../Buttons/ButtonAsText";
 
@@ -27,7 +25,6 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
   onSetDelete,
 }) => {
   const [showExercise, setShowExercise] = React.useState(true);
-  const { colors } = useTheme() as CustomTheme;
 
   const incrementReps = (value: number | null) => (value || 0) + 1;
   const decrementReps = (value: number | null) => Math.max((value || 0) - 1, 0);
@@ -37,25 +34,23 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
     Math.max((value || 0) - 2.5, 0);
 
   return (
-    <View
-      className={showExercise ? "rounded-2xl mb-5" : ""}
-      style={showExercise ? { backgroundColor: colors.card } : undefined}
-    >
+    <View className={showExercise ? "rounded-2xl mb-5 bg-card" : ""}>
       <TouchableOpacity
-        className="flex-row items-center justify-between rounded-2xl h-10 px-2.5 mb-2.5"
-        style={{ backgroundColor: colors.lightBackground }}
+        className="flex-row items-center justify-between rounded-2xl h-10 px-2.5 mb-2.5 bg-lightBackground"
         onPress={() => setShowExercise(!showExercise)}
       >
-        <Text className="text-lg font-bold">
+        <Text className="text-lg font-bold text-text">
           {exerciseInstance.exercise.name}
         </Text>
         <View className="flex-row items-center">
           <TouchableOpacity className="pr-5" onPress={onInstanceDelete}>
-            <FontAwesome name="trash" size={20} />
+            {/* For icons that need a color value, we’re using CSS variable strings */}
+            <FontAwesome name="trash" size={20} color="var(--color-text)" />
           </TouchableOpacity>
           <FontAwesome
             name={showExercise ? "chevron-up" : "chevron-down"}
             size={20}
+            color="var(--color-text)"
           />
         </View>
       </TouchableOpacity>
@@ -64,10 +59,10 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
         <>
           <View className="flex-row justify-between mb-2.5 mr-9">
             <View className="flex-row w-1/2 justify-center pr-2.5">
-              <Text style={{ color: colors.text }}>Reps</Text>
+              <Text className="text-text">Reps</Text>
             </View>
             <View className="flex-row w-1/2 justify-center">
-              <Text style={{ color: colors.text }}>Weight</Text>
+              <Text className="text-text">Weight</Text>
             </View>
           </View>
 
@@ -83,13 +78,12 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="minus-circle"
                     size={30}
-                    color={colors.lightBackground}
+                    color="var(--color-lightBackground)"
                   />
                 </TouchableOpacity>
                 <InputField
                   placeholder="0"
-                  className="w-15 text-center"
-                  style={{ backgroundColor: colors.background }}
+                  className="w-15 text-center bg-background"
                   value={set.reps === 0 ? "" : set.reps?.toString() || ""}
                   keyboardType="numeric"
                   onChangeText={(value) =>
@@ -105,7 +99,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="plus-circle"
                     size={30}
-                    color={colors.lightBackground}
+                    color="var(--color-lightBackground)"
                   />
                 </TouchableOpacity>
               </View>
@@ -120,13 +114,12 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="minus-circle"
                     size={30}
-                    color={colors.lightBackground}
+                    color="var(--color-lightBackground)"
                   />
                 </TouchableOpacity>
                 <InputField
                   placeholder="0"
-                  className="w-15 text-center"
-                  style={{ backgroundColor: colors.background }}
+                  className="w-15 text-center bg-background"
                   value={set.weight === 0 ? "" : set.weight?.toString() || ""}
                   keyboardType="numeric"
                   onChangeText={(value) =>
@@ -142,13 +135,17 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="plus-circle"
                     size={30}
-                    color={colors.lightBackground}
+                    color="var(--color-lightBackground)"
                   />
                 </TouchableOpacity>
               </View>
               <View className="mr-2.5 justify-center">
                 <TouchableOpacity onPress={() => onSetDelete(setIndex)}>
-                  <FontAwesome name="trash" size={20} color={colors.text} />
+                  <FontAwesome
+                    name="trash"
+                    size={20}
+                    color="var(--color-text)"
+                  />
                 </TouchableOpacity>
               </View>
             </View>

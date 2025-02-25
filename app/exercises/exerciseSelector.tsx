@@ -73,7 +73,6 @@ const ExerciseSelector: React.FC = () => {
           placeholder="Search"
           value={searchValue}
           onChangeText={onSearch}
-          style={{ marginBottom: 20 }}
         />
         {groupedExercises &&
           groupedExercises.map((group, index) => (

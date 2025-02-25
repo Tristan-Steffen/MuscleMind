@@ -12,6 +12,7 @@ import SessionDetails from "@/components/tracking/SessionDetails";
 import { ScrollView } from "react-native";
 
 const TrackingPage: React.FC = () => {
+  // Retaining useTheme only for values needed by components (such as icon colors)
   const { colors } = useTheme() as CustomTheme;
   const db = useSQLiteContext();
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -51,13 +52,12 @@ const TrackingPage: React.FC = () => {
 
   const handleSelectDate = (day: Date) => {
     setSelectedDate(day);
-
-    // Calculate the Monday of the week for the selected day
+    // Calculate Monday of the week for the selected day
     const selectedMondayOffset = day.getDay() === 0 ? -6 : 1 - day.getDay();
     const selectedWeekStart = new Date(day);
     selectedWeekStart.setDate(day.getDate() + selectedMondayOffset);
 
-    // Calculate the difference in weeks from the original reference (app start week)
+    // Calculate the difference in weeks from the reference (today’s week)
     const today = new Date();
     const todayMondayOffset = today.getDay() === 0 ? -6 : 1 - today.getDay();
     const todayStartOfWeek = new Date(today);
@@ -71,25 +71,29 @@ const TrackingPage: React.FC = () => {
     setWeekOffset(newWeekOffset);
   };
 
-
-
   const sessionsForSelectedDay = sessions.filter((session) =>
     isSameDay(new Date(session.date), selectedDate)
   );
 
-  console.log("test")
-
-  console.log(sessionsForSelectedDay[0])
-
-  const weekRange = `${weekDays[0].getDate()} - ${weekDays[6].getDate()} ${weekDays[0].toLocaleString('en-US', { month: 'long' })} ${weekDays[0].getFullYear()}`;
+  const weekRange = `${weekDays[0].getDate()} - ${weekDays[6].getDate()} ${weekDays[0].toLocaleString(
+    "en-US",
+    { month: "long" }
+  )} ${weekDays[0].getFullYear()}`;
 
   return (
     <View className="flex-1 mt-14">
-      <View className="flex-col items-center justify-between pb-4 border-b w-full" style={{ borderColor: colors.border }}>
+      {/* Use Tailwind classes for border and text colors */}
+      <View className="flex-col items-center justify-between pb-4 border-b border-border w-full">
         <View className="flex-row items-center justify-between w-full mb-4">
-          <IconButton onPress={handlePrevWeek} icon={<FontAwesome name="arrow-circle-left" size={36} color={colors.basicButton} />} />
-          <Text className="text-lg font-bold" style={{ color: colors.text }}>{weekRange}</Text>
-          <IconButton onPress={handleNextWeek} icon={<FontAwesome name="arrow-circle-right" size={36} color={colors.basicButton} />} />
+          <IconButton
+            onPress={handlePrevWeek}
+            icon={<FontAwesome name="arrow-circle-left" size={36} color={colors.basicButton} />}
+          />
+          <Text className="text-lg font-bold text-text">{weekRange}</Text>
+          <IconButton
+            onPress={handleNextWeek}
+            icon={<FontAwesome name="arrow-circle-right" size={36} color={colors.basicButton} />}
+          />
         </View>
         <View className="flex-row justify-evenly w-full">
           {weekDays.map((day, index) => (
@@ -106,17 +110,17 @@ const TrackingPage: React.FC = () => {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="p-4">
-        <Text className="text-xl font-bold mb-2" style={{ color: colors.text }}>
+        <Text className="text-xl font-bold mb-2 text-text">
           Sessions for {selectedDate.toLocaleDateString()}
         </Text>
         {sessionsForSelectedDay.length > 0 ? (
-          sessionsForSelectedDay.map((session) => (
-            <SessionDetails session={session} />
+          sessionsForSelectedDay.map((session, key) => (
+            <SessionDetails session={session} key={key} />
           ))
         ) : (
-          <Text style={{ color: colors.text }}>No sessions found for this day.</Text>
+          <Text className="text-text">No sessions found for this day.</Text>
         )}
-        <View className="h-4"></View>
+        <View className="h-4" />
       </ScrollView>
     </View>
   );

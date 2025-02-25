@@ -1,82 +1,59 @@
-// src/components/Workout/PlannedSets.tsx
 import React from "react";
 import { View } from "react-native";
 import { Text } from "@/components/Themed";
 import { Set } from "@/Interfaces/sessionInterfaces";
-import { CustomTheme } from "@/constants/Colors";
 import BigButton from "../Buttons/BigButton";
 
 interface PlannedSetsProps {
     sets: Set[];
     currentSetIndex: number;
     onAddSet: () => void;
-    colors: CustomTheme["colors"];
-    mutedColor?: string;
+    // No longer passing colors—Tailwind classes will handle that.
+    mutedColorClass?: string;
 }
 
 export const PlannedSets: React.FC<PlannedSetsProps> = ({
     sets,
     currentSetIndex,
     onAddSet,
-    colors,
-    mutedColor = "#999",
+    mutedColorClass = "text-muted",
 }) => {
     return (
         <View className="mb-6">
-            <Text className="text-xl font-bold mb-2" style={{ color: colors.text }}>
-                Planned Sets
-            </Text>
+            <Text className="text-xl font-bold mb-2 text-text">Planned Sets</Text>
             {/* Header Row */}
-            <View
-                className="flex-row justify-between border-b pb-2"
-                style={{ borderColor: colors.border }}
-            >
-                <Text className="flex-1 text-center font-bold" style={{ color: colors.text }}>
-                    Set
-                </Text>
-                <Text className="flex-1 text-center font-bold" style={{ color: colors.text }}>
-                    Reps
-                </Text>
-                <Text className="flex-1 text-center font-bold" style={{ color: colors.text }}>
-                    Weight
-                </Text>
-                <Text className="flex-1 text-center font-bold" style={{ color: colors.text }}>
-                    Total
-                </Text>
-                <Text className="flex-1 text-center font-bold" style={{ color: colors.text }}>
-                    RIR
-                </Text>
+            <View className="flex-row justify-between border-b pb-2 border-border">
+                <Text className="flex-1 text-center font-bold text-text">Set</Text>
+                <Text className="flex-1 text-center font-bold text-text">Reps</Text>
+                <Text className="flex-1 text-center font-bold text-text">Weight</Text>
+                <Text className="flex-1 text-center font-bold text-text">Total</Text>
+                <Text className="flex-1 text-center font-bold text-text">RIR</Text>
             </View>
             {/* Sets List */}
             {sets.map((set, index) => {
                 const isCurrent = index === currentSetIndex && !set.done;
-                const textColor = set.done ? colors.text : mutedColor;
+                // If set is not done, use muted class; otherwise use normal text
+                const valueClass = set.done ? "text-text" : mutedColorClass;
                 return (
                     <View
                         key={index}
-                        className="flex-row justify-between py-2"
-                        style={{
-                            backgroundColor: isCurrent
-                                ? (colors.darkBackground || "#e0e0e0")
-                                : colors.background,
-                        }}
+                        className={`flex-row justify-between py-2 ${isCurrent ? "bg-darkBackground" : "bg-background"
+                            }`}
                     >
-                        <Text className="flex-1 text-center" style={{ color: colors.text }}>
-                            {index + 1}
-                        </Text>
-                        <Text className="flex-1 text-center" style={{ color: textColor }}>
+                        <Text className="flex-1 text-center text-text">{index + 1}</Text>
+                        <Text className={`flex-1 text-center ${valueClass}`}>
                             {set.reps !== undefined ? set.reps!.toString() : "-"}
                         </Text>
-                        <Text className="flex-1 text-center" style={{ color: textColor }}>
+                        <Text className={`flex-1 text-center ${valueClass}`}>
                             {set.weight !== undefined ? set.weight!.toString() : "-"}
                         </Text>
-                        <Text className="flex-1 text-center" style={{ color: textColor }}>
-                            {(set.reps !== undefined && set.weight !== undefined)
+                        <Text className={`flex-1 text-center ${valueClass}`}>
+                            {set.reps !== undefined && set.weight !== undefined
                                 ? (set.reps! * set.weight!).toString()
                                 : "-"}
                         </Text>
-                        <Text className="flex-1 text-center" style={{ color: textColor }}>
-                            {set.repsInReserve !== null ? set.repsInReserve!.toString() : "-"}
+                        <Text className={`flex-1 text-center ${valueClass}`}>
+                            {set.repsInReserve ? set.repsInReserve!.toString() : "-"}
                         </Text>
                     </View>
                 );

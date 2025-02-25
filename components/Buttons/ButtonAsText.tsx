@@ -1,13 +1,12 @@
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
-import { useTheme } from "@react-navigation/native";
-import { CustomTheme } from "@/constants/Colors";
+import { TouchableOpacity } from "react-native";
 import { Href, Link } from "expo-router";
+import { Text } from "@/components/Themed";
 
 type ButtonAsTextProps = {
   title: string;
   onPress?: () => void;
-  textColor?: string;
+  textColor?: string; // Optional override, if needed
   textStyle?: string;
   style?: string;
   href?: Href;
@@ -21,25 +20,21 @@ const ButtonAsText: React.FC<ButtonAsTextProps> = ({
   style,
   href,
 }) => {
-  const { colors } = useTheme() as CustomTheme;
-
-  const textStyles = `text-base font-medium ${textStyle}`;
+  // If no override is provided, default to our Tailwind class for basicButton text
+  const defaultTextClass = textColor ? "" : "text-basicButton";
+  const combinedTextClasses = `text-base font-medium ${textStyle} ${defaultTextClass}`;
 
   if (href) {
     return (
       <Link href={href} className={style}>
-        <Text style={{ color: textColor || colors.basicButton }} className={textStyles}>
-          {title}
-        </Text>
+        <Text className={combinedTextClasses}>{title}</Text>
       </Link>
     );
   }
 
   return (
     <TouchableOpacity className={style} onPress={onPress} activeOpacity={0.6}>
-      <Text style={{ color: textColor || colors.basicButton }} className={textStyles}>
-        {title}
-      </Text>
+      <Text className={combinedTextClasses}>{title}</Text>
     </TouchableOpacity>
   );
 };

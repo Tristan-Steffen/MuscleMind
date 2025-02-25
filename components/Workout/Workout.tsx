@@ -1,18 +1,17 @@
-// src/components/Workout/Workout.tsx
 import React, { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
 import { Text } from "@/components/Themed";
 import WorkoutItem from "@/components/Workout/WorkoutItem";
 import { Exercise, ExerciseInstance } from "@/Interfaces/sessionInterfaces";
-import { CustomTheme } from "@/constants/Colors";
 import WorkoutExercisePerformer from "./WorkoutExercisePerformer";
 import { useWorkoutContext } from "@/context/WorkoutContext";
-import { useTheme } from "@react-navigation/native";
 import { useSession } from "@/hooks/useSession";
 import { useSessionContext } from "@/context/SessionContext";
 
-const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void, onFinishWorkout: () => void }> = ({ onNavigateToInfo, onFinishWorkout }) => {
-  const { colors } = useTheme() as CustomTheme;
+const Workout: React.FC<{
+  onNavigateToInfo: (exercise: Exercise) => void;
+  onFinishWorkout: () => void;
+}> = ({ onNavigateToInfo, onFinishWorkout }) => {
   const {
     selectedWorkoutInstances,
     selectedWorkoutInstance,
@@ -24,13 +23,8 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void, onFini
     setWorkoutDescription,
   } = useWorkoutContext();
 
-  const {
-    selectedExerciseInstances,
-    workoutTitle,
-    workoutDescription,
-    clearContext,
-  } = useSessionContext();
-
+  const { selectedExerciseInstances, workoutTitle, workoutDescription, clearContext } =
+    useSessionContext();
   const { createEmptySet } = useSession();
 
   const [instances, setInstances] = useState<ExerciseInstance[]>();
@@ -39,10 +33,10 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void, onFini
     if (!workoutStartTime) {
       setWorkoutStartTime(Date.now());
     }
-    updateselectedWorkoutInstances(selectedExerciseInstances)
-    setWorkoutTitle(workoutTitle),
-      setWorkoutDescription(workoutDescription)
-    clearContext()
+    updateselectedWorkoutInstances(selectedExerciseInstances);
+    setWorkoutTitle(workoutTitle);
+    setWorkoutDescription(workoutDescription);
+    clearContext();
   }, []);
 
   useEffect(() => {
@@ -70,12 +64,7 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void, onFini
     let newSet = createEmptySet();
     const lastSet =
       selectedWorkoutInstance.sets[selectedWorkoutInstance.sets.length - 1];
-    newSet = {
-      ...newSet,
-      reps: lastSet.reps,
-      weight: lastSet.weight,
-      done: false,
-    };
+    newSet = { ...newSet, reps: lastSet.reps, weight: lastSet.weight, done: false };
     setselectedWorkoutInstance({
       ...selectedWorkoutInstance,
       sets: [...selectedWorkoutInstance.sets, newSet],
@@ -84,12 +73,11 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void, onFini
   };
 
   return instances ? (
-    <View className="flex-1 px-5" style={{ backgroundColor: colors.background }}>
+    <View className="flex-1 px-5 bg-background">
       {selectedWorkoutInstance ? (
         <WorkoutExercisePerformer
           exerciseInstance={selectedWorkoutInstance}
           onAddSet={handleAddSet}
-          colors={colors}
           onNavigateToInfo={onNavigateToInfo}
           onFinishWorkout={onFinishWorkout}
         />
@@ -99,7 +87,6 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void, onFini
           renderItem={({ item }) => (
             <WorkoutItem
               exerciseInstance={item}
-              colors={colors}
               onPress={() => handleExercisePress(item)}
             />
           )}
@@ -108,9 +95,7 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void, onFini
     </View>
   ) : (
     <View className="flex-1 items-center justify-center">
-      <Text className="text-lg" style={{ color: "gray" }}>
-        No exercises added yet!
-      </Text>
+      <Text className="text-lg text-gray-500">No exercises added yet!</Text>
     </View>
   );
 };

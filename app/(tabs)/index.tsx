@@ -46,7 +46,7 @@ export default function TabTwoScreen() {
           />
         </View>
         <View className="flex-row justify-between items-center mt-5 mx-1.5">
-          <Text className="text-base">Your Workouts</Text>
+          <Text className="text-base text-text">Your Workouts</Text>
           <ButtonAsText
             title="View all"
             href={{
@@ -56,7 +56,7 @@ export default function TabTwoScreen() {
           />
         </View>
         <View className="flex-row justify-between items-center mt-5 mx-1.5">
-          <Text className="text-base">Example Workouts</Text>
+          <Text className="text-base text-text">Example Workouts</Text>
           <ButtonAsText
             title="View all"
             href={{

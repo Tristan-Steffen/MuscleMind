@@ -1,8 +1,6 @@
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { Text } from "@/components/Themed";
-import { CustomTheme } from "@/constants/Colors";
-import { useTheme } from "@react-navigation/native";
 
 type IconButtonProps = {
     onPress: () => void;
@@ -21,8 +19,6 @@ const IconButton: React.FC<IconButtonProps> = ({
     containerStyle = "",
     textStyle = "",
 }) => {
-    const { colors } = useTheme() as CustomTheme;
-
     // If only an icon is provided, render it as a button
     if (!text && icon) {
         return (
@@ -32,7 +28,6 @@ const IconButton: React.FC<IconButtonProps> = ({
         );
     }
 
-    // Default classes.
     const defaultButtonClasses = "h-7 w-[70px] rounded-full justify-center items-center mx-1";
     const defaultTextClasses = "text-base font-bold mx-2.5";
     const isActive = active === undefined || active;
@@ -41,27 +36,17 @@ const IconButton: React.FC<IconButtonProps> = ({
         return (
             <TouchableOpacity
                 onPress={onPress}
-                className={`${defaultButtonClasses} ${containerStyle}`}
-                style={{ backgroundColor: colors.text }}
+                className={`${defaultButtonClasses} ${containerStyle} bg-text`}
             >
-                <Text
-                    className={`${defaultTextClasses} ${textStyle}`}
-                    style={{ color: colors.card }}
-                >
+                <Text className={`${defaultTextClasses} ${textStyle} text-card`}>
                     {text}
                 </Text>
             </TouchableOpacity>
         );
     } else {
         return (
-            <View
-                className={`${defaultButtonClasses} ${containerStyle}`}
-                style={{ backgroundColor: colors.border }}
-            >
-                <Text
-                    className={`${defaultTextClasses} ${textStyle}`}
-                    style={{ color: colors.card }}
-                >
+            <View className={`${defaultButtonClasses} ${containerStyle} bg-border`}>
+                <Text className={`${defaultTextClasses} ${textStyle} text-card`}>
                     {text}
                 </Text>
             </View>

@@ -18,7 +18,7 @@ const TemplateBuilder: React.FC = () => {
     editSelectedExerciseInstance,
     removeExerciseInstance,
     updateSelectedExerciseInstances,
-    updateNewSelections
+    updateNewSelections,
   } = useSessionContext();
 
   const { createEmptySet } = useSession();
@@ -44,7 +44,6 @@ const TemplateBuilder: React.FC = () => {
       updateNewSelections(instances);
     }
   }, [local.session]);
-
 
   function onSetChange(
     setIndex: number,
@@ -87,7 +86,7 @@ const TemplateBuilder: React.FC = () => {
         />
         <InputField
           placeholder="Workout Description (optional)"
-          style={{ height: 120, paddingTop: 15, marginTop: 15 }}
+          className="h-[120px] pt-4 mt-4" // Tailwind classes for height, padding-top and margin-top
           value={workoutDescription}
           onChangeText={setWorkoutDescription}
           multiline={true}

@@ -1,13 +1,11 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ThemeProvider } from "@react-navigation/native";
 import { createTheme } from "@/constants/Colors";
-import { useFonts } from "expo-font";
 import { router, Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import "react-native-reanimated";
 import useColorScheme from "@/hooks/useColorScheme";
-import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
+import { SQLiteProvider } from "expo-sqlite";
 import { initDatabase, checkIfDatabaseIsEmpty } from "@/utils/db/database";
 import { createTestData } from "@/utils/db/sessionFactory";
 import { SessionProvider, useSessionContext } from "@/context/SessionContext";
@@ -16,49 +14,39 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import Workout from "@/components/Workout/Workout";
 import WorkoutHeader from "@/components/Workout/WorkoutHeader";
 import IconButton from "@/components/Buttons/IconButton";
-import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import "../global.css";
 import HeaderButton from "@/components/Buttons/HeaderButton";
 import { Exercise } from "@/Interfaces/sessionInterfaces";
 import { useWorkoutContext, WorkoutProvider } from "@/context/WorkoutContext";
+import { View } from "react-native";
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-    ...FontAwesome.font,
-  });
   const { colorScheme } = useColorScheme();
   const customTheme = createTheme(colorScheme);
 
-  useEffect(() => {
-    if (error) throw error;
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [error, loaded]);
-
-  if (!loaded) return null;
-
   return (
     <ThemeProvider value={customTheme}>
-      <SQLiteProvider
-        databaseName="fitness5.db"
-        onInit={async (db: SQLiteDatabase) => {
-          await initDatabase(db);
-          const isEmpty = await checkIfDatabaseIsEmpty(db);
-          if (isEmpty) {
-            await createTestData(db);
-          }
-        }}
-      >
-        <SessionProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <WorkoutProvider>
-              <RootLayoutNav />
-            </WorkoutProvider>
-          </GestureHandlerRootView>
-        </SessionProvider>
-      </SQLiteProvider>
+      {/* The top-level view now applies the dark class and uses the global background */}
+      <View className={`${colorScheme === "dark" ? "dark" : ""} flex-1 bg-background`}>
+        <SQLiteProvider
+          databaseName="fitness5.db"
+          onInit={async (db) => {
+            await initDatabase(db);
+            const isEmpty = await checkIfDatabaseIsEmpty(db);
+            if (isEmpty) {
+              await createTestData(db);
+            }
+          }}
+        >
+          <SessionProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <WorkoutProvider>
+                <RootLayoutNav />
+              </WorkoutProvider>
+            </GestureHandlerRootView>
+          </SessionProvider>
+        </SQLiteProvider>
+      </View>
     </ThemeProvider>
   );
 }
@@ -68,18 +56,15 @@ function RootLayoutNav() {
   const customTheme = createTheme(colorScheme);
   const colors = customTheme.colors;
 
-  // Create a ref for the BottomSheet
+  // Ref for BottomSheet
   const bottomSheetRef = useRef<BottomSheet>(null);
-  // Use two snap points: minimized ("10%") and expanded ("95%")
+  // Snap points for BottomSheet
   const snapPoints = useMemo(() => ["10%", "95%"], []);
 
-  // Control whether the sheet is rendered
   const [sheetVisible, setSheetVisible] = useState(false);
 
-  // Open the sheet when the Start button is pressed.
   const handlePresentSheetPress = useCallback(() => {
     setSheetVisible(true);
-    // After mounting, open the sheet by snapping to the expanded index (1).
     setTimeout(() => {
       bottomSheetRef.current?.snapToIndex(0);
     }, 50);
@@ -87,7 +72,6 @@ function RootLayoutNav() {
   }, []);
 
   const handleNavigateToInfo = (exercise: Exercise) => {
-    // When navigating, unmount the sheet.
     bottomSheetRef.current?.snapToIndex(0);
     router.navigate({
       pathname: "/exercises/exerciseInfo",
@@ -112,14 +96,36 @@ function RootLayoutNav() {
           name="workouts/workouts"
           options={{
             title: "Example Workouts",
-            headerLeft: () => <IconButton icon={<FontAwesome name="arrow-circle-left" size={32} color={colors.text} />} onPress={() => router.back()} />,
+            headerLeft: () => (
+              <IconButton
+                icon={
+                  <FontAwesome
+                    name="arrow-circle-left"
+                    size={32}
+                    color={colors.text}
+                  />
+                }
+                onPress={() => router.back()}
+              />
+            ),
           }}
         />
         <Stack.Screen
           name="workouts/workoutBuilder"
           options={{
             title: "New Workout",
-            headerLeft: () => <IconButton icon={<FontAwesome name="arrow-circle-left" size={32} color={colors.text} />} onPress={() => router.back()} />,
+            headerLeft: () => (
+              <IconButton
+                icon={
+                  <FontAwesome
+                    name="arrow-circle-left"
+                    size={32}
+                    color={colors.text}
+                  />
+                }
+                onPress={() => router.back()}
+              />
+            ),
             headerRight: () => (
               <HeaderButton
                 onPress={handlePresentSheetPress}
@@ -135,7 +141,13 @@ function RootLayoutNav() {
             title: "Exercise Selector",
             headerLeft: () => (
               <IconButton
-                icon={<FontAwesome name="arrow-circle-left" size={32} color={colors.text} />}
+                icon={
+                  <FontAwesome
+                    name="arrow-circle-left"
+                    size={32}
+                    color={colors.text}
+                  />
+                }
                 onPress={() => {
                   revertNewSelections();
                   router.back();
@@ -156,13 +168,12 @@ function RootLayoutNav() {
         />
       </Stack>
 
-      {/* Conditionally render the BottomSheet */}
       {sheetVisible && (
         <BottomSheet
           ref={bottomSheetRef}
-          index={1} // When mounted, start in the expanded state
+          index={1}
           snapPoints={snapPoints}
-          enablePanDownToClose={false} // Disable dismissal by swipe; user can drag between snap points.
+          enablePanDownToClose={false}
           backgroundStyle={{ backgroundColor: colors.darkerBackground }}
           handleComponent={() => (
             <WorkoutHeader
@@ -170,7 +181,6 @@ function RootLayoutNav() {
                 setselectedWorkoutInstance(null);
               }}
               onFinishWorkout={() => {
-                // When End Workout is confirmed, finishWorkout saves state and then unmounts the sheet.
                 finishWorkout(() => setSheetVisible(false));
               }}
             />

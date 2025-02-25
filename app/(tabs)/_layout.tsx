@@ -1,7 +1,6 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
-import Colors from "@/constants/Colors";
 import useColorScheme from "@/hooks/useColorScheme";
 import { useWorkoutContext } from "@/context/WorkoutContext";
 
@@ -14,17 +13,21 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const { selectedWorkoutInstances } = useWorkoutContext();
-  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const { colorScheme } = useColorScheme();
+
+  // Use new system values (from tailwind config/global.css)
+  // Here we define tint manually; ideally you might extract these values from a single source.
+  const tint = colorScheme === "dark" ? "#fff" : "#2f95dc";
 
   return (
     <>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: Colors[colorScheme].tint,
+          tabBarActiveTintColor: tint,
           headerShown: false,
           tabBarStyle: {
-            marginBottom: selectedWorkoutInstances.length != 0 ? 70 : 0
-          }
+            marginBottom: selectedWorkoutInstances.length !== 0 ? 70 : 0,
+          },
         }}
       >
         <Tabs.Screen
@@ -38,9 +41,7 @@ export default function TabLayout() {
           name="statistics"
           options={{
             title: "Statistics",
-            tabBarIcon: ({ color }) => (
-              <TabBarIcon name="bar-chart" color={color} />
-            ),
+            tabBarIcon: ({ color }) => <TabBarIcon name="bar-chart" color={color} />,
           }}
         />
         <Tabs.Screen
@@ -57,14 +58,11 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
           }}
         />
-
         <Tabs.Screen
           name="nutrition"
           options={{
             title: "Nutrition",
-            tabBarIcon: ({ color }) => (
-              <TabBarIcon name="apple" color={color} />
-            ),
+            tabBarIcon: ({ color }) => <TabBarIcon name="apple" color={color} />,
           }}
         />
       </Tabs>
