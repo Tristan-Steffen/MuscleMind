@@ -106,9 +106,6 @@ const TrackingPage: React.FC = () => {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="p-4">
-        <Text className="text-xl font-bold mb-2" style={{ color: colors.text }}>
-          Sessions for {selectedDate.toLocaleDateString()}
-        </Text>
         {sessionsForSelectedDay.length > 0 ? (
           sessionsForSelectedDay.map((session) => (
             <SessionDetails session={session} />
