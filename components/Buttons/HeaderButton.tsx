@@ -21,7 +21,7 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({ onPress, text, active }) =>
       <TouchableOpacity
         onPress={onPress}
         className={buttonClasses}
-        style={{ backgroundColor: colors.text }}
+        style={{ backgroundColor: colors.highlight }}
         activeOpacity={0.8}
       >
         <Text className={textClasses} style={{ color: colors.card }}>

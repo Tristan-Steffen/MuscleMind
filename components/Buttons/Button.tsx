@@ -34,7 +34,7 @@ const Button: React.FC<ButtonProps> = ({
     return (
         <TouchableOpacity
             className={`py-1 rounded-full items-center justify-center px-2 ${style}`}
-            style={{ backgroundColor: colors.basicButton }} // Dynamic color from theme
+            style={{ backgroundColor: colors.highlight }} // Dynamic color from theme
             onPress={handlePress}
             activeOpacity={0.8}
         >

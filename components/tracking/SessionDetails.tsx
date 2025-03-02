@@ -53,18 +53,16 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({ session }) => {
             style={{ backgroundColor: colors.card, borderColor: colors.border }}
         >
             {/* Header Row */}
-            <View className={`flex-row items-center justify-between p-3 rounded-t-lg ${isCollapsed ? "rounded-b-lg" : "border-b"}`}
+            <TouchableOpacity onPress={toggleCollapsed} className={`flex-row items-center justify-between p-3 rounded-t-lg ${isCollapsed ? "rounded-b-lg" : "border-b"}`}
                 style={{ borderColor: colors.border, backgroundColor: colors.navigator }}
             >
                 <Text className="font-bold text-lg ml-2">{session.name}</Text>
-                <TouchableOpacity onPress={toggleCollapsed}>
-                    <FontAwesome
-                        name={isCollapsed ? "chevron-down" : "chevron-up"}
-                        size={24}
-                        color={colors.text}
-                    />
-                </TouchableOpacity>
-            </View>
+                <FontAwesome
+                    name={isCollapsed ? "chevron-down" : "chevron-up"}
+                    size={24}
+                    color={colors.text}
+                />
+            </TouchableOpacity>
 
             {/* Additional Session Details */}
             {!isCollapsed && (

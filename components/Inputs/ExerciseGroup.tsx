@@ -74,7 +74,7 @@ const ExerciseGroup: React.FC<ExerciseGroupProps> = ({
                   <FontAwesome
                     name="info"
                     size={20}
-                    color={colors.lightBackground}
+                    color={colors.highlight}
                   />
                 </TouchableOpacity>
               </View>

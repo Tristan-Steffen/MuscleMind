@@ -27,14 +27,14 @@ const PresetCard: React.FC<PresetCardProps> = ({ session, className }) => {
   return (
     <View
       className={`rounded-[25px] w-[48%] ${className || ""}`}
-      style={[{ backgroundColor: colors.darkBackground }]}
+      style={[{ backgroundColor: colors.lighterBackground }]}
     >
       <TouchableOpacity onPress={onPressCard()}>
         <View
           className="h-10 rounded-[25px] px-2.5 justify-center"
-          style={{ backgroundColor: colors.basicButton }}
+          style={{ backgroundColor: colors.highlight }}
         >
-          <Text className="text-base font-semibold" style={{ color: colors.text }}>
+          <Text className="text-base font-semibold" style={{ color: colors.background }}>
             {session.name}
           </Text>
         </View>
@@ -47,7 +47,7 @@ const PresetCard: React.FC<PresetCardProps> = ({ session, className }) => {
                 }`}
               style={{
                 backgroundColor:
-                  index % 2 === 0 ? colors.darkBackground : colors.darkerBackground,
+                  index % 2 === 0 ? colors.lighterBackground : colors.darkerBackground,
               }}
             >
               <Text className="text-xs" style={{ color: colors.text }}>

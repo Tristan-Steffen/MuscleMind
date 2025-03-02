@@ -34,11 +34,11 @@ const BigButton: React.FC<BigButtonProps> = ({
   return (
     <TouchableOpacity
       className={`w-full py-4 rounded-full items-center justify-center my-2.5 ${style}`}
-      style={{ backgroundColor: colors.basicButton }} // Dynamic color from theme
+      style={{ backgroundColor: colors.highlight }} // Dynamic color from theme
       onPress={handlePress}
       activeOpacity={0.8}
     >
-      <Text className={`text-lg font-semibold ${textStyle}`} style={{ color: colors.text }}>
+      <Text className={`text-lg font-semibold ${textStyle}`} style={{ color: colors.background }}>
         {title}
       </Text>
     </TouchableOpacity>

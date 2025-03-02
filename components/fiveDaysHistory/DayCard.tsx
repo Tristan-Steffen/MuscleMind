@@ -17,7 +17,7 @@ const DayCard: React.FC<DayCardProps> = ({ day, date, isToday = false, onPress, 
 
   return (
     <TouchableOpacity onPress={onPress} className={`rounded-3xl items-center justify-center mx-1 ${classname}`} style={{
-      backgroundColor: isToday ? colors.lightBackground : colors.card,
+      backgroundColor: isToday ? colors.highlight : colors.card,
     }}>
       <Text
         className="text-xs font-semibold"

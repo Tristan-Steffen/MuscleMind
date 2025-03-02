@@ -78,7 +78,7 @@ export const CurrentSetInput: React.FC<CurrentSetInputProps> = ({
                         }
                         className="p-2"
                     >
-                        <FontAwesome name="plus-circle" size={44} color={colors.lightBackground} />
+                        <FontAwesome name="plus-circle" size={44} color={colors.highlight} />
                     </TouchableOpacity>
                     <InputField
                         placeholder="0"
@@ -101,7 +101,7 @@ export const CurrentSetInput: React.FC<CurrentSetInputProps> = ({
                         }
                         className="p-2"
                     >
-                        <FontAwesome name="minus-circle" size={44} color={colors.lightBackground} />
+                        <FontAwesome name="minus-circle" size={44} color={colors.highlight} />
                     </TouchableOpacity>
                 </View>
                 {/* Weight Column */}
@@ -113,7 +113,7 @@ export const CurrentSetInput: React.FC<CurrentSetInputProps> = ({
                         }
                         className="p-2"
                     >
-                        <FontAwesome name="plus-circle" size={44} color={colors.lightBackground} />
+                        <FontAwesome name="plus-circle" size={44} color={colors.highlight} />
                     </TouchableOpacity>
                     <InputField
                         placeholder="0"
@@ -146,7 +146,7 @@ export const CurrentSetInput: React.FC<CurrentSetInputProps> = ({
                         }
                         className="p-2"
                     >
-                        <FontAwesome name="minus-circle" size={44} color={colors.lightBackground} />
+                        <FontAwesome name="minus-circle" size={44} color={colors.highlight} />
                     </TouchableOpacity>
                 </View>
                 {/* RIR Column */}
@@ -162,7 +162,7 @@ export const CurrentSetInput: React.FC<CurrentSetInputProps> = ({
                         }
                         className="p-2"
                     >
-                        <FontAwesome name="plus-circle" size={44} color={colors.lightBackground} />
+                        <FontAwesome name="plus-circle" size={44} color={colors.highlight} />
                     </TouchableOpacity>
                     <InputField
                         placeholder="0"
@@ -189,7 +189,7 @@ export const CurrentSetInput: React.FC<CurrentSetInputProps> = ({
                         }
                         className="p-2"
                     >
-                        <FontAwesome name="minus-circle" size={44} color={colors.lightBackground} />
+                        <FontAwesome name="minus-circle" size={44} color={colors.highlight} />
                     </TouchableOpacity>
                 </View>
             </View>

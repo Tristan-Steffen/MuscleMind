@@ -42,7 +42,7 @@ const IconButton: React.FC<IconButtonProps> = ({
             <TouchableOpacity
                 onPress={onPress}
                 className={`${defaultButtonClasses} ${containerStyle}`}
-                style={{ backgroundColor: colors.text }}
+                style={{ backgroundColor: colors.highlight }}
             >
                 <Text
                     className={`${defaultTextClasses} ${textStyle}`}

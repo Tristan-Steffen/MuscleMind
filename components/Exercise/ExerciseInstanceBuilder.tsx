@@ -43,7 +43,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
     >
       <TouchableOpacity
         className="flex-row items-center justify-between rounded-2xl h-10 px-2.5 mb-2.5"
-        style={{ backgroundColor: colors.lightBackground }}
+        style={{ backgroundColor: colors.highlight }}
         onPress={() => setShowExercise(!showExercise)}
       >
         <Text className="text-lg font-bold">
@@ -83,7 +83,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="minus-circle"
                     size={30}
-                    color={colors.lightBackground}
+                    color={colors.highlight}
                   />
                 </TouchableOpacity>
                 <InputField
@@ -105,7 +105,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="plus-circle"
                     size={30}
-                    color={colors.lightBackground}
+                    color={colors.highlight}
                   />
                 </TouchableOpacity>
               </View>
@@ -120,7 +120,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="minus-circle"
                     size={30}
-                    color={colors.lightBackground}
+                    color={colors.highlight}
                   />
                 </TouchableOpacity>
                 <InputField
@@ -142,7 +142,7 @@ const ExerciseInstanceBuilder: React.FC<ExerciseInstanceBuilderProps> = ({
                   <FontAwesome
                     name="plus-circle"
                     size={30}
-                    color={colors.lightBackground}
+                    color={colors.highlight}
                   />
                 </TouchableOpacity>
               </View>

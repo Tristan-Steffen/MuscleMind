@@ -119,7 +119,7 @@ function RootLayoutNav() {
           name="workouts/workoutBuilder"
           options={{
             title: "New Workout",
-            headerLeft: () => <IconButton icon={<FontAwesome name="arrow-circle-left" size={32} color={colors.text} />} onPress={() => router.back()} />,
+            headerLeft: () => <IconButton icon={<FontAwesome name="arrow-circle-left" size={32} color={colors.highlight} />} onPress={() => router.back()} />,
             headerRight: () => (
               <HeaderButton
                 onPress={handlePresentSheetPress}

@@ -78,7 +78,7 @@ const WorkoutExercisePerformer: React.FC<WorkoutExercisePerformerProps> = ({
           {exerciseInstance.exercise.name}
         </Text>
         <TouchableOpacity onPress={() => onNavigateToInfo(exerciseInstance.exercise)}>
-          <FontAwesome name="info-circle" size={26} color={colors.lightBackground} />
+          <FontAwesome name="info-circle" size={26} color={colors.highlight} />
         </TouchableOpacity>
       </View>
 

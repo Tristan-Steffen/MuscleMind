@@ -57,7 +57,7 @@ export const PlannedSets: React.FC<PlannedSetsProps> = ({
                         className="flex-row justify-between py-2"
                         style={{
                             backgroundColor: isCurrent
-                                ? (colors.darkBackground || "#e0e0e0")
+                                ? (colors.lighterBackground || "#e0e0e0")
                                 : colors.background,
                         }}
                     >

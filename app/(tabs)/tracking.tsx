@@ -87,9 +87,9 @@ const TrackingPage: React.FC = () => {
     <View className="flex-1 mt-14">
       <View className="flex-col items-center justify-between pb-4 border-b w-full" style={{ borderColor: colors.border }}>
         <View className="flex-row items-center justify-between w-full mb-4">
-          <IconButton onPress={handlePrevWeek} icon={<FontAwesome name="arrow-circle-left" size={36} color={colors.basicButton} />} />
+          <IconButton onPress={handlePrevWeek} icon={<FontAwesome name="arrow-circle-left" size={36} color={colors.highlight} />} />
           <Text className="text-lg font-bold" style={{ color: colors.text }}>{weekRange}</Text>
-          <IconButton onPress={handleNextWeek} icon={<FontAwesome name="arrow-circle-right" size={36} color={colors.basicButton} />} />
+          <IconButton onPress={handleNextWeek} icon={<FontAwesome name="arrow-circle-right" size={36} color={colors.highlight} />} />
         </View>
         <View className="flex-row justify-evenly w-full">
           {weekDays.map((day, index) => (

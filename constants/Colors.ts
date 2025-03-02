@@ -7,8 +7,8 @@ const Colors = {
     text: "#000",
     placeHolderText: "#666",
     background: white,
-    lightBackground: "#FFEEE7",
-    darkBackground: "#40455C",
+    highlight: "#FFEEE7",
+    lighterBackground: "#40455C",
     darkerBackground: "#383C4E",
     navigator: white,
     tint: "#2f95dc",
@@ -24,9 +24,9 @@ const Colors = {
     text: white,
     placeHolderText: "#666",
     background: "#010104",
-    darkBackground: "#0A0814",
-    darkerBackground: "#0F0F11",
-    lightBackground: "#FFEEE7",
+    lighterBackground: "#1C1624",
+    darkerBackground: "#100B1A",
+    highlight: "#FFEEE7",
     navigator: "#0D0D48",
     tint: white,
     tabIconDefault: "#ccc",
@@ -43,8 +43,8 @@ export default Colors;
 
 export type CustomTheme = Theme & {
   colors: Theme["colors"] & {
-    lightBackground: string;
-    darkBackground: string;
+    highlight: string;
+    lighterBackground: string;
     basicButton: string;
     darkerBackground: string;
     placeHolderText: string;
@@ -62,9 +62,9 @@ export const createTheme = (colorScheme: "light" | "dark"): CustomTheme => ({
     card: Colors[colorScheme].card,
     border: Colors[colorScheme].border,
     notification: Colors[colorScheme].notification,
-    lightBackground: Colors[colorScheme].lightBackground,
+    highlight: Colors[colorScheme].highlight,
     basicButton: Colors[colorScheme].basicButton,
-    darkBackground: Colors[colorScheme].darkBackground,
+    lighterBackground: Colors[colorScheme].lighterBackground,
     darkerBackground: Colors[colorScheme].darkerBackground,
     placeHolderText: Colors[colorScheme].placeHolderText,
     success: Colors[colorScheme].success,
