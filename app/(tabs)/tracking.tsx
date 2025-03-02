@@ -107,8 +107,10 @@ const TrackingPage: React.FC = () => {
 
       <ScrollView showsVerticalScrollIndicator={false} className="p-4">
         {sessionsForSelectedDay.length > 0 ? (
-          sessionsForSelectedDay.map((session) => (
-            <SessionDetails session={session} />
+          sessionsForSelectedDay.map((session, index) => (
+            <View className="pb-4">
+              <SessionDetails session={session} key={index} />
+            </View>
           ))
         ) : (
           <Text style={{ color: colors.text }}>No sessions found for this day.</Text>

@@ -23,15 +23,15 @@ const Colors = {
   dark: {
     text: white,
     placeHolderText: "#666",
-    background: "#161629",
+    background: "#010104",
     darkBackground: "#0A0814",
     darkerBackground: "#0F0F11",
     lightBackground: "#FFEEE7",
-    navigator: "#010103",
+    navigator: "#0D0D48",
     tint: white,
     tabIconDefault: "#ccc",
     tabIconSelected: white,
-    card: "#16213E",
+    card: "#262831",
     border: "#51515B",
     notification: "#ff453a",
     basicButton: "#505F9E",
@@ -49,6 +49,7 @@ export type CustomTheme = Theme & {
     darkerBackground: string;
     placeHolderText: string;
     success: string;
+    navigator: string;
   };
 };
 
@@ -67,5 +68,6 @@ export const createTheme = (colorScheme: "light" | "dark"): CustomTheme => ({
     darkerBackground: Colors[colorScheme].darkerBackground,
     placeHolderText: Colors[colorScheme].placeHolderText,
     success: Colors[colorScheme].success,
+    navigator: Colors[colorScheme].navigator
   },
 });
