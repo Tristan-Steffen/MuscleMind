@@ -41,7 +41,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={customTheme}>
       <SQLiteProvider
-        databaseName="Fitness1.db"
+        databaseName="Fitness3.db"
         onInit={async (db: SQLiteDatabase) => {
           await initDatabase(db);
           const isEmpty = await checkIfDatabaseIsEmpty(db);

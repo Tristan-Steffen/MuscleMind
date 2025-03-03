@@ -57,7 +57,7 @@ export async function updateSession(
       $date: session.date.toISOString(),
       $isPreset: session.isPreset ? 1 : 0,
       $isExample: session.isExample ? 1 : 0,
-      $createdAt: session.createdAt.toISOString(),
+      $createdAt: session.createdAt!.toISOString(),
       $updatedAt: Date.now().toString(),
       $id: session.id,
     });
@@ -119,8 +119,8 @@ export async function getAllSessions(db: SQLiteDatabase): Promise<Session[]> {
   for (let i = 0; i < sessions.length; i++) {
     // Convert string dates to Date objects ints to booleans
     sessions[i].date = new Date(sessions[i].date);
-    sessions[i].createdAt = new Date(sessions[i].createdAt);
-    sessions[i].updatedAt = new Date(sessions[i].updatedAt);
+    sessions[i].createdAt = sessions[i].createdAt;
+    sessions[i].updatedAt = sessions[i].updatedAt;
     sessions[i].isPreset = Boolean(sessions[i].isPreset);
     sessions[i].isExample = Boolean(sessions[i].isExample);
 
@@ -143,8 +143,8 @@ export async function getExamplePresetSessions(
   for (let i = 0; i < sessions.length; i++) {
     // Convert string dates to Date objects and ints to booleans
     sessions[i].date = new Date(sessions[i].date);
-    sessions[i].createdAt = new Date(sessions[i].createdAt);
-    sessions[i].updatedAt = new Date(sessions[i].updatedAt);
+    sessions[i].createdAt = sessions[i].createdAt;
+    sessions[i].updatedAt = sessions[i].updatedAt;
     sessions[i].isPreset = Boolean(sessions[i].isPreset);
     sessions[i].isExample = Boolean(sessions[i].isExample);
 
@@ -167,8 +167,8 @@ export async function getCustomPresetSessions(
   for (let i = 0; i < sessions.length; i++) {
     // Convert string dates to Date objects and ints to booleans
     sessions[i].date = new Date(sessions[i].date);
-    sessions[i].createdAt = new Date(sessions[i].createdAt);
-    sessions[i].updatedAt = new Date(sessions[i].updatedAt);
+    sessions[i].createdAt = sessions[i].createdAt;
+    sessions[i].updatedAt = sessions[i].updatedAt;
     sessions[i].isPreset = Boolean(sessions[i].isPreset);
     sessions[i].isExample = Boolean(sessions[i].isExample);
 
@@ -197,8 +197,8 @@ export async function getSession(
 
     // Convert string dates to Date objects ints to booleans
     session.date = new Date(session.date);
-    session.createdAt = new Date(session.createdAt);
-    session.updatedAt = new Date(session.updatedAt);
+    session.createdAt = session.createdAt;
+    session.updatedAt = session.updatedAt;
     session.isPreset = Boolean(session.isPreset);
     session.isExample = Boolean(session.isExample);
 

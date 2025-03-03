@@ -84,8 +84,8 @@ export async function getExerciseInstancesForSession(
   );
 
   for (const exerciseInstance of exerciseInstances) {
-    exerciseInstance.createdAt = new Date(exerciseInstance.createdAt);
-    exerciseInstance.updatedAt = new Date(exerciseInstance.updatedAt);
+    exerciseInstance.createdAt = exerciseInstance.createdAt;
+    exerciseInstance.updatedAt = exerciseInstance.updatedAt;
     exerciseInstance.sets = await getSetsForExerciseInstance(
       db,
       exerciseInstance.id!
@@ -109,8 +109,8 @@ export async function getAllExerciseInstances(
   );
 
   for (let i = 0; i < instaces.length; i++) {
-    instaces[i].createdAt = new Date(instaces[i].createdAt);
-    instaces[i].updatedAt = new Date(instaces[i].updatedAt);
+    instaces[i].createdAt = instaces[i].createdAt;
+    instaces[i].updatedAt = instaces[i].updatedAt;
   }
   return instaces;
 }

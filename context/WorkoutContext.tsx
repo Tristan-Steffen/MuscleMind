@@ -91,8 +91,8 @@ export const WorkoutProvider: React.FC<{ children: ReactNode }> = ({ children })
                     const { sessionId, id, ...exerciseWithoutSessionId } = ei;
                     // For each kept set, remove the exerciseInstanceId property.
                     const newSets = filteredSets.map((set) => {
-                        const { exerciseInstanceId, ...setWithoutEiId } = set;
-                        return { ...setWithoutEiId, exerciseInstanceId: null };
+                        const { exerciseInstanceId, id, ...setWithoutEiId } = set;
+                        return { ...setWithoutEiId };
                     });
                     return { ...exerciseWithoutSessionId, sets: newSets };
                 })

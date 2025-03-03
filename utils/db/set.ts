@@ -16,7 +16,6 @@ export async function addSet(db: SQLiteDatabase, set: Set): Promise<number> {
       $repsInReserve: set.repsInReserve ?? null,
     });
 
-    console.log("result", result)
     return result.lastInsertRowId;
   } finally {
     await statement.finalizeAsync();
@@ -31,8 +30,7 @@ export async function updateSet(db: SQLiteDatabase, set: Set): Promise<void> {
     "UPDATE sets SET reps = ?, weight = ?, rest = ?, exerciseInstanceId = ?, repsInReserve = ? WHERE id = ?"
   );
   
-  console.log("update", set)
-  try {
+   try {
     await statement.executeAsync([
       set.reps,
       set.weight,
