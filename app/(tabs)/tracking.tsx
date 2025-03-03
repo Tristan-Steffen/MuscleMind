@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text } from "@/components/Themed";
-import { useTheme } from "@react-navigation/native";
+import { useFocusEffect, useTheme } from "@react-navigation/native";
 import { Session } from "@/Interfaces/sessionInterfaces";
 import DayCard from "@/components/fiveDaysHistory/DayCard";
 import IconButton from "@/components/Buttons/IconButton";
@@ -18,13 +18,16 @@ const TrackingPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [weekOffset, setWeekOffset] = useState(0);
 
-  useEffect(() => {
-    const fetchSessions = async () => {
-      const fetchedSessions = await getAllSessions(db);
-      setSessions(fetchedSessions);
-    };
-    fetchSessions();
-  }, [db]);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchSessions = async () => {
+        const fetchedSessions = await getAllSessions(db);
+        console.log(fetchedSessions[16])
+        setSessions(fetchedSessions);
+      };
+      fetchSessions();
+    }, [db])
+  );
 
   const getWeekDays = () => {
     const today = new Date();
@@ -71,13 +74,14 @@ const TrackingPage: React.FC = () => {
     setWeekOffset(newWeekOffset);
   };
 
-
-
   const sessionsForSelectedDay = sessions.filter((session) =>
     isSameDay(new Date(session.date), selectedDate)
   );
 
-  const weekRange = `${weekDays[0].getDate()} - ${weekDays[6].getDate()} ${weekDays[0].toLocaleString('en-US', { month: 'long' })} ${weekDays[0].getFullYear()}`;
+  const weekRange = `${weekDays[0].getDate()} - ${weekDays[6].getDate()} ${weekDays[0].toLocaleString(
+    "en-US",
+    { month: "long" }
+  )} ${weekDays[0].getFullYear()}`;
 
   return (
     <View className="flex-1 mt-14">
@@ -88,9 +92,9 @@ const TrackingPage: React.FC = () => {
           <IconButton onPress={handleNextWeek} icon={<FontAwesome name="arrow-circle-right" size={36} color={colors.highlight} />} />
         </View>
         <View className="flex-row justify-evenly w-full">
-          {weekDays.map((day, index) => (
+          {weekDays.map((day) => (
             <DayCard
-              key={index}
+              key={day.toISOString()}
               day={day.toLocaleDateString("en-US", { weekday: "short" })}
               date={day.getDate()}
               isToday={isSameDay(day, selectedDate)}
@@ -103,9 +107,9 @@ const TrackingPage: React.FC = () => {
 
       <ScrollView showsVerticalScrollIndicator={false} className="p-4">
         {sessionsForSelectedDay.length > 0 ? (
-          sessionsForSelectedDay.map((session, index) => (
-            <View className="pb-4">
-              <SessionDetails session={session} key={index} />
+          sessionsForSelectedDay.map((session) => (
+            <View key={session.id} className="pb-4">
+              <SessionDetails session={session} />
             </View>
           ))
         ) : (

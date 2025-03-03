@@ -22,8 +22,8 @@ export async function addSession(
       $date: session.date.toISOString(),
       $isPreset: session.isPreset ? 1 : 0,
       $isExample: session.isExample ? 1 : 0,
-      $createdAt: Date.now().toString(),
-      $updatedAt: Date.now().toString(),
+      $createdAt: new Date().toISOString(),
+      $updatedAt: new Date().toISOString(),
     });
 
     const sessionId = result.lastInsertRowId;

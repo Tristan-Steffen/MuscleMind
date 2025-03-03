@@ -16,8 +16,8 @@ export async function addExerciseInstance(
     const result = await statement.executeAsync({
       $exerciseId: exerciseInstance.exercise.id!,
       $sessionId: exerciseInstance.sessionId!,
-      $createdAt: Date.now().toString(),
-      $updatedAt: Date.now().toString(),
+      $createdAt: new Date().toISOString(),
+      $updatedAt: new Date().toISOString(),
     });
 
     exerciseInstance.id = result.lastInsertRowId;

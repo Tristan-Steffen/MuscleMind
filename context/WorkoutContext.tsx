@@ -76,32 +76,6 @@ export const WorkoutProvider: React.FC<{ children: ReactNode }> = ({ children })
         );
     };
 
-    // Save the workout to the database.
-    // We construct a Session object using the workout context values.
-    // We ensure that every exercise instance has valid Date objects for createdAt/updatedAt.
-    const saveWorkoutToDatabase = async (): Promise<void> => {
-        if (!selectedWorkoutInstances || !workoutStartTime) return;
-
-        const session: Session = {
-            name: workoutTitle,
-            description: workoutDescription,
-            date: new Date(workoutStartTime),
-            isPreset: false,
-            isExample: false,
-            // Map over each exercise instance to ensure dates are valid.
-            exercise_instances: selectedWorkoutInstances.map((ei) => ({
-                ...ei,
-                createdAt: ei.createdAt instanceof Date ? ei.createdAt : new Date(),
-                updatedAt: ei.updatedAt instanceof Date ? ei.updatedAt : new Date(),
-            })),
-            createdAt: new Date(workoutStartTime),
-            updatedAt: new Date(),
-        };
-
-        const sessionId = await addSession(db, session);
-        console.log("Workout saved with session ID:", sessionId);
-    };
-
     const finishWorkout = async (closeModal: () => void) => {
         try {
             // Transform the selected exercise instances.
@@ -114,7 +88,7 @@ export const WorkoutProvider: React.FC<{ children: ReactNode }> = ({ children })
                         return null;
                     }
                     // Remove sessionId from the exercise instance.
-                    const { sessionId, ...exerciseWithoutSessionId } = ei;
+                    const { sessionId, id, ...exerciseWithoutSessionId } = ei;
                     // For each kept set, remove the exerciseInstanceId property.
                     const newSets = filteredSets.map((set) => {
                         const { exerciseInstanceId, ...setWithoutEiId } = set;

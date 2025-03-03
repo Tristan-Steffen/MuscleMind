@@ -76,7 +76,7 @@ export const PlannedSets: React.FC<PlannedSetsProps> = ({
                                 : "-"}
                         </Text>
                         <Text className="flex-1 text-center" style={{ color: textColor }}>
-                            {set.repsInReserve !== null ? set.repsInReserve!.toString() : "-"}
+                            {set.repsInReserve ? set.repsInReserve.toString() : "-"}
                         </Text>
                     </View>
                 );

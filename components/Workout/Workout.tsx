@@ -68,14 +68,17 @@ const Workout: React.FC<{ onNavigateToInfo: (exercise: Exercise) => void, onFini
   const handleAddSet = () => {
     if (!selectedWorkoutInstance) return;
     let newSet = createEmptySet();
-    const lastSet =
-      selectedWorkoutInstance.sets[selectedWorkoutInstance.sets.length - 1];
-    newSet = {
-      ...newSet,
-      reps: lastSet.reps,
-      weight: lastSet.weight,
-      done: false,
-    };
+    console.log(selectedWorkoutInstance.sets)
+    if (selectedWorkoutInstance.sets.length !== 0) {
+      const lastSet =
+        selectedWorkoutInstance.sets[selectedWorkoutInstance.sets.length - 1];
+      newSet = {
+        ...newSet,
+        reps: lastSet.reps,
+        weight: lastSet.weight,
+        done: false,
+      };
+    }
     setselectedWorkoutInstance({
       ...selectedWorkoutInstance,
       sets: [...selectedWorkoutInstance.sets, newSet],

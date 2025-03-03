@@ -59,8 +59,8 @@ export function useSession() {
   const createEmptySet = (): Set => {
     return {
       id: undefined,
-      reps: null,
-      weight: null,
+      reps: 0,
+      weight: 0,
       rest: null,
       exerciseInstanceId: null,
       repsInReserve: null,
