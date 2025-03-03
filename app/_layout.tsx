@@ -16,7 +16,6 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import Workout from "@/components/Workout/Workout";
 import WorkoutHeader from "@/components/Workout/WorkoutHeader";
 import IconButton from "@/components/Buttons/IconButton";
-import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import "../global.css";
 import HeaderButton from "@/components/Buttons/HeaderButton";
 import { Exercise } from "@/Interfaces/sessionInterfaces";
@@ -42,7 +41,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={customTheme}>
       <SQLiteProvider
-        databaseName="fitness5.db"
+        databaseName="Fitness1.db"
         onInit={async (db: SQLiteDatabase) => {
           await initDatabase(db);
           const isEmpty = await checkIfDatabaseIsEmpty(db);

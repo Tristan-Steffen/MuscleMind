@@ -11,11 +11,12 @@ export async function addSet(db: SQLiteDatabase, set: Set): Promise<number> {
     const result = await statement.executeAsync({
       $reps: set.reps,
       $weight: set.weight,
-      $rest: set.rest,
+      $rest: set.rest ?? null,
       $exerciseInstanceId: set.exerciseInstanceId,
-      $repsInReserve: set.repsInReserve,
+      $repsInReserve: set.repsInReserve ?? null,
     });
 
+    console.log("result", result)
     return result.lastInsertRowId;
   } finally {
     await statement.finalizeAsync();
@@ -30,6 +31,7 @@ export async function updateSet(db: SQLiteDatabase, set: Set): Promise<void> {
     "UPDATE sets SET reps = ?, weight = ?, rest = ?, exerciseInstanceId = ?, repsInReserve = ? WHERE id = ?"
   );
   
+  console.log("update", set)
   try {
     await statement.executeAsync([
       set.reps,

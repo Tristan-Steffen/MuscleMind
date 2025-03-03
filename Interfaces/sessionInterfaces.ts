@@ -29,8 +29,8 @@ export interface ExerciseInstance {
   exerciseId?: number;
   sessionId?: number;
   sets: Set[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface Session {
@@ -41,8 +41,8 @@ export interface Session {
   isPreset: boolean;
   isExample: boolean;
   exercise_instances: ExerciseInstance[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface Muscle {

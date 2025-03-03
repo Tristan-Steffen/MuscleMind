@@ -77,10 +77,6 @@ const TrackingPage: React.FC = () => {
     isSameDay(new Date(session.date), selectedDate)
   );
 
-  console.log("test")
-
-  console.log(sessionsForSelectedDay[0])
-
   const weekRange = `${weekDays[0].getDate()} - ${weekDays[6].getDate()} ${weekDays[0].toLocaleString('en-US', { month: 'long' })} ${weekDays[0].getFullYear()}`;
 
   return (

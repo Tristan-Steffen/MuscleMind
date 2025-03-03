@@ -104,19 +104,52 @@ export const WorkoutProvider: React.FC<{ children: ReactNode }> = ({ children })
 
     const finishWorkout = async (closeModal: () => void) => {
         try {
-            await saveWorkoutToDatabase();
+            // Transform the selected exercise instances.
+            const filteredExerciseInstances = selectedWorkoutInstances
+                .map((ei) => {
+                    // Filter sets to only keep ones marked as done.
+                    const filteredSets = ei.sets.filter((set) => set.done === true);
+                    // If there are no done sets, exclude this exercise instance.
+                    if (filteredSets.length === 0) {
+                        return null;
+                    }
+                    // Remove sessionId from the exercise instance.
+                    const { sessionId, ...exerciseWithoutSessionId } = ei;
+                    // For each kept set, remove the exerciseInstanceId property.
+                    const newSets = filteredSets.map((set) => {
+                        const { exerciseInstanceId, ...setWithoutEiId } = set;
+                        return { ...setWithoutEiId, exerciseInstanceId: null };
+                    });
+                    return { ...exerciseWithoutSessionId, sets: newSets };
+                })
+                .filter((ei) => ei !== null) as ExerciseInstance[];
+
+            // Build the session using the filtered exercise instances.
+            const session: Session = {
+                name: workoutTitle,
+                description: workoutDescription,
+                date: new Date(workoutStartTime!),
+                isPreset: false,
+                isExample: false,
+                exercise_instances: filteredExerciseInstances,
+            };
+
+            // Save the session to the database.
+            const sessionId = await addSession(db, session);
+            console.log("Workout saved with session ID:", sessionId);
+
             // Clear workout-related state.
             setWorkoutTitle("");
             setWorkoutDescription("");
             setselectedWorkoutInstances([]);
             setselectedWorkoutInstance(null);
             setWorkoutStartTime(null);
-            // Close the modal.
             closeModal();
         } catch (error) {
             console.error("Error finishing workout", error);
         }
     };
+
 
     return (
         <WorkoutContext.Provider

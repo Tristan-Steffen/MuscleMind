@@ -38,7 +38,7 @@ const Button: React.FC<ButtonProps> = ({
             onPress={handlePress}
             activeOpacity={0.8}
         >
-            <Text className={`text-lg font-semibold ${textStyle}`} style={{ color: colors.text }}>
+            <Text className={`text-lg font-semibold ${textStyle}`} style={{ color: colors.background }}>
                 {title}
             </Text>
         </TouchableOpacity>

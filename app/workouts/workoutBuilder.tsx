@@ -63,11 +63,18 @@ const TemplateBuilder: React.FC = () => {
 
   function onAddInstanceSet(instanceIndex: number) {
     let newInstance = selectedExerciseInstances[instanceIndex];
-    let lastSet = newInstance.sets[newInstance.sets.length - 1];
     let set = createEmptySet();
-    set.reps = lastSet.reps;
-    set.weight = lastSet.weight;
-    newInstance.sets.push(set);
+
+    if (newInstance.sets.length === 0) {
+      set.reps = 0
+      set.weight = 0
+      newInstance.sets.push(set);
+    } else {
+      let lastSet = newInstance.sets[newInstance.sets.length - 1];
+      set.reps = lastSet.reps;
+      set.weight = lastSet.weight;
+      newInstance.sets.push(set);
+    }
     editSelectedExerciseInstance(newInstance);
   }
 

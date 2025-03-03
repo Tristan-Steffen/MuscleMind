@@ -238,9 +238,7 @@ export const createTestData = async (db: SQLiteDatabase) => {
     const exerciseInstance: ExerciseInstance = {
       exercise: exercises[i],
       sessionId: 0,
-      sets: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      sets: []
     };
 
     const sets: Set[] = [
@@ -268,9 +266,7 @@ export const createTestData = async (db: SQLiteDatabase) => {
         exerciseInstances[1], // Overhead Press
         exerciseInstances[2], // Dumbbell Flyes
         exerciseInstances[3], // Triceps Pushdown
-      ],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      ]
     },
     {
       name: "Pull Day",
@@ -283,9 +279,7 @@ export const createTestData = async (db: SQLiteDatabase) => {
         exerciseInstances[5], // Pull-Ups
         exerciseInstances[6], // Barbell Rows
         exerciseInstances[7], // Bicep Curls
-      ],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      ]
     },
     {
       name: "Leg Day",
@@ -299,9 +293,7 @@ export const createTestData = async (db: SQLiteDatabase) => {
         exerciseInstances[10], // Lunges
         exerciseInstances[11], // Leg Curls
         exerciseInstances[12], // Calf Raises
-      ],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      ]
     },
   ];
 
