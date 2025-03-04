@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text } from "@/components/Themed";
 import { useFocusEffect, useTheme } from "@react-navigation/native";
 import { Session } from "@/Interfaces/sessionInterfaces";
@@ -6,7 +6,7 @@ import DayCard from "@/components/fiveDaysHistory/DayCard";
 import IconButton from "@/components/Buttons/IconButton";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { CustomTheme } from "@/constants/Colors";
-import { getAllSessions } from "@/utils/db/session";
+import { getSessionsForWeek } from "@/utils/db/session"; // Updated import
 import { useSQLiteContext } from "expo-sqlite";
 import SessionDetails from "@/components/tracking/SessionDetails";
 import { ScrollView } from "react-native";
@@ -14,20 +14,9 @@ import { ScrollView } from "react-native";
 const TrackingPage: React.FC = () => {
   const { colors } = useTheme() as CustomTheme;
   const db = useSQLiteContext();
-  const [sessions, setSessions] = useState<Session[]>([]);
+  const [weekSessions, setWeekSessions] = useState<Session[]>([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [weekOffset, setWeekOffset] = useState(0);
-
-  useFocusEffect(
-    useCallback(() => {
-      const fetchSessions = async () => {
-        const fetchedSessions = await getAllSessions(db);
-        console.log(fetchedSessions[16])
-        setSessions(fetchedSessions);
-      };
-      fetchSessions();
-    }, [db])
-  );
 
   const getWeekDays = () => {
     const today = new Date();
@@ -44,6 +33,23 @@ const TrackingPage: React.FC = () => {
 
   const weekDays = getWeekDays();
 
+  // Calculate week boundaries: weekStart is Monday at 00:00, weekEnd is next Monday at 00:00.
+  const weekStart = new Date(weekDays[0]);
+  weekStart.setHours(0, 0, 0, 0);
+  const weekEnd = new Date(weekDays[6]);
+  weekEnd.setDate(weekEnd.getDate() + 1);
+  weekEnd.setHours(0, 0, 0, 0);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchWeekSessions = async () => {
+        const fetchedSessions = await getSessionsForWeek(db, weekStart, weekEnd);
+        setWeekSessions(fetchedSessions);
+      };
+      fetchWeekSessions();
+    }, [db, weekOffset])
+  );
+
   const handlePrevWeek = () => setWeekOffset((prev) => prev - 1);
   const handleNextWeek = () => setWeekOffset((prev) => prev + 1);
 
@@ -55,12 +61,12 @@ const TrackingPage: React.FC = () => {
   const handleSelectDate = (day: Date) => {
     setSelectedDate(day);
 
-    // Calculate the Monday of the week for the selected day
+    // Calculate the Monday of the selected day’s week.
     const selectedMondayOffset = day.getDay() === 0 ? -6 : 1 - day.getDay();
     const selectedWeekStart = new Date(day);
     selectedWeekStart.setDate(day.getDate() + selectedMondayOffset);
 
-    // Calculate the difference in weeks from the original reference (app start week)
+    // Calculate difference in weeks from the current week.
     const today = new Date();
     const todayMondayOffset = today.getDay() === 0 ? -6 : 1 - today.getDay();
     const todayStartOfWeek = new Date(today);
@@ -74,7 +80,8 @@ const TrackingPage: React.FC = () => {
     setWeekOffset(newWeekOffset);
   };
 
-  const sessionsForSelectedDay = sessions.filter((session) =>
+  // Filter sessions for the selected day from the preloaded week sessions.
+  const sessionsForSelectedDay = weekSessions.filter((session) =>
     isSameDay(new Date(session.date), selectedDate)
   );
 
@@ -85,11 +92,34 @@ const TrackingPage: React.FC = () => {
 
   return (
     <View className="flex-1 mt-14">
-      <View className="flex-col items-center justify-between pb-4 border-b w-full" style={{ borderColor: colors.border }}>
+      <View
+        className="flex-col items-center justify-between pb-4 border-b w-full"
+        style={{ borderColor: colors.border }}
+      >
         <View className="flex-row items-center justify-between w-full mb-4">
-          <IconButton onPress={handlePrevWeek} icon={<FontAwesome name="arrow-circle-left" size={36} color={colors.highlight} />} />
-          <Text className="text-lg font-bold" style={{ color: colors.text }}>{weekRange}</Text>
-          <IconButton onPress={handleNextWeek} icon={<FontAwesome name="arrow-circle-right" size={36} color={colors.highlight} />} />
+          <IconButton
+            onPress={handlePrevWeek}
+            icon={
+              <FontAwesome
+                name="arrow-circle-left"
+                size={36}
+                color={colors.highlight}
+              />
+            }
+          />
+          <Text className="text-lg font-bold" style={{ color: colors.text }}>
+            {weekRange}
+          </Text>
+          <IconButton
+            onPress={handleNextWeek}
+            icon={
+              <FontAwesome
+                name="arrow-circle-right"
+                size={36}
+                color={colors.highlight}
+              />
+            }
+          />
         </View>
         <View className="flex-row justify-evenly w-full">
           {weekDays.map((day) => (
@@ -113,7 +143,9 @@ const TrackingPage: React.FC = () => {
             </View>
           ))
         ) : (
-          <Text style={{ color: colors.text }}>No sessions found for this day.</Text>
+          <Text style={{ color: colors.text }}>
+            No sessions found for this day.
+          </Text>
         )}
         <View className="h-4"></View>
       </ScrollView>

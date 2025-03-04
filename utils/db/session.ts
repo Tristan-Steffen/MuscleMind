@@ -133,6 +133,37 @@ export async function getAllSessions(db: SQLiteDatabase): Promise<Session[]> {
   return sessions;
 }
 
+export async function getSessionsForWeek(
+  db: SQLiteDatabase,
+  weekStart: Date,
+  weekEnd: Date
+): Promise<Session[]> {
+  // Convert week boundaries to ISO strings.
+  const startStr = weekStart.toISOString();
+  const endStr = weekEnd.toISOString();
+
+  const sessions = await db.getAllAsync<Session>(
+    "SELECT * FROM sessions WHERE date >= $start AND date < $end AND isPreset = 0",
+    { $start: startStr, $end: endStr }
+  );
+
+  for (let i = 0; i < sessions.length; i++) {
+    sessions[i].date = new Date(sessions[i].date);
+    sessions[i].createdAt = sessions[i].createdAt;
+    sessions[i].updatedAt = sessions[i].updatedAt;
+    sessions[i].isPreset = Boolean(sessions[i].isPreset);
+    sessions[i].isExample = Boolean(sessions[i].isExample);
+
+    sessions[i].exercise_instances = await getExerciseInstancesForSession(
+      db,
+      sessions[i].id!
+    );
+  }
+
+  return sessions;
+}
+
+
 export async function getExamplePresetSessions(
   db: SQLiteDatabase
 ): Promise<Session[]> {
