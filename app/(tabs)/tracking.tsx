@@ -1,3 +1,4 @@
+// TrackingPage.tsx
 import React, { useState, useCallback } from "react";
 import { View, Text } from "@/components/Themed";
 import { useFocusEffect, useTheme } from "@react-navigation/native";
@@ -6,7 +7,7 @@ import DayCard from "@/components/fiveDaysHistory/DayCard";
 import IconButton from "@/components/Buttons/IconButton";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { CustomTheme } from "@/constants/Colors";
-import { getSessionsForWeek } from "@/utils/db/session"; // Updated import
+import { getSessionsForWeek, deleteSession } from "@/utils/db/session";
 import { useSQLiteContext } from "expo-sqlite";
 import SessionDetails from "@/components/tracking/SessionDetails";
 import { ScrollView } from "react-native";
@@ -33,7 +34,7 @@ const TrackingPage: React.FC = () => {
 
   const weekDays = getWeekDays();
 
-  // Calculate week boundaries: weekStart is Monday at 00:00, weekEnd is next Monday at 00:00.
+  // Calculate week boundaries (Monday 00:00 to next Monday 00:00)
   const weekStart = new Date(weekDays[0]);
   weekStart.setHours(0, 0, 0, 0);
   const weekEnd = new Date(weekDays[6]);
@@ -60,30 +61,38 @@ const TrackingPage: React.FC = () => {
 
   const handleSelectDate = (day: Date) => {
     setSelectedDate(day);
-
-    // Calculate the Monday of the selected day’s week.
+    // Calculate the selected week offset (if needed) …
     const selectedMondayOffset = day.getDay() === 0 ? -6 : 1 - day.getDay();
     const selectedWeekStart = new Date(day);
     selectedWeekStart.setDate(day.getDate() + selectedMondayOffset);
-
-    // Calculate difference in weeks from the current week.
     const today = new Date();
     const todayMondayOffset = today.getDay() === 0 ? -6 : 1 - today.getDay();
     const todayStartOfWeek = new Date(today);
     todayStartOfWeek.setDate(today.getDate() + todayMondayOffset);
-
     const newWeekOffset = Math.round(
       (selectedWeekStart.getTime() - todayStartOfWeek.getTime()) /
       (7 * 24 * 60 * 60 * 1000)
     );
-
     setWeekOffset(newWeekOffset);
   };
 
-  // Filter sessions for the selected day from the preloaded week sessions.
+  // Filter the sessions for the selected day from preloaded week sessions.
   const sessionsForSelectedDay = weekSessions.filter((session) =>
     isSameDay(new Date(session.date), selectedDate)
   );
+
+  // Handle session deletion
+  const handleDeleteSession = async (sessionToDelete: Session) => {
+    try {
+      await deleteSession(db, sessionToDelete.id!);
+      // Remove the deleted session from state.
+      setWeekSessions((prev) =>
+        prev.filter((session) => session.id !== sessionToDelete.id)
+      );
+    } catch (error) {
+      console.error("Error deleting session:", error);
+    }
+  };
 
   const weekRange = `${weekDays[0].getDate()} - ${weekDays[6].getDate()} ${weekDays[0].toLocaleString(
     "en-US",
@@ -139,7 +148,7 @@ const TrackingPage: React.FC = () => {
         {sessionsForSelectedDay.length > 0 ? (
           sessionsForSelectedDay.map((session) => (
             <View key={session.id} className="pb-4">
-              <SessionDetails session={session} />
+              <SessionDetails session={session} onDelete={handleDeleteSession} />
             </View>
           ))
         ) : (
