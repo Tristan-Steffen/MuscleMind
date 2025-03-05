@@ -7,7 +7,7 @@ import DayCard from "@/components/fiveDaysHistory/DayCard";
 import IconButton from "@/components/Buttons/IconButton";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { CustomTheme } from "@/constants/Colors";
-import { getSessionsForWeek, deleteSession } from "@/utils/db/session";
+import { getSessionsForWeek, deleteSession, updateSession, getSession } from "@/utils/db/session";
 import { useSQLiteContext } from "expo-sqlite";
 import SessionDetails from "@/components/tracking/SessionDetails";
 import { ScrollView } from "react-native";
@@ -43,13 +43,15 @@ const TrackingPage: React.FC = () => {
 
   useFocusEffect(
     useCallback(() => {
-      const fetchWeekSessions = async () => {
-        const fetchedSessions = await getSessionsForWeek(db, weekStart, weekEnd);
-        setWeekSessions(fetchedSessions);
-      };
+
       fetchWeekSessions();
     }, [db, weekOffset])
   );
+
+  const fetchWeekSessions = async () => {
+    const fetchedSessions = await getSessionsForWeek(db, weekStart, weekEnd);
+    setWeekSessions(fetchedSessions);
+  };
 
   const handlePrevWeek = () => setWeekOffset((prev) => prev - 1);
   const handleNextWeek = () => setWeekOffset((prev) => prev + 1);
@@ -91,6 +93,15 @@ const TrackingPage: React.FC = () => {
       );
     } catch (error) {
       console.error("Error deleting session:", error);
+    }
+  };
+
+  const handleOnSave = async (updatedSession: Session): Promise<void> => {
+    try {
+      await updateSession(db, updatedSession);
+      fetchWeekSessions()
+    } catch (error) {
+      console.error("Error updating session:", error);
     }
   };
 
@@ -148,7 +159,7 @@ const TrackingPage: React.FC = () => {
         {sessionsForSelectedDay.length > 0 ? (
           sessionsForSelectedDay.map((session) => (
             <View key={session.id} className="pb-4">
-              <SessionDetails session={session} onDelete={handleDeleteSession} />
+              <SessionDetails session={session} onDelete={handleDeleteSession} onSave={handleOnSave} />
             </View>
           ))
         ) : (

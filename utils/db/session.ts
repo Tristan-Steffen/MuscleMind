@@ -41,7 +41,6 @@ export async function addSession(
 
 export async function updateSession(
   db: SQLiteDatabase,
-  oldSession: Session,
   session: Session
 ): Promise<void> {
   if (!session.id) throw new Error("Session ID is required");
@@ -57,32 +56,40 @@ export async function updateSession(
       $date: session.date.toISOString(),
       $isPreset: session.isPreset ? 1 : 0,
       $isExample: session.isExample ? 1 : 0,
-      $createdAt: session.createdAt!.toISOString(),
-      $updatedAt: Date.now().toString(),
+      // Use the current date if session.createdAt is undefined
+      $createdAt: session.createdAt 
+        ? (session.createdAt instanceof Date 
+            ? session.createdAt.toISOString() 
+            : new Date(session.createdAt).toISOString())
+        : new Date().toISOString(),
+      $updatedAt: new Date().toISOString(),
       $id: session.id,
     });
   } finally {
     await statement.finalizeAsync();
   }
 
-  // Create a map of old exercise instances for easier comparison, converting IDs to strings
+  // Fetch the existing exercise instances for the session from the DB.
+  const oldExerciseInstances = await getExerciseInstancesForSession(db, session.id);
   const oldExerciseInstanceMap = new Map<string, ExerciseInstance>(
-    oldSession.exercise_instances.map((ei) => [String(ei.id!), ei])
+    oldExerciseInstances.map((ei) => [String(ei.id!), ei])
   );
 
-  // Track IDs of the exercise instances in the new session, also converting to strings
+  // Create a set of IDs for the new exercise instances (only those that already exist)
   const newExerciseInstanceIds = new Set<string>(
-    session.exercise_instances.map((ei) => String(ei.id!))
+    session.exercise_instances
+      .filter((ei) => ei.id != null)
+      .map((ei) => String(ei.id))
   );
 
-  // Delete exercise instances not present in the new session
-  for (const [id, oldExerciseInstance] of oldExerciseInstanceMap) {
+  // Delete exercise instances that are no longer present in the updated session.
+  for (const [id] of oldExerciseInstanceMap.entries()) {
     if (!newExerciseInstanceIds.has(id)) {
-      await deleteExerciseInstance(db, Number(id)); // This deletes the exercise instance and its associated sets
+      await deleteExerciseInstance(db, Number(id));
     }
   }
 
-  // Update or add exercise instances in the new session
+  // Update or add exercise instances.
   for (const exerciseInstance of session.exercise_instances) {
     if (exerciseInstance.id) {
       await updateExerciseInstance(
@@ -97,6 +104,7 @@ export async function updateSession(
     }
   }
 }
+
 
 export async function deleteSession(
   db: SQLiteDatabase,

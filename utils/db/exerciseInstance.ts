@@ -43,10 +43,18 @@ export async function updateExerciseInstance(
     "UPDATE exerciseInstances SET createdAt = $createdAt, updatedAt = $updatedAt, sessionId = $sessionId, exerciseId = $exerciseId WHERE id = $id"
   );
 
+  // Convert createdAt to a proper ISO string whether it's already a Date or a string
+  const createdAtValue = exerciseInstance.createdAt;
+  const createdAtISOString = createdAtValue
+    ? (createdAtValue instanceof Date
+        ? createdAtValue.toISOString()
+        : new Date(createdAtValue).toISOString())
+    : new Date().toISOString();
+
   try {
     await statement.executeAsync({
-      $createdAt: exerciseInstance.createdAt!.toISOString(),
-      $updatedAt: Date.now().toString(),
+      $createdAt: createdAtISOString,
+      $updatedAt: new Date().toISOString(),
       $id: exerciseInstance.id,
       $sessionId: sessionId,
       $exerciseId: exerciseId,
@@ -56,6 +64,7 @@ export async function updateExerciseInstance(
   }
   updateSetsForExerciseInstance(db, exerciseInstance);
 }
+
 
 export async function deleteExerciseInstance(
   db: SQLiteDatabase,
