@@ -76,7 +76,9 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({
         setIsEditing(false);
     };
 
-    // Renders a row for each set. If editing, show TextInputs; otherwise, plain text.
+    const getInputValue = (value: number | null | undefined): string =>
+        value === null || value == undefined || value === 0 ? "" : value.toString();
+
     const renderSetRow = (
         set: any,
         exerciseIndex: number,
@@ -84,14 +86,13 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({
     ) => {
         if (isEditing) {
             return (
-                <View key={set.id || setIndex} className="flex-row my-1">
-                    <Text className="flex-1 text-center">{setIndex + 1}</Text>
+                <View key={set.id || setIndex} className="flex-row gap-2 px-1 my-1">
+                    <Text className="w-10 text-center self-center">{setIndex + 1}</Text>
                     <TextInput
-                        className="flex-1 text-center border"
+                        placeholder="0"
+                        className="flex-1 text-center rounded-xl py-1 border"
                         style={{ color: colors.text, borderColor: colors.border }}
-                        value={String(
-                            editedSession.exercise_instances[exerciseIndex].sets[setIndex].weight
-                        )}
+                        value={getInputValue(editedSession.exercise_instances[exerciseIndex].sets[setIndex].weight)}
                         keyboardType="numeric"
                         onChangeText={(text) => {
                             const newWeight = Number(text);
@@ -118,11 +119,10 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({
                         }}
                     />
                     <TextInput
-                        className="flex-1 text-center border"
+                        placeholder="0"
+                        className="flex-1 text-center rounded-xl py-1 border"
                         style={{ color: colors.text, borderColor: colors.border }}
-                        value={String(
-                            editedSession.exercise_instances[exerciseIndex].sets[setIndex].reps
-                        )}
+                        value={getInputValue(editedSession.exercise_instances[exerciseIndex].sets[setIndex].reps)}
                         keyboardType="numeric"
                         onChangeText={(text) => {
                             const newReps = Number(text);
@@ -148,21 +148,14 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({
                             });
                         }}
                     />
-                    <Text style={{ flex: 1, textAlign: "center", color: colors.text }}>
-                        {Number(
-                            editedSession.exercise_instances[exerciseIndex].sets[setIndex].weight
-                        ) *
-                            Number(
-                                editedSession.exercise_instances[exerciseIndex].sets[setIndex].reps
-                            )}
+                    <Text className="flex-1 text-center">
+                        {editedSession.exercise_instances[exerciseIndex].sets[setIndex].weight! * editedSession.exercise_instances[exerciseIndex].sets[setIndex].reps!}
                     </Text>
                     <TextInput
-                        className="flex-1 text-center border"
+                        placeholder="-"
+                        className="flex-1 text-center rounded-xl py-1 border"
                         style={{ color: colors.text, borderColor: colors.border }}
-                        value={String(
-                            editedSession.exercise_instances[exerciseIndex].sets[setIndex]
-                                .repsInReserve
-                        )}
+                        value={getInputValue(editedSession.exercise_instances[exerciseIndex].sets[setIndex].repsInReserve)}
                         keyboardType="numeric"
                         onChangeText={(text) => {
                             const newRIR = Number(text);
@@ -192,16 +185,17 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({
             );
         } else {
             return (
-                <View key={set.id || setIndex} className="flex-row my-1">
-                    <Text className="flex-1 text-center">{setIndex + 1}</Text>
+                <View key={set.id || setIndex} className="flex-row gap-2 px-1 my-2">
+                    <Text className="w-10 text-center">{setIndex + 1}</Text>
                     <Text className="flex-1 text-center">{set.weight}</Text>
                     <Text className="flex-1 text-center">{set.reps}</Text>
                     <Text className="flex-1 text-center">{getTotal(set.weight, set.reps)}</Text>
-                    <Text className="flex-1 text-center">{set.repsInReserve}</Text>
+                    <Text className="flex-1 text-center">{set.repsInReserve === 0 ? "-" : set.repsInReserve}</Text>
                 </View>
             );
         }
     };
+
 
     return (
         <View
@@ -216,25 +210,11 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({
                 style={{ borderColor: colors.border, backgroundColor: colors.navigator }}
             >
                 <Text className="font-bold text-lg ml-2">{session.name}</Text>
-                {isEditing ? (
-                    // Show save button in editing mode
-                    <TouchableOpacity
-                        onPress={handleSave}
-                        className="w-10 h-10 flex items-center justify-center"
-                    >
-                        <FontAwesome name="save" size={20} color={colors.text} />
-                    </TouchableOpacity>
-                ) : (
-                    // Otherwise, show the dropdown button
-                    <RNView ref={dropdownButtonRef}>
-                        <TouchableOpacity
-                            onPress={openDropdown}
-                            className="w-10 h-10 flex items-center justify-center"
-                        >
-                            <FontAwesome name="ellipsis-v" size={20} color={colors.text} />
-                        </TouchableOpacity>
-                    </RNView>
-                )}
+                <FontAwesome
+                    name={isCollapsed ? "chevron-down" : "chevron-up"}
+                    size={24}
+                    color={colors.text}
+                />
             </TouchableOpacity>
 
             {/* Additional Session Details */}
@@ -242,8 +222,14 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({
                 <View className="p-2 pb-0" style={{ backgroundColor: colors.card }}>
                     <View className="rounded-md flex-row items-center justify-between pl-2 mt-2 mb-4">
                         <Text className="flex-1">{session.description}</Text>
-                        {/* Only show dropdown if not editing */}
-                        {!isEditing && (
+                        {isEditing ? (
+                            <TouchableOpacity
+                                onPress={handleSave}
+                                className="w-10 h-10 flex items-center justify-center"
+                            >
+                                <FontAwesome name="save" size={20} color={colors.text} />
+                            </TouchableOpacity>
+                        ) : (
                             <RNView ref={dropdownButtonRef}>
                                 <TouchableOpacity
                                     onPress={openDropdown}
@@ -269,8 +255,8 @@ const SessionDetails: React.FC<SessionDetailsProps> = ({
                                     {exerciseInstance.exercise.name}
                                 </Text>
                             </View>
-                            <View className="flex-row mb-1 pt-2">
-                                <Text className="flex-1 text-center font-bold">Set</Text>
+                            <View className="flex-row gap-2 px-1 my-2">
+                                <Text className="w-10 text-center font-bold">Set</Text>
                                 <Text className="flex-1 text-center font-bold">Weight</Text>
                                 <Text className="flex-1 text-center font-bold">Reps</Text>
                                 <Text className="flex-1 text-center font-bold">Total</Text>
